@@ -1,0 +1,57 @@
+User: USER,,,,,
+Path: C:\Program Files (x86)\BMG\CLARIOstar\User\Data,,,,,
+Test ID: 159,,,,,
+Test Name: PI Assay AH,,,,,
+Date: 2/24/2020,,,,,
+Time: 2:55:03 PM,,,,,
+ID1: 200224  Plate P2 Hela cell death- long infection,,,,,
+ID2: 40000 cells,,,,,
+"Fluorescence (FI), multichromatic",,,,,
+
+
+ Basic settings ,,,,,
+
+Measurement type:,"Fluorescence (FI), multichromatic",,,,
+Microplate name:,COSTAR 96,,,,
+,,,,,
+
+ Kinetic (plate mode) settings ,,,,,
+
+No. of cycles:,437,,,,
+Cycle time [s]:,360,,,,
+No. of flashes per well and cycle:,50,,,,
+,,,,,
+
+Scan mode:,spiral scan,,,,
+Scan diameter [mm]:,5,,,,
+,,,,,
+Well multichromatics used,,,,,
+
+ Optic settings ,,,,,
+
+No.,Presetname,Excitation,Dichroic filter,Emission,Gain
+1,Propidium Iodide *,535-15,574.79999999999995,617-20,2243
+2,Propidium Iodide Solution,493-15,auto 564.5,636-15,2238
+,,,,,
+
+ Optic settings ,,,,,
+
+Gain obtained by:,gain adjustment performed,,,,
+Well(s) used for gain adjustment:,G10,,,,
+Focal height obtained by:,previous focal height (focus adjustment performed),,,,
+Focal height [mm]:,5.3,,,,
+Well used for focus adjustment:,H7,,,,
+,,,,,
+
+ General settings ,,,,,
+Bottom optic used,,,,,
+Extended IR PMT used,,,,,
+
+Spoon type:,-,,,,
+Injection needle holder type:,-,,,,
+Settling time [s]:,0,,,,
+Reading direction:,"bidirectional, horizontal left to right, top to bottom",,,,
+Target temperature [°C]:,37,,,,
+Target concentration O2 [%]:,set off,,,,
+Target concentration CO2 [%]:,,,,,
+,,,,,

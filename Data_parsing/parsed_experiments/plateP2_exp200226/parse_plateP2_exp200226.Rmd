@@ -1,0 +1,58 @@
+---
+title: 'Parse results: plate P2 / exp200226'
+author: "Stefano Giulieri"
+date: "02/03/2020"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = here::here())
+msg <- stringr::str_c("My directory is ", here::here())
+print(msg)
+```
+
+```{r}
+library(tidyverse)
+library(magrittr)
+rm(list = ls())
+source("Functions/all_functions.R")
+```
+
+# Parse data
+
+```{r}
+PI_data <- parse_kinetics(file = "Raw_data/plateP2/exp200226/PI_kinetics/200226 Plate P2 n1 HeLa 40000 cell death assay 44h.xlsx",
+                          exp = "exp200226",
+                          n_cycles = 437,
+                          plate = "P2",
+                          n_skip = 13,
+                          plot_data = T) %>%
+   annotate_wells(well_info = "plate_info/well_info_plates_P1_P2.csv")
+# save PI data
+PI_data %>%
+  write_csv("Data_parsing/parsed_experiments/exp200226/PI_data_plateP2_exp200226.csv")
+```
+
+Note the warning `the number of parsed well is not 96`. This is because the outer wells are not used in plate P1.
+
+# Parse growth data
+
+```{r}
+growth_data <- parse_growth(file = "Raw_data/plateP2/exp200226/Growth_curves/Plate P2 n1 ON growth.xlsx",
+                            duration = c(19,10),
+                            interval = 10,
+                            exp = "exp200226",
+                            plate = "P2",
+                            n_skip = 15,
+                            normalised = T,
+                            annotate = "none"
+) %>%
+  annotate_wells(well_info = "plate_info/well_info_plates_P1_P2.csv")
+
+# save growth data
+growth_data %>%
+  write_csv("Data_parsing/parsed_experiments/exp200226/growth_data_plateP2_exp200226.csv")
+```

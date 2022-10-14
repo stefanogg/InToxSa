@@ -1,0 +1,256 @@
+---
+title: 'Summarise GWAS: PI AUC (mutations)'
+author: "Stefano Giulieri"
+date: "24/05/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd(stringr::str_c(here::here(), "/InToxSa_paper/GWAS/pyseer_output"))
+msg <- glue::glue("My directory is {getwd()}")
+message(msg)
+```
+
+Here we summarise gene-burden GWAS results for PI uptake (and generate plots)
+
+```{r message=FALSE}
+library(tidyverse)
+library(patchwork)
+library(ggrepel)
+rm(list = ls())
+```
+
+# Load raw data
+
+# Pyseer output directories
+
+Here we focus on pyseer-gemma output. This can extended later
+
+```{r}
+files <- list.files("~/Documents/Transfer_with_server/", pattern = "genes.toxicity", full.names = T)
+dir <- "raw_data/genes"
+for (f in files) file.copy(f, dir)
+```
+
+Generate a df of pyseer files
+
+```{r}
+files <- list.files(dir, recursive = T, full.names = T)
+df_files <- tibble(path = files,
+                   dataset = "VANANZ",
+                   phenotype = str_remove(basename(files), ".pyseer.tab"),
+                    truncations = str_detect(path, "trunc"),
+                   rare_mutations = str_detect(path, "rare")) %>%
+  mutate(phenotype = str_remove(phenotype, ".*mutations.|.*genes."))
+
+df_files <- drop_na(df_files, dataset) %>%
+  mutate(across(everything(), as.factor)) 
+```
+
+Parse files and concatenate them
+
+```{r}
+names(files) <- files
+df_pyseer <- purrr::map_df(.x = files, .f = read_tsv, .id = "path") 
+
+df_pyseer <- df_pyseer %>%
+  left_join(df_files)
+```
+
+## Annotation files (genes)
+
+```{r}
+df_annotation_simple <- readRDS("~/OneDrive - The University of Melbourne/R/SAUREUS-GENERAL/ref_genomes/processed_data/BPH2947/df_blastp_BPH2947_neb_curated.Rda")
+```
+
+## Annotate output
+
+```{r}
+df_pyseer_annotated <- df_pyseer %>%
+  dplyr::rename(LOCUS_TAG = variant,
+         p_value = `lrt-pvalue`) %>%
+  left_join(df_annotation_simple) %>%
+  arrange(p_value)
+```
+
+# Plot for figure 3
+
+Preliminary
+
+```{r}
+# df_plot <- df_pyseer_annotated%>%
+#   group_by(dataset, rare_mutations, truncations) %>%
+#   mutate(bonf = .05/n_distinct(LOCUS_TAG)) %>%
+#   mutate(unique_gene_symbol = if_else(p_value < bonf, unique_gene_symbol, NA_character_)) %>%
+#   mutate(beta_colour = if_else(p_value < bonf, beta, NA_real_)) 
+
+df_plot <- df_pyseer_annotated%>%
+  group_by(dataset, rare_mutations, truncations) %>%
+  mutate(bonf = .05/n_distinct(LOCUS_TAG)) %>%
+  mutate(label_gene_symbol = if_else(p_value < bonf, unique_gene_symbol, NA_character_)) %>%
+  mutate(beta_colour = beta) 
+
+df_plot %>%
+  count(dataset, rare_mutations, truncations, bonf)
+
+df_plot %>%
+  filter(p_value < bonf) %>%
+  ungroup() %>%
+  count(dataset, rare_mutations, truncations) %>%
+  arrange(rare_mutations)
+
+(p1 <- df_plot %>%
+  ggplot(aes(x = start, y = -log10(p_value),
+             shape = truncations,
+             alpha = p_value < bonf)) +
+  geom_point() +
+  geom_hline(aes(yintercept = -log10(bonf)),
+             linetype = "dotted",
+             colour = "red") +
+  facet_grid(rare_mutations~truncations, labeller = label_both) +
+  theme_bw())
+```
+
+Inspect most important hits
+
+```{r}
+(p2 <- df_plot %>%
+  filter(rare_mutations == "TRUE") %>%
+  group_by(rare_mutations, truncations) %>%
+  slice_min(order_by = p_value, n = 10) %>%
+  ggplot(aes(x = abs(beta), y = -log10(p_value), shape = truncations)) +
+  geom_point(aes(size = af)) +
+  geom_text_repel(aes(label = unique_gene_symbol), fontface = "bold") +
+  facet_grid(~truncations, labeller = label_both) +
+  theme_bw())
+
+(p3 <- df_plot %>%
+  filter(rare_mutations == "TRUE") %>%
+  mutate(truncations = if_else(truncations == "TRUE", "Protein_truncating", "All protein-modifying")) %>%
+  group_by(rare_mutations, truncations) %>%
+  slice_min(order_by = p_value, n = 10) %>%
+  ggplot(aes(x = fct_rev(tidytext::reorder_within(unique_gene_symbol, by = p_value, within = rare_mutations)), 
+             y = -log10(p_value),
+             size = af, colour = beta)) +
+  geom_point() +
+  geom_hline(aes(yintercept = -log10(bonf)),
+             linetype = "dotted") +
+  coord_flip() +
+  facet_wrap(~truncations, scales = "free_y", ncol = 1) +
+   tidytext::scale_x_reordered() +
+  scale_color_steps2(low = "blue", high = "red",
+                     na.value = "grey90", name = "Effect size") +
+  labs(x = "") +
+  theme_bw(base_size = 16) +
+  theme(text = element_text(face = "bold")))
+
+
+```
+
+Check all mutations aggregated
+
+```{r}
+(p4 <- df_plot %>%
+  filter(rare_mutations == "FALSE") %>%
+  mutate(truncations = if_else(truncations == "TRUE", "Protein_truncating", "All protein-modifying")) %>%
+  group_by(rare_mutations, truncations) %>%
+  slice_min(order_by = p_value, n = 10) %>%
+  ggplot(aes(x = fct_rev(tidytext::reorder_within(unique_gene_symbol, by = p_value, within = truncations)), 
+             y = -log10(p_value),
+             size = af, colour = beta)) +
+  geom_point() +
+  geom_hline(aes(yintercept = -log10(bonf)),
+             linetype = "dotted") +
+  coord_flip() +
+  facet_wrap(~truncations, scales = "free_y", ncol = 1) +
+   tidytext::scale_x_reordered() +
+  scale_color_steps2(low = "blue", high = "red",
+                     na.value = "grey90", name = "Effect size") +
+  labs(x = "") +
+  theme_bw(base_size = 16) +
+  theme(text = element_text(face = "bold")))
+```
+
+Final: first attempt (with labels)
+
+```{r}
+(p5 <- df_plot %>%
+  filter(rare_mutations == "TRUE") %>%
+   mutate(truncations = if_else(truncations == "TRUE", "Protein_truncating", "All protein-modifying")) %>%
+  ggplot(aes(x = start/1e6, y = -log10(p_value),
+             shape = truncations)) +
+  geom_point(aes(colour = beta_colour, size = af)) +
+  geom_text_repel(aes(label = unique_gene_symbol), fontface = "bold") +
+  scale_color_steps2(low = "blue", high = "red",
+                     na.value = "grey90", name = "Effect size") +
+  scale_size_continuous(name = "Fraction with\nmutated gene", range = c(3,10)) +
+  scale_shape_discrete(name = "Mutation type", labels = c("All protein-modifying", "Protein-truncating"), guide = "none") +
+  facet_wrap(~truncations) +
+  labs(title = "",
+       x = "Gene position on BPH2947 chromosome (Mb)",
+       y = "-log10(p value)") +
+  theme_bw(base_size = 16) +
+  theme(text = element_text(face = "bold")))
+
+# ggsave("figures/vanco_mic/vanco_genes_rare_manhattan_plot.pdf", width = 9.5, height = 5)
+```
+
+Final (simplified)
+
+```{r}
+(p6 <- df_plot %>%
+  filter(rare_mutations == "TRUE" & truncations == "FALSE") %>%
+  ggplot(aes(x = start/1e6, y = -log10(p_value))) +
+  geom_point(aes(colour = beta_colour, size = af)) +
+  geom_text_repel(aes(label = label_gene_symbol), fontface = "bold") +
+  scale_color_steps2(low = "blue", high = "red",
+                     na.value = "grey90", name = "Effect size (transformed)") +
+  scale_size_continuous(name = "Fraction with\nmutated gene", range = c(3,10)) +
+  labs(title = "",
+       x = "Gene position on BPH2947 chromosome (Mb)",
+       y = "-log10(p value)") +
+  theme_bw(base_size = 16) +
+  theme(text = element_text(face = "bold")))
+```
+
+Further simplification
+
+```{r}
+(p7 <- df_plot %>%
+  filter(rare_mutations == "TRUE" & truncations == "FALSE") %>%
+  ggplot(aes(x = start/1e6, y = -log10(p_value))) +
+  geom_point(aes(colour = beta < 0, size = af), alpha = .5) +
+  geom_text_repel(aes(label = label_gene_symbol), fontface = "bold") +
+  geom_hline(aes(yintercept = -log10(bonf)), linetype = "dotted") +
+  scale_colour_manual(values = c("red", "blue"), name = "Impact on PI uptake", labels = c("Increase", "Decrease")) +
+  scale_size_continuous(name = "Fraction with\nmutated gene", range = c(1,10), breaks = c(.1,.2)) +
+  labs(title = "",
+       x = "Gene position on BPH2947 chromosome (Mb)",
+       y = "-log10(p value)") +
+  theme_bw(base_size = 11) +
+  theme(text = element_text(face = "bold")))
+
+```
+
+Number of significant genes (rare mutations only)
+
+```{r}
+genes <- df_plot %>%
+  filter(p_value < bonf) %>%
+  filter(rare_mutations == "TRUE") %>%
+  .$unique_gene_symbol %>%
+  unique()
+ 
+```
+
+# Save processed output
+
+```{r}
+df_pyseer_annotated %>%
+  saveRDS("processed_data/pyseer_output_toxicity_genes.Rda")
+
+plot_list <- list(p1,p2,p3,p4,p5, p6, p7)
+
+# saveRDS(plot_list, "processed_data/pyseer_output_toxicity_genes_all_plots.Rda")
+```

@@ -1,0 +1,310 @@
+---
+title: 'VANANZ closely related pairs analysis'
+author: "R Guerillot"
+date: "28/02/2020"
+output: html_document
+editor_options: 
+  chunk_output_type: inline
+---
+
+# Set/check knitR option and working directory
+```{r setup, include=T}
+library(tidyverse)
+library(here)
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = here())
+print(paste("My working directory is:" ,here()))
+```
+
+# Source functions
+
+```{r message=FALSE}
+source("Functions/all_functions.R")
+```
+
+
+
+# Import snp distance matrix (from snp-dist core.aln (snippy)) 
+
+```{r message=FALSE, warning=FALSE}
+
+snp.dist.mat <- read.csv("Data_analysis/Genetic_pairs_analysis/VANANZ_core.aln.dist.mat", sep = "\t")  %>%
+  as.matrix(.)
+
+# put 1st column as row name and remove 1st column
+row.names(snp.dist.mat) <- snp.dist.mat[,1]
+snp.dist.mat <- snp.dist.mat[,2:845]
+```
+
+# Turn distance matrix to long format
+
+```{r}
+require(harrietr)
+snp.dist.df <- harrietr::melt_dist(snp.dist.mat) %>%
+  mutate(dist = as.integer(dist))
+hist(snp.dist.df$dist, breaks = 1000)
+hist(snp.dist.df$dist, breaks = 10000, xlim = c(0,100))
+```
+
+# Extract closely related pairs (<= 10 core SNP)
+
+```{r}
+close_strain.df <- snp.dist.df %>%
+  filter(dist <= 10)
+nrow(close_strain.df)
+```
+
+# Merge with pairs metadata
+
+```{r}
+VAN_metadata.df <- read.csv("plate_info/strain_metadata.csv")
+
+close_strain.df <- merge(close_strain.df, 
+                         VAN_metadata.df,
+                         by.x = "iso1",
+                         by.y = "sample_id") %>%
+                   select(iso1, iso2, dist, strain_group) %>%
+                   merge(., 
+                         VAN_metadata.df,
+                         by.x = "iso2",
+                         by.y = "sample_id") %>%
+                   rename(strain_group.iso1 = strain_group.x,
+                          strain_group.iso2 = strain_group.y)
+```
+
+# Extract genetic pairs not from same patient
+
+```{r}
+close_strain_different_patient.df <- close_strain.df %>%
+  filter(strain_group.iso1 != strain_group.iso2)
+
+nrow(close_strain_different_patient.df)
+```
+
+There are 286 genetic pairs not from same patient that could be checked for differential phenotype.
+
+This list should be modified to be exported to the server as nullarbor style ".tab" file
+
+```{r}
+df_genetic_pairs <- close_strain_different_patient.df %>%
+  arrange(iso1) %>%
+  mutate(pair_id = str_c("GP-", 
+                         formatC(row_number(), 
+                                 width = 3, 
+                                 format = "d", 
+                                 flag = "0"))) %>%
+  select(pair_id, iso1, iso2)
+write_tsv(df_genetic_pairs, "Genetic_pairs_analysis/dataframes/genetic_pairs.tab", col_names = F)
+```
+
+
+# Get a list of analysed strains so far
+
+```{r}
+analysed_strain <- c(
+  read.csv("Data_parsing/dataframes/concatenated_datasets/PI_kinetics_data.csv") %>% .$sample_id %>% as.character(.),
+  read.csv("plate_info/plate_maps/plate_P1.csv") %>% .$sample_id %>% as.character(.),
+  read.csv("plate_info/plate_maps/plate_P2.csv") %>% .$sample_id %>% as.character(.),
+  read.csv("plate_info/plate_maps/plate_M1.csv") %>% .$sample_id %>% as.character(.),
+  read.csv("plate_info/plate_maps/plate_M2.csv") %>% .$sample_id %>% as.character(.)
+  ) %>%
+  unique(.)
+
+analysed_strain
+```
+
+## Close pairs analysed:
+```{r}
+close_strain_analysed.df <- close_strain.df %>%
+  filter(iso1 %in% analysed_strain & iso2 %in% analysed_strain)
+
+nrow(close_strain_analysed.df)
+```
+26 different pairs already analysed. There all from same patients. 
+
+
+
+## Close strain not from same patient already analysed:
+```{r}
+close_strain_different_patient_analysed.df <- close_strain_different_patient.df %>%
+  filter(iso1 %in% analysed_strain & iso2 %in% analysed_strain)
+
+close_strain_different_patient_analysed.df
+
+```
+
+Only one pair among 286 genetic pairs not from same patient have been screened yet.
+--> no significant different in cell death
+
+# Look for strain with loss of cell death/toxicity (agrA mutant like) and check if there are close genetic pair to assess associated with these isolates.
+
+## Import cell death AUC parameter of all isolates.
+```{r}
+cd_param_df <- read.csv("Data_analysis/dataframes/cell_death_parameters.csv")
+AUC_summary_df <- cd_param_df %>%
+  group_by(sample_id) %>%
+  summarise(AUC = mean(AUC), ST= unique(ST)) %>%
+  mutate(sample_id = fct_reorder(sample_id, AUC))
+
+hist(AUC_summary_df$AUC, breaks =100)
+```
+
+## Check where non-infected and tox-4 (agrA mutant) sit
+```{r fig.height=10}
+ggplot(AUC_summary_df, aes(x = sample_id, y = AUC, fill = sample_id != "TOX-4")) +
+  geom_bar(stat = "identity")+
+# facet_wrap(~ST) +
+  coord_flip()
+```
+
+## Check AUC per ST
+```{r fig.height=10}
+ggplot(AUC_summary_df, aes(x = sample_id, y = AUC, fill = AUC > 30)) +
+  geom_bar(stat = "identity")+
+  facet_wrap(~ST, scales = "free") +
+  coord_flip()
+```
+
+AUC <= 30 AUC looks like a reasonable threshold for low toxicity isolate.
+Probably better to set ST specific threshold based on AUC distribution within each ST
+
+# Set ST specific threshold (< 0.3  mean)
+```{r fig.height=10}
+source("Functions/all_functions.R")
+
+# AUC_summary_df2 <- AUC_summary_df %>%
+#   filter(!is.na(ST)) %>%
+#   group_by(ST) %>%
+#   mutate(lower_outlier = (is_out_tukey(AUC,k_tukey = .5) & AUC < median(AUC)))
+
+AUC_summary_df <- AUC_summary_df %>%
+  filter(!is.na(ST)) %>%
+  group_by(ST) %>%
+  mutate(lower_outlier = AUC < 0.30*mean(AUC))
+
+ggplot(AUC_summary_df, aes(x = sample_id, y = AUC, fill = lower_outlier)) +
+  geom_bar(stat = "identity")+
+  facet_wrap(~ST, scales = "free") +
+  coord_flip()
+
+low_tox_iso <- AUC_summary_df %>%
+  filter(lower_outlier == T) %>%
+  .$sample_id
+
+low_tox_iso
+
+length(low_tox_iso)
+```
+
+# Identify paired isolates of low cell death isolates
+```{r}
+close_strain_low_tox.df <- close_strain.df %>%
+  filter(iso1 %in% low_tox_iso | iso2 %in% low_tox_iso)
+
+paired_strain_low_tox <- c(close_strain_low_tox.df$iso1,
+                           close_strain_low_tox.df$iso2) %>%
+  setdiff(., low_tox_iso)
+
+paired_strain_low_tox
+```
+
+# Check paired isolate not already analysed
+```{r}
+paired_strain_not_analysed <- setdiff(paired_strain_low_tox, analysed_strain)
+paired_strain_not_analysed
+```
+
+# Create list of paired strain to analyse
+```{r}
+close_strain_low_tox.df <- close_strain_low_tox.df %>%
+  filter(iso1 %in% paired_strain_not_analysed | iso2 %in% paired_strain_not_analysed) %>%
+  mutate(strain_done = ifelse(iso1 %in% analysed_strain, yes = iso1, no = iso2)) %>%
+  mutate(strain_not_done = ifelse(iso1 %in% paired_strain_not_analysed, yes = iso1, no = iso2))
+```
+
+17/18 pairs are closely related to BPH3757 which is an agrA mutant (from within-host pair VSS-541), no point looking further for genetic deteminant of low cell death.
+
+# Plot remaining pair (BPH2410-BPH3382):
+```{r}
+all_PI.df <- read.csv("Data_parsing/dataframes/concatenated_datasets/PI_kinetics_data.csv") %>%
+  JE2_POMS_standardisation(.) %>%
+  fit_smooth_spline(.)
+
+plot_cell_death(all_PI.df %>% filter(sample_id %in% c("BPH2710", "BPH3382", "JE2")), comparator = "JE2", standardized = T, fitted = T, combine_experiments = "all")
+
+```
+
+
+# Change ST specific threshold (< 0.5 mean)
+```{r fig.height=10}
+source("Functions/all_functions.R")
+
+# AUC_summary_df2 <- AUC_summary_df %>%
+#   filter(!is.na(ST)) %>%
+#   group_by(ST) %>%
+#   mutate(lower_outlier = (is_out_tukey(AUC,k_tukey = .5) & AUC < median(AUC)))
+
+AUC_summary_df <- AUC_summary_df %>%
+  filter(!is.na(ST)) %>%
+  group_by(ST) %>%
+  mutate(lower_outlier = AUC < 0.7*mean(AUC))
+
+ggplot(AUC_summary_df, aes(x = sample_id, y = AUC, fill = lower_outlier)) +
+  geom_bar(stat = "identity")+
+  facet_wrap(~ST, scales = "free") +
+  coord_flip()
+
+low_tox_iso <- AUC_summary_df %>%
+  filter(lower_outlier == T) %>%
+  .$sample_id
+
+low_tox_iso
+
+length(low_tox_iso)
+```
+
+# Identify paired isolates of low cell death isolates
+```{r}
+close_strain_low_tox.df <- close_strain.df %>%
+  filter(iso1 %in% low_tox_iso | iso2 %in% low_tox_iso)
+
+paired_strain_low_tox <- c(close_strain_low_tox.df$iso1,
+                           close_strain_low_tox.df$iso2) %>%
+  setdiff(., low_tox_iso)
+
+paired_strain_low_tox
+```
+
+# Check paired isolate not already analysed
+```{r}
+paired_strain_not_analysed <- setdiff(paired_strain_low_tox, analysed_strain)
+paired_strain_not_analysed
+```
+
+# Create list of paired strain to analyse
+```{r}
+close_strain_low_tox.df <- close_strain_low_tox.df %>%
+  filter(iso1 %in% paired_strain_not_analysed | iso2 %in% paired_strain_not_analysed) %>%
+  mutate(strain_done = ifelse(iso1 %in% analysed_strain, yes = iso1, no = iso2)) %>%
+  mutate(strain_not_done = ifelse(iso1 %in% paired_strain_not_analysed, yes = iso1, no = iso2))
+```
+
+No more pairs identified with lower threshold to define low toxic isolates
+
+# Get closest relative for each strain with low tox
+```{r}
+snp.dist.low.tox.closest.df <- snp.dist.df %>%
+  group_by(iso1) %>%
+  filter(dist == min(dist)) %>%
+  ungroup() %>%
+  filter(iso1 %in% low_tox_iso | iso2 %in% low_tox_iso)%>%
+  mutate(iso1_done = ifelse(iso1 %in% analysed_strain, yes = T, no = F)) %>%
+  mutate(iso2_done = ifelse(iso2 %in% analysed_strain, yes = T, no = F)) %>%
+  mutate(iso1_low_tox = ifelse(iso1 %in% low_tox_iso, yes = T, no = NA)) %>%
+  mutate(iso2_low_tox = ifelse(iso2 %in% low_tox_iso, yes = T, no = NA)) %>%
+  mutate(iso1_low_tox = ifelse(iso1 %in% analysed_strain & !(iso1 %in% low_tox_iso), yes = F, no = iso1_low_tox)) %>%
+  mutate(iso2_low_tox = ifelse(iso2 %in% analysed_strain & !(iso2 %in% low_tox_iso), yes = F, no = iso1_low_tox))
+
+```
+
+

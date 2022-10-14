@@ -1,0 +1,762 @@
+---
+title: "VANANZ closely related pairs: mutations"
+author: "Stefano Giulieri"
+date: "01/05/2020"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+# Set/check knitR option and working directory
+
+```{r setup, include=T}
+library(tidyverse)
+library(ggpubr)
+library(harrietr)
+library(here)
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = here())
+print(paste("My working directory is:" ,here()))
+rm(list = ls())
+```
+
+# Import raw data
+
+## Snippy output
+
+```{r}
+snippy_data <- read_tsv("Ideas_Grant_2020_analysis/Raw_data/all_pair_id_snps.mask.tab") %>%
+  arrange(PAIR_ID)
+snippy_data 
+
+# modify snippy output: 
+# 1) generate iso1 and iso2 for merging with the phenotypic analysis
+# 2) modify CHROM (contig name) to be consistent with the labelling in bed files down the track
+# 3) extract mutation effects for easier interpretation
+
+
+source("../Functions/aa_convert.R")
+snippy_data_modified <- snippy_data %>%
+  mutate(iso1 = str_remove(REFERENCE, ".gbk"),
+         iso2 = ISOLATE,
+         CHROM = str_c(iso1, "_", CHROM)) %>%
+  separate(EFFECT, 
+           into = c("EFFTYPE", "NUCLEOTIDE_CHANGE", "MUTATION"), 
+           sep = "\\s", 
+           remove = T, 
+           extra = "merge") %>%
+  mutate(NUCLEOTIDE_CHANGE = str_remove(NUCLEOTIDE_CHANGE, "c."),
+         MUTATION = str_remove(MUTATION, "p."),
+         MUTATION_SHORT = aa_convert(MUTATION)) %>%
+  separate(AA_POS, 
+           into = c("AA_POS", "AA_LENGTH"), 
+           sep = "/", 
+           remove = T) %>%
+  mutate_at(vars(starts_with("AA")), 
+            as.numeric)
+snippy_data_modified
+
+snippy_data_modified %>%
+  .$ISOLATE %>%
+  n_distinct()
+
+df_n_mutations <- snippy_data_modified %>%
+  count(PAIR_ID, sort = T)
+df_n_mutations %>%
+  ggplot(aes(x = n)) +
+  # geom_histogram() +
+  geom_density() +
+  theme_bw()
+
+distant_pairs <- df_n_mutations %>%
+  filter(n > 100) %>%
+  .$PAIR_ID
+snippy_data_modified_no_distant_pairs <- snippy_data_modified %>%
+  filter(!PAIR_ID %in% distant_pairs)
+rm(distant_pairs, df_n_mutations)
+```
+
+# clustering of protein genes (cd-hit)
+
+```{r}
+protein_clusters_data <- read_tsv("Ideas_Grant_2020_analysis/Raw_data/mutated_proteins.cd-hit.tab") %>%
+  rename_all(funs(str_c(., "_prot"))) 
+
+nebraska_clusters <- read_tsv("Ideas_Grant_2020_analysis/Raw_data/representative_proteins_FPR3757_cd-hit.tab") %>%
+  mutate(source = if_else(str_detect(id, "SAUSA300"), "FPR3757", "mutated_proteins")) %>%
+  group_by(clstr) %>%
+  filter(any(str_detect(id, "BPH"))) %>%
+  group_by(clstr, source) %>%
+  arrange(desc(clstr_cov, clstr_id)) %>%
+  filter(!(source == "FPR3757" & row_number() > 1)) %>%
+  mutate(source_long = str_c(source, "_", row_number())) %>%
+  ungroup() %>%
+  select(id, clstr, source_long) %>%
+  pivot_wider(names_from = source_long, values_from = id) %>%
+  pivot_longer(cols = starts_with("mutated_proteins"), names_to = "source_long", values_to = "id_prot") %>%
+  drop_na(id_prot) %>%
+  select(id_prot, nebraska_locus_tag = FPR3757_1) 
+
+df_neb <- read_csv("Ideas_Grant_2020_analysis/Raw_data/nebraska_all_proteins.csv") %>%
+  rename(neb_mutant_id = `Strain Name`, neb_gene = `Gene name`, neb_product = `gene discription`)
+
+protein_clusters_data <- protein_clusters_data %>%
+  left_join(nebraska_clusters) %>%
+  group_by(clstr_prot) %>%
+  mutate(nebraska_locus_tag = nebraska_locus_tag[which(clstr_rep_prot == 1)]) %>%
+  left_join(df_neb)
+
+
+
+protein_seq_data <- read_tsv("Ideas_Grant_2020_analysis/Raw_data/mutated_proteins.tab") %>%
+  rename_all(funs(str_c(., "_prot")))
+```
+
+## merge clusters and sequences with snippy data
+
+```{r}
+snippy_data_modified_proteins <- snippy_data_modified_no_distant_pairs %>%
+  left_join(protein_clusters_data,
+            by = c("LOCUS_TAG" = "id_prot")) %>%
+  left_join(protein_seq_data,
+            by = c("LOCUS_TAG" = "FASTA_ID_prot"))
+snippy_data_modified_proteins
+```
+
+# clustering and annotation of intergenic regions 
+
+## gff with annotation of intergenic regions
+
+```{r}
+col_names <- c("CHROM_intergenic", 
+               "START", 
+               "END", 
+               "CHROM_protein", 
+               "SOURCE", 
+               "TYPE", 
+               "START_flank_prot", 
+               "END_flank_prot", 
+               "SCORE", 
+               "STRAND_flank_prot", 
+               "PHASE", 
+               "ATTRIBUTES_flank_prot",  
+               "CHROM_mutation",
+               "POS_minus1",
+               "POS", 
+               "PAIR_ID", 
+               "REFERENCE", 
+               "ISOLATE")
+
+intergenic_regions_annotated <- read_tsv("Ideas_Grant_2020_analysis/Raw_data/all_mutated.intergenic.annotated.bed",
+                                         col_names = col_names) %>%
+  select(CHROM = CHROM_intergenic, 
+         START, 
+         END, 
+         START_flank_prot, 
+         END_flank_prot, 
+         STRAND_flank_prot, 
+         ATTRIBUTES_flank_prot, 
+         POS, 
+         PAIR_ID, 
+         REFERENCE, 
+         ISOLATE) 
+upstream_proteins <- intergenic_regions_annotated %>%
+  group_by(CHROM, START, END, POS, PAIR_ID, REFERENCE, ISOLATE) %>%
+  filter(END_flank_prot < POS) %>%
+  rename_at(vars(ends_with("_flank_prot")),
+            funs(str_c(., "_upstream")))
+downstream_proteins <- intergenic_regions_annotated %>%
+  group_by(CHROM, START, END, POS, PAIR_ID, REFERENCE, ISOLATE) %>%
+  filter(START_flank_prot > POS) %>%
+  rename_at(vars(ends_with("_flank_prot")),
+            funs(str_c(., "_downstream")))
+intergenic_regions_annotated <- upstream_proteins %>%
+  left_join(downstream_proteins)
+intergenic_regions_annotated
+
+rm(upstream_proteins, downstream_proteins)
+```
+
+## cd-hit clustering of intergenic regions
+
+``` {r}
+intergenic_clusters_data <- read_tsv("Ideas_Grant_2020_analysis/Raw_data/all_mutated.intergenic.cd-hit.tab") %>%
+  separate(id, into = c("CHROM", "START", "END"), sep = "[:-]", remove = F) %>%
+  rename_at(vars(id, starts_with("clstr")),
+            funs(str_c(., "_intergenic"))) %>%
+  mutate_at(vars(START, END), as.numeric) %>%
+  distinct()
+
+snippy_data_modified_proteins_intergenic_regions <- snippy_data_modified_proteins %>%
+  left_join(intergenic_regions_annotated,
+            by = c("CHROM", "POS", "PAIR_ID", "REFERENCE", "ISOLATE")) %>%
+  left_join(intergenic_clusters_data)
+  
+```
+
+# Mortality switches and phenotypes
+
+```{r}
+df_phenotypes <- read_csv("Ideas_Grant_2020_analysis/Genetic_pairs_table/genetic_pairs_pheno_changes_mortality_switches.csv")
+
+# check available phenotypes
+# mortality
+df_phenotypes %>%
+  select(iso1, iso2, switches) %>%
+  distinct() %>%
+  count(switches)
+
+
+# most mortality phenotypes are not available. Need to recalculate that
+df_all_genetic_pairs_pheno <- read_csv("Ideas_Grant_2020_analysis/Genetic_pairs_table/df_all_genetic_pairs_pheno.csv")
+
+
+df_all_genetic_pairs_pheno %>%
+  select(iso1, iso2, iso1_mortality, iso2_mortality) %>%
+  filter(is.na(iso1_mortality) | is.na(iso2_mortality))
+
+df_all_genetic_pairs_pheno_switches <- df_all_genetic_pairs_pheno %>%
+  mutate(switches = str_c(iso1_mortality, "-", iso2_mortality))
+ 
+# count
+df_all_genetic_pairs_pheno_switches %>%
+  select(iso1, iso2, switches) %>%
+  distinct() %>%
+  count(switches)
+
+# df_mutations_phenotypes <- snippy_data_modified_proteins_intergenic_regions %>%
+#  left_join(df_phenotypes)
+
+
+```
+
+# Analyse mortality switches
+
+No intergenic for now until we have fixed the merging issues above
+
+```{r}
+df_mutations_phenotypes_mortality <- snippy_data_modified_proteins %>%
+  left_join(df_all_genetic_pairs_pheno_switches)
+
+# convergence_all <- df_mutations_phenotypes_mortality %>%
+#   group_by(clstr_prot) %>%
+#   summarise(GENE = str_c(unique(GENE), collapse = "|"), 
+#             n = n_distinct(PAIR_ID),
+#             switches = str_c(switches, collapse = "|"),
+#             mutations = str_c(unique(MUTATION_SHORT), collapse = "|"))
+
+# mortality_convergence <- df_mutations_phenotypes_mortality %>%
+#   group_by(switches, clstr_prot) %>%
+#   summarise(n = n_distinct(PAIR_ID),
+#             GENE = str_c(unique(GENE), collapse = "|"),
+#             pairs = str_c(str_c(iso1, "-", iso2), collapse = "|"),
+#             mutations = str_c(unique(MUTATION_SHORT), collapse = "|"))
+```
+
+# Try with smaller dataset
+
+```{r}
+# df_phenotypes_no_dup <- df_phenotypes %>%
+#   rowwise() %>%
+#   mutate(key = paste(sort(c(iso1, iso2, switches)), collapse = "")) %>%
+#   #select(iso1, iso2, switches, key)
+#   distinct(key, .keep_all = T) %>%
+#   ungroup()
+# 
+# df_mutations_phenotypes_no_dup <- snippy_data_modified_proteins %>%
+#   right_join(df_phenotypes_no_dup)
+# 
+# convergence_all <- df_mutations_phenotypes_no_dup %>%
+#   drop_na(clstr_prot) %>%
+#   group_by(clstr_prot, clstr_size_prot) %>%
+#   summarise(gene = str_c(unique(GENE), collapse = "|"),
+#             n = n_distinct(PAIR_ID),
+#             switches = str_c(switches, collapse = "|"))
+# 
+# convergence_mortality <- df_mutations_phenotypes_no_dup %>%
+#   drop_na(clstr_prot) %>%
+#   filter(switches %in% c("Survived-Died", "Died-Survived")) %>%
+#   group_by(clstr_prot, clstr_size_prot) %>%
+#   summarise(gene = str_c(unique(GENE), collapse = "|"),
+#             product = str_c(unique(PRODUCT), collapse = "|"),
+#             mutations = str_c(unique(MUTATION_SHORT), collapse = "|"),
+#             n = n_distinct(PAIR_ID), n_references = n_distinct(REFERENCE))
+# 
+# convergence_mortality_control <- df_mutations_phenotypes_no_dup %>%
+#   drop_na(clstr_prot) %>%
+#   filter(switches %in% c("Survived-Survived", "Died-Died")) %>%
+#   group_by(clstr_prot, clstr_size_prot) %>%
+#   summarise(gene = str_c(unique(GENE), collapse = "|"),
+#             product = str_c(unique(PRODUCT), collapse = "|"),
+#             mutations = str_c(unique(MUTATION_SHORT), collapse = "|"),
+#             n = n_distinct(PAIR_ID), n_references = n_distinct(REFERENCE))
+
+```
+
+# Try again on the large dataset
+
+## Select pairs
+
+We need a non-symmetric dataset
+
+```{r}
+require(harrietr)
+
+snp.dist.mat <- read.csv("Data_analysis/Genetic_pairs_analysis/VANANZ_core.aln.dist.mat", sep = "\t")  %>%
+  as.matrix(.)
+str(snp.dist.mat)
+
+
+# put 1st column as row name and remove 1st column
+row.names(snp.dist.mat) <- snp.dist.mat[,1]
+snp.dist.mat <- snp.dist.mat[,2:845]
+str(snp.dist.mat)
+snp.dist.df <- harrietr::melt_dist(snp.dist.mat) %>%
+  mutate(dist = as.integer(dist)) %>%
+  filter(iso1 != "Reference") # remove reference
+str(snp.dist.df)
+
+close_strain.df <- snp.dist.df %>%
+  filter(dist <= 30)
+nrow(close_strain.df)
+
+# check that there are no duplicate pairs
+df_close_pairs <- close_strain.df %>%
+  distinct(iso1, iso2)
+nrow(df_close_pairs)
+```
+
+# Filter existing dataset of mutations
+
+```{r}
+# df_mutations_phenotypes_mortality_non_symmetric <- df_mutations_phenotypes_mortality %>%
+#   right_join(close_strain.df)
+# 
+# df_convergence_mortality_non_symmetric <- df_mutations_phenotypes_mortality %>%
+#   drop_na(clstr_prot) %>%
+#   filter(switches %in% c("Survived-Died", "Died-Survived")) %>%
+#   group_by(clstr_prot, clstr_size_prot) %>%
+#   summarise(gene = str_c(unique(GENE), collapse = "|"),
+#             product = str_c(unique(PRODUCT), collapse = "|"),
+#             mutations = str_c(unique(MUTATION_SHORT), collapse = "|"),
+#             n = n_distinct(PAIR_ID), n_references = n_distinct(REFERENCE))
+# 
+# df_convergence_mortality_non_symmetric_long <- df_mutations_phenotypes_mortality %>%
+#   drop_na(clstr_prot) %>%
+#   filter(switches %in% c("Survived-Died", "Died-Survived")) %>%
+#   filter(EFFTYPE != "synonymous_variant") %>%
+#   group_by(clstr_prot, clstr_size_prot) %>%
+#   mutate(n = n_distinct(PAIR_ID), 
+#          n_references = n_distinct(REFERENCE)) %>%
+#   select(n_references, n, everything()) %>%
+#   filter(n_references > 1)
+```
+
+# Try creating independent pairs for mortality switches
+
+```{r}
+df_mortality_close_pairs_indep <- df_all_genetic_pairs_pheno_switches %>%
+  right_join(df_close_pairs) %>%
+  filter(switches %in% c("Survived-Died", "Died-Survived")) %>%
+  arrange(iso1) %>%
+  mutate(same_iso1 = if_else(row_number() == 1, FALSE, lag(iso1) == iso1)) %>%
+  filter(!same_iso1) %>%
+  arrange(iso2) %>%
+  mutate(same_iso2 = if_else(row_number() == 1, FALSE, lag(iso2) == iso2)) %>%
+  filter(!same_iso2) %>%
+  select(iso1, same_iso1, iso2, same_iso2, everything())
+
+
+df_mutations_phenotypes_mortality_indep <- snippy_data_modified_proteins %>%
+  right_join(df_mortality_close_pairs_indep) 
+
+df_convergence_mortality_indep <- df_mutations_phenotypes_mortality_indep %>%
+  drop_na(PRODUCT) %>%
+  filter(EFFTYPE != "synonymous_variant") %>%
+  group_by(clstr_prot, clstr_size_prot) %>%
+   mutate(n = n_distinct(PAIR_ID), 
+         n_references = n_distinct(REFERENCE)) %>%
+  select(n_references, n, clstr_prot, clstr_size_prot, GENE, PRODUCT, MUTATION_SHORT, everything()) %>%
+  arrange(clstr_prot, desc(n_references))
+
+df_convergence_mortality_indep
+
+n_distinct(df_convergence_mortality_indep$PAIR_ID)
+
+t_mortality_indep <- df_convergence_mortality_indep %>%
+  distinct(n_references, n, clstr_prot, clstr_size_prot, GENE, PRODUCT, MUTATION_SHORT, nebraska_locus_tag, neb_mutant_id, neb_gene, neb_product) %>%
+  group_by(n_references, clstr_prot, clstr_size_prot, nebraska_locus_tag, neb_mutant_id, neb_gene, neb_product) %>%
+  summarise_at(vars(GENE, PRODUCT, MUTATION_SHORT),
+               funs(str_c(unique(.), collapse = "|")))
+  
+  
+```
+
+# Same with controls
+
+```{r}
+df_mortality_close_pairs_indep_controls <- df_all_genetic_pairs_pheno_switches %>%
+  right_join(df_close_pairs) %>%
+  drop_na(switches) %>%
+  filter(!switches %in% c("Survived-Died", "Died-Survived")) %>%
+  arrange(iso1) %>%
+  mutate(same_iso1 = if_else(row_number() == 1, FALSE, lag(iso1) == iso1)) %>%
+  filter(!same_iso1) %>%
+  arrange(iso2) %>%
+  mutate(same_iso2 = if_else(row_number() == 1, FALSE, lag(iso2) == iso2)) %>%
+  filter(!same_iso2) %>%
+  select(iso1, same_iso1, iso2, same_iso2, everything())
+
+
+df_mutations_phenotypes_mortality_indep_controls <- snippy_data_modified_proteins %>%
+  right_join(df_mortality_close_pairs_indep) 
+
+n_distinct(df_mutations_phenotypes_mortality_indep_controls$PAIR_ID)
+
+df_convergence_mortality_controls <- df_mutations_phenotypes_mortality_indep %>%
+  drop_na(PRODUCT) %>%
+  filter(EFFTYPE != "synonymous_variant") %>%
+  group_by(clstr_prot, clstr_size_prot) %>%
+   mutate(n = n_distinct(PAIR_ID), 
+         n_references = n_distinct(REFERENCE)) %>%
+  select(n_references, n, clstr_prot, clstr_size_prot, GENE, PRODUCT, MUTATION_SHORT, everything()) %>%
+  arrange(clstr_prot, desc(n_references))
+
+t_controls <- df_convergence_mortality_controls %>%
+  distinct(n_references, n, clstr_prot, clstr_size_prot, GENE, PRODUCT, MUTATION_SHORT) %>%
+  group_by(n_references, clstr_prot, clstr_size_prot) %>%
+  summarise_at(vars(GENE, PRODUCT, MUTATION_SHORT),
+               funs(str_c(unique(.), collapse = "|")))
+```
+
+## Ideas
+
+unique mutations for each lethal strain
+
+tree with mutations
+
+as many switches as lethal strains
+
+```{r}
+df_mortality_close_clusters <- df_all_genetic_pairs_pheno_switches %>%
+  arrange(iso2) %>%
+  filter(switches %in% c("Survived-Died")) %>%
+  group_by(iso2) %>%
+  mutate(iso_cluster = str_c(iso2, "-cluster")) %>%
+  # rowwise() %>%
+  # mutate(key = str_c(sort(c(iso1, iso2)), collapse = "")) %>%
+  # select(iso1, iso2, switches, iso_cluster, key) %>%
+  # distinct(key, .keep_all = T) %>%
+  select(iso1, iso2, switches, iso_cluster)
+
+df_mortality_close_clusters %>%
+  .$iso_cluster %>%
+  n_distinct()
+  
+df_mortality_close_clusters %>%
+  ggplot(aes(x = fct_infreq(iso_cluster))) +
+  geom_bar() +
+  coord_flip() +
+  labs(x = "") +
+  theme_bw()
+
+df_mutations_phenotypes_mortality_close_clusters <- snippy_data_modified_proteins %>%
+  right_join(df_mortality_close_clusters) 
+
+df_convergence_mortality_clusters <- df_mutations_phenotypes_mortality_close_clusters %>%
+  drop_na(PRODUCT) %>%
+  filter(EFFTYPE != "synonymous_variant") %>%
+  group_by(clstr_prot, clstr_size_prot) %>%
+   mutate(n_clusters = n_distinct(iso_cluster), 
+          n_pairs = n_distinct(PAIR_ID),
+         n_references = n_distinct(REFERENCE)) %>%
+  select(n_references, n_clusters, n_pairs, clstr_prot, clstr_size_prot, GENE, PRODUCT, MUTATION_SHORT, iso_cluster, PAIR_ID, switches, everything()) %>%
+  arrange(clstr_prot, desc(n_clusters))
+
+t_mortality_clusters <- df_convergence_mortality_clusters %>%
+  group_by(clstr_prot) %>%
+  mutate(SEQUENCE_prot = SEQUENCE_prot[1]) %>%
+  distinct(n_references, n_clusters, n_pairs, clstr_prot, clstr_size_prot, SEQUENCE_prot, GENE, PRODUCT, MUTATION_SHORT, nebraska_locus_tag, neb_mutant_id, neb_gene, neb_product) %>%
+  group_by(n_clusters, n_pairs, clstr_prot, clstr_size_prot, SEQUENCE_prot, nebraska_locus_tag, neb_mutant_id, neb_gene, neb_product) %>%
+  summarise_at(vars(GENE, PRODUCT, MUTATION_SHORT),
+               funs(str_c(unique(.), collapse = "|")))%>%
+  mutate(phenotype = "SAB mortality") %>%
+  arrange(desc(n_clusters))
+t_mortality_clusters
+
+```
+
+# Convergence analysis of growth rate
+
+## Explore growth rate
+
+```{r}
+df_phenotypes
+
+for (var in str_subset(colnames(df_phenotypes), "iso1_.*_OD")){
+  p <- ggdensity(data = df_phenotypes, x = var, fill = "red") +
+    theme_bw()
+  
+  print(p)
+}
+
+```
+
+```{r}
+df_phenotypes %>%
+  ggplot(aes(x = abs(delta_AUC_OD))) +
+  geom_density(fill = "red") +
+  theme_bw()
+
+df_plot <- df_phenotypes %>%
+  mutate_at(vars(matches("delta_.*_OD")),
+            abs)
+
+for (var in str_subset(colnames(df_plot), "delta_.*_OD")){
+  p <- ggdensity(data = df_plot, x = var, fill = "red") +
+    theme_bw()
+  
+  print(p)
+}
+```
+
+
+## Generate dataset of clusters of discordant growth 
+
+Based on the exploration above, we define a delta AUC threshold of 30 for discordant pairs (60 would be a more stringent one)
+
+```{r}
+df_growth_close_clusters <- df_phenotypes %>%
+  arrange(iso2) %>%
+  filter(delta_AUC_OD < - 10) %>%
+  group_by(iso2) %>%
+  mutate(iso_cluster = str_c(iso2, "-cluster")) %>%
+  ungroup() %>%
+  distinct(iso1, .keep_all =T)  %>%
+  select(iso1, iso2, iso_cluster, delta_AUC_OD, iso1_AUC_OD, iso2_AUC_OD)
+
+df_growth_close_clusters %>%
+  .$iso_cluster %>%
+  n_distinct()
+  
+df_growth_close_clusters %>%
+  ggplot(aes(x = fct_infreq(iso_cluster))) +
+  geom_bar() +
+  coord_flip() +
+  labs(x = "") +
+  theme_bw()
+
+
+```
+
+
+## Convergence analysis of growth
+
+```{r}
+df_mutations_growth_close_clusters <- snippy_data_modified_proteins %>%
+  right_join(df_growth_close_clusters) 
+nrow(df_mutations_growth_close_clusters)
+
+df_convergence_growth_clusters <- df_mutations_growth_close_clusters %>%
+  drop_na(PRODUCT) %>%
+  filter(EFFTYPE != "synonymous_variant") %>%
+  group_by(clstr_prot, clstr_size_prot) %>%
+   mutate(n_clusters = n_distinct(iso_cluster), 
+          n_pairs = n_distinct(PAIR_ID),
+         n_references = n_distinct(REFERENCE)) %>%
+  select(n_references, n_clusters, n_pairs, clstr_prot, clstr_size_prot, GENE, PRODUCT, MUTATION_SHORT, iso_cluster, PAIR_ID, delta_AUC_OD, everything()) %>%
+  arrange(clstr_prot, desc(n_clusters))
+
+t_growth_clusters <- df_convergence_growth_clusters %>%
+  group_by(clstr_prot) %>%
+  mutate(SEQUENCE_prot = SEQUENCE_prot[1]) %>%
+  distinct(n_references, n_clusters, n_pairs, clstr_prot, clstr_size_prot, SEQUENCE_prot, GENE, PRODUCT, MUTATION_SHORT, nebraska_locus_tag, neb_mutant_id, neb_gene, neb_product) %>%
+  group_by(n_clusters, n_pairs, clstr_prot, clstr_size_prot, SEQUENCE_prot, nebraska_locus_tag, neb_mutant_id, neb_gene, neb_product) %>%
+  summarise_at(vars(GENE, PRODUCT, MUTATION_SHORT),
+               funs(str_c(unique(.), collapse = "|"))) %>%
+  mutate(phenotype = "Growth rate (AUC)") %>%
+  arrange(desc(n_clusters))
+```
+
+
+# Convergence analysis of cytotoxicity
+
+## Explore cytotoxicity
+
+```{r}
+for (var in str_subset(colnames(df_phenotypes), "iso1_.*_death")){
+  p <- ggdensity(data = df_phenotypes, x = var, fill = "blue") +
+    theme_bw()
+  
+  print(p)
+}
+```
+
+
+```{r}
+df_plot <- df_phenotypes %>%
+  mutate_at(vars(matches("delta_.*_death")),
+            abs)
+
+for (var in str_subset(colnames(df_plot), "delta_.*_death")){
+  p <- ggdensity(data = df_plot, x = var, fill = "blue") +
+    theme_bw()
+  
+  print(p)
+}
+```
+
+
+## Generate dataset of clusters of discordant cell death 
+
+```{r}
+df_cell_death_close_clusters <- df_phenotypes %>%
+  arrange(iso2) %>%
+  filter(delta_AUC_death < - 40) %>%
+  group_by(iso2) %>%
+  mutate(iso_cluster = str_c(iso2, "-cluster")) %>%
+  ungroup() %>%
+  distinct(iso1, .keep_all =T)  %>%
+  select(iso1, iso2, iso_cluster, delta_AUC_death, iso1_AUC_death, iso2_AUC_death)
+
+
+df_cell_death_close_clusters %>%
+  .$iso_cluster %>%
+  n_distinct()
+  
+df_cell_death_close_clusters %>%
+  ggplot(aes(x = fct_infreq(iso_cluster))) +
+  geom_bar() +
+  coord_flip() +
+  labs(x = "") +
+  theme_bw()
+```
+
+
+## Convergence analysis of cytotoxicity
+
+```{r}
+df_mutations_cell_death_close_clusters <- snippy_data_modified_proteins %>%
+  right_join(df_cell_death_close_clusters) 
+nrow(df_mutations_cell_death_close_clusters)
+
+df_convergence_cell_death_clusters <- df_mutations_cell_death_close_clusters %>%
+  drop_na(PRODUCT) %>%
+  filter(EFFTYPE != "synonymous_variant") %>%
+  group_by(clstr_prot, clstr_size_prot) %>%
+   mutate(n_clusters = n_distinct(iso_cluster), 
+          n_pairs = n_distinct(PAIR_ID),
+         n_references = n_distinct(REFERENCE)) %>%
+  select(n_references, n_clusters, n_pairs, clstr_prot, clstr_size_prot, GENE, PRODUCT, MUTATION_SHORT, iso_cluster, PAIR_ID, delta_AUC_death, everything()) %>%
+  arrange(clstr_prot, desc(n_clusters))
+
+t_cell_death_clusters <- df_convergence_cell_death_clusters %>%
+  group_by(clstr_prot) %>%
+  mutate(SEQUENCE_prot = SEQUENCE_prot[1]) %>%
+  distinct(n_references, n_clusters, n_pairs, clstr_prot, clstr_size_prot, SEQUENCE_prot, GENE, PRODUCT, MUTATION_SHORT, nebraska_locus_tag, neb_mutant_id, neb_gene, neb_product) %>%
+  group_by(n_clusters, n_pairs, clstr_prot, clstr_size_prot, SEQUENCE_prot, nebraska_locus_tag, neb_mutant_id, neb_gene, neb_product) %>%
+  summarise_at(vars(GENE, PRODUCT, MUTATION_SHORT),
+               funs(str_c(unique(.), collapse = "|"))) %>%
+  mutate(phenotype = "Cell death (AUC)")
+```
+
+## Merge datasets
+
+```{r}
+t <- bind_rows(t_mortality_clusters,
+               t_growth_clusters,
+               t_cell_death_clusters)
+
+t_convergent <- t %>%
+  ungroup() %>%
+  select(clstr_prot, starts_with("neb"), n_clusters, phenotype) %>%
+  pivot_wider(names_from = phenotype, names_prefix = "n_clusters_", values_from = n_clusters, values_fill = list(n_clusters = 0)) %>%
+  left_join(t) %>%
+   group_by_at(vars(clstr_prot, starts_with("n_clusters_"),
+                    starts_with("neb"))) %>%
+  summarise_at(vars(GENE, PRODUCT, MUTATION_SHORT),
+               funs(str_c(unique(.), collapse = "|")))
+
+write_csv(t_convergent,
+          "Ideas_Grant_2020_analysis/Convergence_analysis_tables/convergence_analysis_clusters_reduntant_controls.csv")
+```
+
+# Summarise data (for Venn diagram): all mutated genes
+
+```{r}
+t_venn <- t_convergent %>%
+  ungroup() %>%
+  mutate_at(vars(starts_with("n_clusters")),
+            funs(mutated = as.integer(. > 0))) %>%
+  unite(col = "intersect", ends_with("mutated"), sep = "") %>%
+  mutate(intersect = recode(intersect,
+                            `111` = "all",
+                            `100` = "SAB mortality only",
+                            `110` = "SAB mortality and growth rate",
+                            `101` = "SAB mortality and cell death",
+                            `011` = "Growth rate and cell death",
+                            `010` = "Growth rate only",
+                            `011` = "Growth rate and cell death",
+                            `001` = "Cell death only"))
+
+t_venn_synthesis <- t_venn %>%
+  count(intersect)
+```
+
+# Summarise data (for Venn diagram): genes mutated at least 2 times (convergent)
+
+```{r}
+t_venn_stringent <- t_convergent %>%
+  ungroup() %>%
+  mutate_at(vars(starts_with("n_clusters")),
+            funs(mutated = as.integer(. > 1))) %>%
+  unite(col = "intersect", ends_with("mutated"), sep = "") %>%
+  filter(intersect != "000") %>%
+  mutate(intersect = recode(intersect,
+                            `111` = "all",
+                            `100` = "SAB mortality only",
+                            `110` = "SAB mortality and growth rate",
+                            `101` = "SAB mortality and cell death",
+                            `011` = "Growth rate and cell death",
+                            `010` = "Growth rate only",
+                            `011` = "Growth rate and cell death",
+                            `001` = "Cell death only"))
+
+t_venn__stringent_synthesis <- t_venn_stringent %>%
+  count(intersect)
+```
+
+
+## Import tree
+
+```{r}
+library(ggtree)
+tree <- read.tree("Ideas_Grant_2020_analysis/Raw_data/VANANZ_phenotypes_n843.tree") %>%
+  phytools::midpoint.root()
+ggtree(tree, layout = "circular")
+```
+
+## Show pairs on the tree
+
+```{r}
+mortality_close_clusters_isolates_iso1 <- df_mortality_close_clusters %>%
+  separate(switches, into = c("iso1_mortality", "iso2_mortality")) %>%
+  ungroup() %>%
+  select(starts_with("iso1")) %>%
+  rename(ISOLATE = iso1, mortality = iso1_mortality)
+
+mortality_close_clusters_isolates_iso2 <- df_mortality_close_clusters %>%
+  separate(switches, into = c("iso1_mortality", "iso2_mortality")) %>%
+  ungroup() %>%
+  select(starts_with("iso2")) %>%
+ rename(ISOLATE = iso2, mortality = iso2_mortality)
+
+mortality_close_clusters_isolates <- bind_rows(mortality_close_clusters_isolates_iso1,
+                                               mortality_close_clusters_isolates_iso2) %>%
+  distinct()
+
+ggtree(tree, layout = "circular") %<+% mortality_close_clusters_isolates +
+  geom_point2(aes(subset = !is.na(mortality), colour = mortality))
+```
+
+

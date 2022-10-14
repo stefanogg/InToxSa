@@ -1,0 +1,156 @@
+---
+title: "Summary of within-host pairs with phenotypic changes"
+author: "Stefano Giulieri"
+date: "10/03/2020"
+output: html_document
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = here::here())
+msg <- stringr::str_c("My directory is ", here::here())
+print(msg)
+```
+
+### Library
+
+```{r message=FALSE, warning=TRUE}
+library(tidyverse)
+library(magrittr)
+```
+
+## Remove content from the environment (optional)
+
+```{r}
+rm(list = ls())
+```
+
+# Get list of mutations
+
+```{r message=F}
+mutations_data <- read_csv("../VANESSA_ANZCOSS/dataframes/variants_n182.csv")
+mutated_genes <- mutations_data %>%
+  filter(!eff_category %in% c("non coding regions", "synonymous")) 
+```
+
+# Get matching Sa_USA300_FPR3757 genes
+
+On the server, we perform a `blastn` analysis using the nucleotide sequences of the 26 genes as the query and the multifasta file containing the genes of Sa_USA300_FPR3757 as database. This allows us to match the gene annotations
+
+```{r}
+blastn_data <- read_tsv("Within_host_analysis/within_host_all_genes_Sa_USA300_FPR3757_blastn.tab")
+aa_seq <- read_tsv("Within_host_analysis/proteins_unique_nov16.tab", col_names = c("FASTA_ID", "AA_SEQ")) %>%
+  transmute(LOCUS_TAG = str_remove(FASTA_ID, "\\|MUT-\\d{3}\\|"), within_host_aa_seq = AA_SEQ)
+df_blastn <- blastn_data %>%
+  mutate(LOCUS_TAG = str_remove(QUERY, "\\|MUT-\\d{3}\\|")) %>%
+  select(LOCUS_TAG, nebraska_locus_tag = SEQUENCE) %>%
+  left_join(aa_seq)
+```
+
+# Annotate mutated genes with Nebraska data
+
+```{r}
+aa_seq <- read_tsv("Within_host_analysis/Sa_USA300_FPR3757.tab", col_names = c("nebraska_locus_tag", "nebraska_aa_seq"))
+df_nebraska <- read_csv("Within_host_analysis/NTML 384-well Array well identification.csv") %>%
+  rename(nebraska_locus_tag = `Accession Number`) %>%
+  right_join(aa_seq)
+```
+
+# Annotated mutated genes with Nebraska data
+
+```{r}
+df_genes_annot <- mutated_genes %>%
+  left_join(df_blastn) %>%
+  left_join(df_nebraska)
+```
+
+
+# Get all mutations from pairs with phenotypic changes
+
+```{r}
+pairs <- c("VAN-024", "VAN-050", "VAN-160", "VSS-137", "VSS-541")
+df_nebraska_to_test <- df_genes_annot %>%
+  filter(studyid %in% pairs) %>%
+  drop_na(nebraska_locus_tag) %>%
+  group_by(nebraska_locus_tag, nebraska_aa_seq) %>%
+  summarise(pairs = str_c(unique(studyid), collapse = "##"),
+            mutations = str_c(unique(MUTATION), collapse = "##")) %>%
+  left_join(df_nebraska)
+
+df_nebraska_to_test %>%
+  write_csv("Within_host_analysis/dataframes/nebraska_mutants_to_test.csv")
+```
+
+# Check if Romain's convergent genes are also mutated in clinical pairs
+
+```{r}
+# Nebraska mutants
+neb <- c("NE89", "NE81", "NE29")
+df_neb <- df_genes_annot %>%
+  filter(`Strain Name` %in% neb)
+df_neb
+```
+
+There are no clinical pairs with the same mutated genes. We are now going to gather a broader understanding of these mutations in the VANANZ cohort
+
+# Get LOCUS TAG of the genes on reference BPH2947
+
+```{r}
+blastn_data <- read_tsv("Within_host_analysis/BPH2947_FPR3757_blastn.tab")
+df_blast <- blastn_data %>%
+  mutate(LOCUS_TAG = str_remove(QUERY, "\\|MUT-\\d{3}\\|")) %>%
+  select(LOCUS_TAG, nebraska_locus_tag = SEQUENCE)
+df_neb_BPH2947 <- df_nebraska %>%
+  left_join(df_blast) %>%
+  filter(`Strain Name` %in% neb)
+```
+
+# List of LOCUS TAG for the server
+
+```{r}
+write_lines(df_neb_BPH2947$LOCUS_TAG, "~/Documents/Transfer_with_server/neb_BPH2947_genes.txt")
+```
+
+# List of Neb mutants from the meta-analysis
+
+```{r}
+col_names <- c("QUERY", "SEQUENCE", "ID", "LENGTH", "N_MISMATCH", "N_GAP", "Q_START", "Q_END", "S_START", "S_END", "EVALUE", "BITSCORE")
+blastp_data <- read_tsv("Within_host_analysis/meta-analysis_clusters_FPR3757_blastp.tab", col_names = col_names)
+aa_seq <- read_tsv("Within_host_analysis/meta-analysis_clusters_aa.tab", col_names = c("meta_fasta_id", "meta_aa_seq"))
+df_blastp <- blastp_data %>%
+  group_by(QUERY) %>%
+  filter(ID == max(ID)) %>%
+  select(nebraska_locus_tag = SEQUENCE, meta_fasta_id = QUERY) %>%
+  left_join(aa_seq)
+df_neb_meta <- df_nebraska %>%
+  right_join(df_blastp) %>%
+  select(-meta_aa_seq)
+write_csv(df_neb_meta, "Within_host_analysis/dataframes/nebraska_mutants_meta_analysis.csv")
+```
+
+# List of Neb mutants from overlap with whost
+
+
+```{r}
+col_names <- c("QUERY", "SEQUENCE", "ID", "LENGTH", "N_MISMATCH", "N_GAP", "Q_START", "Q_END", "S_START", "S_END", "EVALUE", "BITSCORE")
+blastp_data <- read_tsv("Within_host_analysis/meta_analysis_Genome_Med_2018_proteins_FPR3757_blastp.tab", col_names = col_names)
+df_blastp <- blastp_data %>%
+  group_by(QUERY) %>%
+  filter(ID == max(ID)) %>%
+  select(nebraska_locus_tag = SEQUENCE, meta_fasta_id = QUERY) 
+df_cluster_overlap <- read_csv("../BARISTA/dataframes/cluster_overlap_meta_whost.csv") %>%
+  rename(meta_fasta_id = rep_id) %>%
+  left_join(df_blastp)
+df_neb_meta_overlap <- df_cluster_overlap %>%
+  left_join(df_nebraska)
+write_csv(df_neb_meta_overlap, "Within_host_analysis/dataframes/nebraska_mutants_meta_analysis_overlap.csv")
+```
+
+# Export df_nebraska
+
+```{r}
+write_csv(df_nebraska, "Within_host_analysis/dataframes/nebraska_all_proteins.csv")
+```
+

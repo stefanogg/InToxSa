@@ -1,0 +1,402 @@
+---
+title: "Create monophyletic pairs"
+author: "Stefano Giulieri"
+date: "08/02/2021"
+output: html_document
+---
+
+Here we inspect the ST239 subtree and define clusters of contrasting clinical mortality 
+
+```{r setup, include=F}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = here::here())
+setwd(here::here())
+print(paste("My working directory is:" ,here::here()))
+```
+
+
+```{r message=F}
+library(tidyverse)
+library(ggtree)
+library(ape)
+library(phytools)
+rm(list = ls())
+```
+
+# The raw data
+
+Phylogenetic tree
+
+```{r}
+f <- "Genetic_pairs_analysis_Oct_2020/raw_data/trees/all_snippy_BPH2947/iqtree.treefile"
+
+tree <- read.tree(f) %>%
+  phytools::midpoint.root() %>%
+  ape::drop.tip("Refere-ce")
+rm(f)
+```
+
+Calculate cophenetic distance
+
+```{r}
+m <- ape::cophenetic.phylo(tree)
+str(m)
+
+df_dist <- as_tibble(m, rownames = "iso1") %>%
+  pivot_longer(starts_with("BPH"),
+               names_to = "iso2", values_to = "dist")
+
+rm(m)
+```
+
+Metadata
+
+```{r}
+df_metadata_all <- read_csv("Ideas_Grant_2020_analysis/Raw_data/strain_metadata_corrected_mortality_with_controls.csv") %>%
+  filter(sample_id %in% tree$tip.label)
+```
+
+# Functions
+
+Function to get MRCA of strains belonging to the same ST. This assumes that 
+
+* all strains with the same ST are monophyletic
+* there are some on strains within the same clade that have a different ST but these different ST are assumed to one locus changes
+
+Thus, this function defines clonal complex based on the tree topology
+
+```{r}
+get_st_mrca <- function(st){
+  tips <- df_metadata_all %>%
+    filter(ST == st) %>%
+    .$sample_id
+  node <- ape::getMRCA(tree, tips)
+  return(node)
+}
+```
+
+Function to get MRCA of all tips in the cluster
+
+```{r}
+get_cluster_mrca <- function(my_cluster){ 
+  
+  df <- df_cluster_monophy %>%
+    filter(cluster_name == my_cluster)
+  tips <- df$sample_id
+  node <- ape::getMRCA(tree_st239, tips)
+  return(node)
+}
+```
+
+Function to check that a group of tips are monophyletic. It identified the MRCA of the tips and thenreturns a tree dataframe with all descendants. if the tips are monophyletic, the descendant will be the same
+
+```{r}
+check_if_monophyletic <- function(tree, # tree as phylo object
+                                  metadata, # metadata must contain the character columns sample_id, mortality, ST. Sample if must be first colun
+                                  tips){ # character of tips
+  node <- ape::getMRCA(tree, tips)
+  desc <- phytools::getDescendants(tree, node)
+  df <- ggtree(tree) %<+% metadata %>%
+    filter(node %in% desc & isTip) %>%
+    transmute(parent, node, label, ST, mortality, is_in_input_tips = label %in% tips)
+  return(df)
+}
+```
+
+Function to plot mortality on tree
+
+```{r}
+plot_tree_mortality <- function(tree, # tree as phylo object
+                                metadata,# dataframe of metadata. Must contain character columns sample_id, mortality
+                                m_offset = 0){
+  matrix <- df_metadata %>%
+    select(sample_id, mortality) %>%
+    column_to_rownames("sample_id")
+
+p <- gheatmap(ggtree(tree), 
+              matrix , width = .04, colnames = F, color = NA, offset = m_offset) +
+  scale_fill_manual(values = c("navy", "orange"), name = "Patient outcome", na.translate = F)
+
+return(p)
+}
+```
+
+Function to plot mortality clusters as a heatmap
+
+```{r}
+plot_clusters_heatmap <- function(tree, # tree as phylo object
+                                  metadata, # dataframe of metadata. Must contain character columns sample_id, mortality, cluster_name
+                                  offset = 20){ # colnames offset
+  matrix <- metadata %>%
+    ungroup() %>%
+    select(sample_id, mortality, cluster_name) %>%
+    arrange(cluster_name) %>%
+    pivot_wider(names_from = cluster_name, values_from = mortality) %>%
+    column_to_rownames("sample_id")
+  
+  p <- gheatmap(ggtree(tree), 
+                matrix, 
+                colnames_position = "top", colnames_angle = 90, colnames_offset_y = offset, color = NA) +
+    scale_fill_manual(values = c("navy", "orange"), name = "Patient outcome", na.translate = F) 
+  
+  return(p)
+  
+}
+```
+
+# The CC 239 tree
+
+```{r}
+node <- get_st_mrca(239)
+tree_st239 <- treeio::tree_subset(tree, node, levels_back = 0)
+ggtree(tree_st239)
+
+df_metadata <- df_metadata_all %>%
+  filter(sample_id %in% tree_st239$tip.label)
+
+# Number of sequences 
+nrow(df_metadata)
+
+# Breakdown by ST
+df_metadata %>%
+  count(ST, sort = T)
+
+rm(node)
+```
+
+Plot mortality on the tree
+
+```{r}
+plot_tree_mortality(tree_st239, df_metadata)
+```
+
+Colour labels according to mortality and export as large pdf for visualisation of monophyletic clades of lethal case strain - non lethal control strains
+
+```{r}
+ggtree(tree_st239) %<+% df_metadata +
+  geom_tiplab(aes(colour = mortality), align = T, size = 3) +
+  scale_color_manual(values = c("black", "grey"), na.translate = F, guide = F) +
+  xlim(0,.0016)
+
+ggsave("Genetic_pairs_analysis_Oct_2020/figures/tmp/st239_subtree_labels.pdf", width = 12, height = 15)
+```
+
+Export tree dataframe for easy editing
+
+```{r}
+ggtree(tree) %<+% df_metadata %>%
+  .$data %>%
+  select(parent:mortality) %>%
+  filter(isTip) %>%
+  arrange(desc(y)) %>%
+  write_csv("Genetic_pairs_analysis_Oct_2020/processed_data/tmp/st239_tree_data.csv")
+```
+
+The cladogram might help solve tricky cases
+
+```{r}
+ggtree(tree_st239, branch.length = "none") %<+% df_metadata +
+  geom_tiplab(aes(colour = mortality), align = T, size = 3) +
+  scale_color_manual(values = c("black", "grey"), na.translate = F, guide = F)
+```
+
+Alternatively, check that the selected tips are monophyletic
+
+```{r}
+tips <- c("BPH2710", "BPH3382")
+check_if_monophyletic(tree_st239, df_metadata, tips)
+rm(tips)
+```
+
+# Reimport the monophyletic clusters
+
+```{r}
+df_cluster_monophy <- read_csv("Genetic_pairs_analysis_Oct_2020/processed_data/tmp/st239_tree_data_monophyletic_clusters.csv")
+```
+
+Modify the dataframe of clusters
+
+* remove samples/tips not in clusters
+* create a cluster name based on the cluster number and the sample id of the lethal (case) strain
+* join dataframe of cophenetic distance between controls (iso1) and case strains (iso2)
+
+```{r}
+df_cluster_monophy <- df_cluster_monophy %>%
+  drop_na(cluster) %>%
+  group_by(cluster) %>%
+  transmute(sample_id = label, 
+            mortality,
+            ST,
+            cluster_case_sample_id = sample_id[which(mortality == "Died")],
+            cluster_name = str_c(formatC(cluster, digits = 1, format = "d", flag = "0"),
+                                 "_", 
+                                 cluster_case_sample_id),
+            n_strains = n()) %>%
+  left_join(df_dist, by = c("sample_id" = "iso1", 
+                            "cluster_case_sample_id" = "iso2"))
+
+
+```
+
+Plot the new clusters on the tree and check if monophyletic
+
+```{r}
+plot_clusters_heatmap(tree_st239, df_cluster_monophy)
+```
+
+Alternative way to check that cluster are monophyletic
+
+```{r}
+p <- plot_tree_mortality(tree_st239, df_metadata, m_offset = 2e-4)
+
+for (i in unique(df_cluster_monophy %>%  .$cluster_name)){
+   node <- get_cluster_mrca(i)
+   p <- p +
+     geom_cladelabel(node = node, label = i)
+ }
+p
+
+ggsave("Genetic_pairs_analysis_Oct_2020/figures/tmp/st239_subtree_new_clusters.pdf")
+
+rm(node, i)
+```
+
+Explore distribution of the cophenetic distance across the clusters
+
+```{r}
+df_cluster_monophy %>%
+  ggplot(aes(x = dist, fill = cluster_name)) +
+  geom_density() +
+  facet_wrap(~cluster_name, scales = "free_y") +
+  theme(legend.position = "none")
+
+df_cluster_monophy %>%
+  ggplot(aes(x = str_c(cluster_name, " (", n_strains, ")"), 
+             y = dist, 
+             fill = cluster_name)) +
+  geom_boxplot() +
+  coord_flip() +
+  theme(legend.position = "none")
+```
+
+The cluster 17 appears problematic with longer distance to the case strain and heterogeneous distances. It is also too large. Cluster 11 is also very large, but very limited genetic distance, so we will keep it for now
+
+# Reduce size of cluster 17
+
+```{r}
+df_cluster_monophy %>%
+  filter(cluster == 17) %>%
+  arrange(dist)
+# These 4 strains form a monophyletic clade
+tips <- df_cluster_monophy %>%
+  filter(cluster == 17) %>%
+  arrange(dist) %>%
+  slice_head(n = 4) %>%
+  .$sample_id
+tips
+
+# Now edit dataframe
+df_cluster_monophy <- df_cluster_monophy %>%
+  filter(cluster != 17 | 
+           (cluster == 17 & sample_id %in% tips))
+
+rm(tips)
+```
+
+Check new cluster 17 on the tree
+
+```{r}
+p <- plot_tree_mortality(tree_st239, df_metadata, m_offset = 2e-4)
+
+for (i in unique(df_cluster_monophy %>%  .$cluster_name)){
+   node <- get_cluster_mrca(i)
+   p <- p +
+     geom_cladelabel(node = node, label = i)
+ }
+p
+
+rm(node, i, p)
+```
+
+# Add the non CC 239 clusters
+
+What is the dataset of existing clusters?
+
+```{r}
+df_clusters_genetic_dist <- read_csv("Genetic_pairs_analysis_Oct_2020/processed_data/tmp/df_clusters.csv") %>%
+  transmute(sample_id = iso, cluster_case_sample_id = str_split_fixed(iso_cluster, "-", 2)[,1], mortality) %>%
+  left_join(df_metadata_all %>% select(sample_id, ST)) %>%
+  group_by(cluster_case_sample_id) %>%
+  filter(!any(ST == "239"))
+```
+
+Edit to make like the CC239 clusters df. Note the code to create the cluster id is a very messy attempt to generate a unique id number (starting from 18) based on the order of the clusters on tree.
+
+Note that there are a lot of warnings, probably because fct_relevel is not happy that we use a very long vector from the tree data to relevel a few values in the current dataframe!
+
+```{r warning=F}
+df_clusters_genetic_dist <- df_clusters_genetic_dist %>%
+  # add cophenetic distance
+  left_join(df_dist, by = c("sample_id" = "iso1",
+                            "cluster_case_sample_id" = "iso2")) %>%
+  # create cluster id
+  ungroup() %>%
+  # here we reorder the variable cluster case id (defining the lethal strain within the group) based on the order on the tree. We get this order from the y variable in the tree dataframe
+  mutate(cluster_case_sample_id = fct_relevel(cluster_case_sample_id, ggtree(tree) %>% .$data %>% arrange(desc(y)) %>% .$label)) %>%
+  group_by(cluster_case_sample_id) %>%
+  # here we use dplyr::cur_group_id() to generate a unique number id for each group and add it to 17
+  mutate(cluster = 17 + cur_group_id()) %>%
+  mutate(cluster_name = str_c(formatC(cluster, digits = 1, format = "d", flag = "0"),
+                                 "_", 
+                                 cluster_case_sample_id),
+            n_strains = n())
+```
+
+Merge in one dataframe
+
+```{r}
+df_cluster_monophy <- df_cluster_monophy %>%
+  full_join(df_clusters_genetic_dist)
+```
+
+Plot on tree
+
+```{r}
+p <- plot_clusters_heatmap(tree, df_cluster_monophy, offset = 80)
+
+st <- unique(df_cluster_monophy$ST) %>% str_subset("-", negate = T)
+
+for (i in st){
+  node <- get_st_mrca(i)
+  p <- p +
+    geom_highlight(node = node) +
+    geom_cladelabel(node = node, label = i)
+}
+p +
+  ylim(0, 1000)
+
+rm(p, node, i)
+```
+
+Explore cophenetic distance again
+
+```{r}
+df_cluster_monophy %>%
+  ggplot(aes(x = str_c(cluster_name, " (", n_strains, ")"), 
+             y = dist, 
+             fill = cluster_name)) +
+  geom_boxplot() +
+  coord_flip() +
+  theme(legend.position = "none")
+```
+
+# Export processed data
+
+```{r}
+dir <- "Genetic_pairs_analysis_Oct_2020/processed_data/monophyletic_clusters/"
+dir.create(dir)
+
+df_cluster_monophy %>%
+  write_csv(str_c(dir, "df_monophyletic_mortality_clusters.csv"))
+```
+

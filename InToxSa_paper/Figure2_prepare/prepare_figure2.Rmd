@@ -1,0 +1,141 @@
+---
+title: "Prepare figure 2"
+author: "Stefano Giulieri"
+date: "24/05/2022"
+output:
+  html_document:
+    toc: TRUE
+---
+
+```{r setup, include=F}
+knitr::opts_chunk$set(echo = TRUE)
+setwd(stringr::str_c(here::here(), "/InToxSa_paper/Figure2_prepare"))
+msg <- glue::glue("My directory is {getwd()}")
+message(msg)
+```
+
+Here we prepare the GWAS figure of the manuscript.
+
+Design of the figure: left panel: phylogenetic tree right panel: multipanel with PCA of PI uptake, Lineage effects (+/- PI AUC distribution per CC) and Manhattan plot
+
+could also add scatter plot with phenotypic and genetic distance
+
+```{r message=FALSE}
+library(tidyverse)
+library(patchwork)
+library(cols4all)
+rm(list = ls())
+```
+
+# Import tree
+
+```{r}
+p1 <- readRDS("../Phylogeny/processed_data/tree_with_metadata.Rda")
+```
+
+# Import scatter plot
+
+```{r}
+rf_plots <- readRDS("../PCA/processed_data/RF_plots_with_CONTROLS.Rda")
+p2 <- rf_plots[[4]]
+
+p2 <- p2 +
+  labs(x = "PI uptake AUC", y = "Maximum PI uptake rate", colour = "Toxicity cluster") +
+  theme_bw(base_size = 11) +
+  theme(text = element_text(face = "bold"),
+        legend.position = c(0.3,0.7),
+        legend.background = element_blank()) 
+p2
+```
+
+# Import variable importance plot
+
+```{r}
+p3 <- rf_plots[[2]]
+
+# labels <- p3$data$Variable %>%
+#   str_match("(.*)_death_(mean|sd)") %>%
+#   set_colnames(c("variable", "parameter", "statistic")) %>%
+#   as_tibble() %>%
+#   mutate(parameter_long = fct_recode(parameter,
+#     `PI uptake AUC` = "AUC",
+#     `Maximum PI uptake rate` = "max_rate",
+#     `Peak PI uptake` = "max",
+#     `Time of peak PI uptake` = "time_of_max",
+#     `Time of maximum PI uptake rate` = "time_of_max_rate",
+#     `Trough PI uptake`= "min",
+#     `Time of through PI uptake` = "time_of_min"
+#   )) %>%
+#   mutate(parameter_short = fct_recode(parameter,
+#     `AUC` = "AUC",
+#     `Maximum rate` = "max_rate",
+#     `Peak` = "max",
+#     `Time of peak` = "time_of_max",
+#     `Time of maximum rate` = "time_of_max_rate",
+#     `Trough`= "min",
+#     `Time of through` = "time_of_min",
+#     `Final uptake` = "end_point"
+#   )) %>%
+#   mutate(label = str_c(parameter_short, " (", statistic, ")"))
+# labels <- labels$label %>%
+#   set_names(labels$variable)
+
+p3 <- p3 +
+  lims(x = c(20,80), y = c(0,.20)) +
+  labs(x = "Gini index decrease", y = "Accuracy decrease") +
+  theme_bw() +
+  theme(text = element_text(face = "bold"))
+```
+
+# Import Lineage effects
+
+```{r}
+# p4 <- readRDS("../GWAS/Lineages/processed_data/lineage_effects_barplot.Rda")
+p4 <- readRDS("../GWAS/Lineages/processed_data/lineages_rf_clusters_scatterplot.Rda") +
+  ylim(-0.008,0.010) +
+  labs(x = "MDS4", y = "MDS3", colour = "Toxicity cluster", fill ="Toxicity cluster" ) +
+  theme(text = element_text(face = "bold"),
+        legend.position = c(0.25,0.8),
+        legend.background = element_blank())
+p4 
+```
+
+# Import Manhattan plot
+
+```{r}
+pyseer_plots <- readRDS("../GWAS/pyseer_output/processed_data/pyseer_output_toxicity_genes_all_plots.Rda")
+p5 <- pyseer_plots[[7]]
+p5 <- p5 +
+  labs(y = "-lgo10(p)") +
+  theme(legend.position = c(.3,.7),
+        legend.spacing.y = unit(1, units = "points"))
+p5
+```
+
+# Compose final figure
+
+```{r}
+p6 <- wrap_plots(p3, p2, p4, p5, ncol = 2)
+
+p1 + p6 +
+  plot_layout(widths = c(4,4))+
+  plot_annotation(tag_levels = "A")
+
+# ggsave("figures/Figure2.pdf", width = 16, height = 8)
+```
+
+Try another
+
+```{r}
+p4 <- p4 + 
+  labs(x = "", y = "-log(p)") +
+  theme(panel.grid = element_blank(),
+        axis.title = element_text(size = 10),
+        axis.text = element_text(size = 10))
+p5 + patchwork::inset_element(p4, left = 0.05, bottom = .55, right = .5, top = .95)
+```
+
+# Import heritability
+
+Calculate heritability for each PI parameter? (later)?
+

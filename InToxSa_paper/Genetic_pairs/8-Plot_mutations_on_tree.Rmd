@@ -1,0 +1,153 @@
+---
+title: "Plot mutations on phylogenetic tree"
+author: "Stefano Giulieri"
+date: '17/06/2022'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd(stringr::str_c(here::here(), "/InToxSa_paper/Genetic_pairs"))
+msg <- glue::glue("My directory is {getwd()}")
+message(msg)
+```
+
+Here we plot mutations on the phylogenetic tree of the PI pairs
+
+```{r}
+library(tidyverse)
+library(ggtree)
+library(phytools)
+library(ggraph)
+library(tidygraph)
+
+rm(list = ls())
+```
+
+# Raw data
+
+Pairs data
+
+```{r}
+pairs_data <- readRDS("processed_data/PI_pairs_data/pairs_description_with_phylo_dataframe.Rda") %>%
+  filter(PI_pair)
+```
+
+Tree
+
+```{r}
+tree <- read.tree("../../Genetic_pairs_analysis_Oct_2020/raw_data/trees/all_snippy_BPH2947/iqtree.treefile")
+```
+
+We keep only tips included in PI_pairs
+
+```{r}
+tree <- keep.tip(tree, c(pairs_data$iso1, pairs_data$iso2)) %>%
+  midpoint.root() %>%
+  drop.tip("Reference")
+ggtree(tree)
+```
+
+# Tree metadata must be in long format
+
+```{r}
+PI_mean <- readRDS("../../Genetic_pairs_analysis_Oct_2020/processed_data/PI/dataframes/parameters/PI_sample_parameters.Rda") %>%
+  as_tibble() %>%
+  select(sample_id, pi_auc = AUC_death_mean)
+pairs <- readRDS("../../Genetic_pairs_analysis_Oct_2020/processed_data/snippy/df_all_pairs_distances_metadata.Rda") %>%
+  as_tibble() 
+df_mutations <- readRDS("../../../VANANZ_phenotypes_local/Genetic_pairs_analysis_Oct_2020/processed_data/convergence/PI/df_PI_convergent_genes.Rda") 
+top_genes <- readRDS("processed_data/gene_convergence/convergence_plots.Rda")[[1]]$data
+
+iso1_data <- pairs %>%
+  select(sample_id = iso1, CC_iso1) %>%
+  filter(sample_id %in% pairs_data$iso1) %>%
+  distinct() %>%
+  inner_join(PI_mean) 
+
+iso2_data <- pairs %>%
+  select(sample_id = iso2, CC_iso2) %>%
+  filter(sample_id %in% pairs_data$iso2) %>%
+  distinct() %>%
+  inner_join(PI_mean) 
+
+iso2_data <- df_mutations %>%
+  ungroup() %>%
+  inner_join(top_genes %>% ungroup() %>% select(cdhit_symbol, cluster_order)) %>%
+  arrange(cluster_order) %>%
+  select(sample_id = iso2, cdhit_symbol, EFFTYPE_SHORT, MUTATION_SHORT) %>%
+  right_join(iso2_data) %>%
+  distinct()
+
+iso2_data <- iso2_data %>%
+  group_by(sample_id, cdhit_symbol) %>%
+  mutate(allele = str_c(MUTATION_SHORT, collapse = "-")) %>%
+  select(-c(EFFTYPE_SHORT, MUTATION_SHORT)) %>%
+  distinct() %>%
+  pivot_wider(names_from = "cdhit_symbol", values_from = "allele") %>%
+  select(-`NA`)
+
+tree_metadata <- bind_rows(iso1_data, iso2_data)
+```
+
+Plot on tree
+
+```{r}
+p <- ggtree(tree, layout = "rectangular") %<+% tree_metadata
+
+p1 <- p +
+  geom_tree(size = 2) +
+  geom_tippoint(aes(colour = pi_auc, x = x + .005), size = 3) +
+  scale_color_viridis_c(guide = guide_legend(direction = "vertical",title.position = "top"),
+                        name = "PI uptake")
+
+
+```
+
+Add mutations
+
+```{r}
+library(RColorBrewer)
+library(ggnewscale)
+# vector of palettes
+pal <- brewer.pal.info %>%
+  rownames_to_column("palette") %>%
+  filter(category == "seq") %>%
+  mutate(multi_hue = str_detect(palette, "\\w[:upper:]")) %>%
+  filter(multi_hue) %>%
+  .$palette
+# list of palette 
+l_pal <- lapply(pal, brewer.pal, n = 10)
+
+matrix <- tree_metadata %>%
+  select(-c(CC_iso1, pi_auc, CC_iso2)) %>%
+  column_to_rownames("sample_id")
+
+p <- p1
+for (i in 1:10){
+  
+  m <- matrix[,i, drop = F]
+  
+  p <- p + new_scale_fill()
+  
+  # p <- gheatmap(p, m, offset = .01 + .01*(i-1), width = .1, colnames = F, color = NA) +
+  # scale_fill_manual(values = l_pal[[i]], na.translate = F, name = colnames(matrix)[i], guide = guide_legend(order = i+1, direction = "horizontal", nrow = 1, title.position = "top"),
+  #                   labels = NULL)
+   
+  p <- gheatmap(p, m, offset = .005 + .02*(i-1), width = .1, colnames = T, color = NA, colnames_position = "top", colnames_angle = 90, colnames_offset_y = 5, hjust = 0) +
+  scale_fill_manual(values = l_pal[[i]], na.translate = F, name = colnames(matrix)[i], guide = "none")
+  # scale_fill_brewer(palette = pal[i], direction = -1, na.translate = F, name = colnames(matrix)[i], guide = guide_legend(order = i+1, direction = "horizontal", nrow = 1, title.position = "top"),
+  #                   labels = NULL)
+
+}
+p3 <- p +
+  ylim(0,70) +
+  theme(legend.spacing.x = unit(0, "cm"),
+        legend.position = c(.2,.6),
+        legend.title = element_text(face = "bold", size = 16),
+        legend.text = element_text(size = 16))
+p3
+
+saveRDS(p3, "processed_data/gene_convergence/tree_with_mutations.Rda")
+```
+

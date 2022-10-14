@@ -1,0 +1,16 @@
+#!/bin/bash
+
+mkdir extracted
+for var in "$@"
+do
+    for f in `find sources -name "$var"`
+    do
+        groupname=`echo $f | cut -d'/' -f 3`
+        filename=`echo ${f##*/}`
+		echo f
+		echo $group_name
+		echo $filename
+		#cp "$f" extracted/"${groupname}_$filename" -v
+    done
+done
+

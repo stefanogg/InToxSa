@@ -1,0 +1,114 @@
+n_events,feature_type,FEATURE_ID,NCTC8325_chrom,START_promoter,END_promoter,promoter_seq,MUTATION
+1,promoter,U1007,NC_007795,1910672,1910773,aatttatactattttaatctctgactaaAGTTTTACATcgctatcagtaTTATGTATGATTTATTTTAAcaactataaataagcttgaattttgtaactag,A:24 G:0
+1,promoter,U1035,NC_007795,1979093,1979194,tggatggaaacaaccaaattgatgtgtgttTTTTTGTTCTagtgaataatTATTATACAATGAGTATCTAtcctagaattatcaatagtaatggtgattat,A:54 G:0
+1,promoter,U1039,NC_007795,1984221,1984322,agttatctcaatatagttatcgctaagtgcaagaTTTATGTAAAaaaatcgtacaCAGCGTATAATTATGTTGAGatatttttgtgcgttataaaagtaaa,AT:42 A:0/AT:42 A:0
+1,promoter,U1058,NC_007795,2022354,2022455,taaattaattgcaaattctttgttaatttttgttaAGGATGAAACgggaagcacctTATGCTATATTTAAATAAGTacaaagaaagggtgacatcagtgcg,T:47 G:0
+1,promoter,U1068,NC_007795,2033453,2033554,agaagatctatatagttaatgaataatTAATGTACTTttttttagttaGTCATTAAAATAAATTAGTActaattactaaggagaataaaaaatgaaaatta,G:28 A:0
+1,promoter,U1069,NC_007795,2033610,2033711,tagtatattaaatttatttttgCGCTTTCCAAatcaatgtataTGTGTTATATTGTTTATGGGaagtaggtaagcatttcggtgcttacctttttttgttt,C:32 CT:0
+1,promoter,U1073,NC_007795,2035428,2035529,ggatgaaaaagtggataatccttttttaggcaggtacttCGGTACTTGcctattttttTATGTTATAATCTTTCTAGacgtattcaagggacgtcttttta,TA:170 T:0/TA:170 T:0
+1,promoter,U1075,NC_007795,2037378,2037479,attcttatctccttttacccaaaataaaaagacgactaataagccgtcTATTTGATATttatattatggTGTGTTAATTTATATATAGAaaaagggcaaca,T:65 C:0/T:50 G:0/T:65 C:0/T:50 G:0
+1,promoter,U1076,NC_007795,2037749,2037850,aaatgtaaataagttttagtcagtgcttcggtactgactttTTATTTattgttgtaatTATGGTAATATGCAGAAGTgagcaagttggatagatggtggct,A:13 G:0
+1,promoter,U1088,NC_007795,2088812,2088913,tttggtcaaaatttcaagtcataaccttttaattaagttTTGTAACttcaagttattTACGATAAAATAAATTATAAacaaatatttggaggaaaattatg,G:36 A:0/C:36 T:0
+1,promoter,U1177,NC_007795,2257500,2257601,agtcatacattttagaaatataaaaaagattgaacgcTACTTGACAAtgataattgttATCAATAAAATAATAAATGAagttatacatattaaggagtgga,C:32 CA:0
+1,promoter,U1179,NC_007795,2261755,2261856,ataatattggtacaagtctgcaaaaatTGACAATCCccagataaacTGCGTTATGATAAGTGGTAagtacaaaccaatttagccctatttgtccaatccaa,G:145 A:0
+1,promoter,U118,NC_007795,314203,314304,ttattaaatttttattaattttgtagtcttaatcaaaaaataatatatgtCATGTTATATTGAAGGTGCagttgtttttcattctcaagagggggtcaaaa,A:27 G:0/T:27 C:0
+1,promoter,U1214,NC_007795,2333139,2333240,tataattatttttgctcttaataattatATATTGATTTctaattgctccCGTTTTATAATTACTATTGTtgtaaaaaggttagctaagctaactattttgt,C:18 G:0
+1,promoter,U124,NC_007795,328736,328837,attttataggaacttttaaaataaattagatattcATGTTGACAAtttaaaaatgtCGCAGTATATTTAGTTAGACatctaacgaaatggtggtgcaataa,T:69 C:0/A:69 G:0/A:69 G:0
+1,promoter,U1326,NC_007795,2502102,2502203,catcatatattagttgataacgattatcaatgtcgcgtggatttgtgacacatttcttttaaaaattcacaaggttatggggcagaaatgataaagagcca,G:68 A:0/C:68 T:0
+1,promoter,U1342,NC_007795,2520447,2520548,tgtaaaaatactaaaaaatgagatgttttattTATAAtTTtctgcaaattTATGATATTGTTTCTTAATatatcatattaaaaatttgtttttcttaaaca,T:20 C:0/A:20 G:0
+1,promoter,U1343,NC_007795,2524459,2524560,ataaattcgcttttaaaaaatatgagttatctattTAGTTGCCAAagataaaataaTAATGTTTAATAACATCATAtagagtatgttagttttaaatgtcg,G:54 A:0/G:54 A:0/C:54 T:0
+1,promoter,U1350,NC_007795,2533682,2533783,attttaaaaatatttaagcctgaaaatgataaagcggtagggaACGTTTTtctgaaagttAGTGATACAATAGTTTTAAgttgaaatacaggaggatgaat,G:70 A:0
+1,promoter,U1359,NC_007795,2551623,2551724,taacagtattcaaagggataaattaaaatgCCACTATacaagatttgaCCTGTatagtggcatgatttgttatgatatagcgttcgagatgaaactctgca,C:243 T:0/C:243 T:0/C:243 T:0/G:243 A:0
+1,promoter,U1432,NC_007795,2657328,2657429,attaggaacagattacattatgataacaaagcCCGCAAGacacctaatcTCTGTTATAGTTTGTTTTGtcgcaaaactataaaagttataattgtttgcat,C:28 A:1
+1,promoter,U1440,NC_007795,2668209,2668310,catttattaatggcgatggagagatgccttggtagatcaattttATGTTACAaacattgaaattagAGGTATATAaaaaatgcttctgcaatagatgcaat,A:80 G:0/T:80 C:0
+1,promoter,U1441,NC_007795,2673813,2673914,tgaattctctacaataacggaagtttttcttttaATATTGAAATttctcaaggatAGGTCTATACTTTATAAATCgtaattattacgatttataatcaaaa,C:42 A:0
+1,promoter,U1466,NC_007795,2697645,2697746,tgcacaaccttaaaaagttcactaaatagacatttaattgTGTTTTCttgaaagctttCGTGGTAGGATTTATATAAGtaaattgagagaaggaatactat,T:121 TA:0/C:122 CT:0/C:122 CT:0/T:121 TA:0
+1,promoter,U1484,NC_007795,2731511,2731612,tatgaaattttcgactttctttatgtgaatataatCACATGTAAGcgtttgaagaTTGTCTATACTCTAAATGAAttcaaagataaaaggaggaaatagac,AAAG:35 TAAT:0
+1,promoter,U1504,NC_007795,2789158,2789259,attttaaaatcaatacaccgaattttctgaaaaaggTTGTAATGTattgctaaaAATGATAAGTTATTAATCAtattacactttagcgtggtagagaagta,A:55 T:0/T:55 A:0/A:55 T:0/T:55 A:0
+1,promoter,U1505,NC_007795,2795262,2795363,ctgactattattatcatttttatagtcactaCTATTGACTTtgcatcaagtgACTCGTACTATTTTAATATAattctgaaaattcaaaatatagaacatta,A:28 C:0/T:28 G:0/A:28 C:0/T:28 G:0
+1,promoter,U1523,NC_007795,2820954,2821055,tttctatttattcttaatttaaacgaaaaaaaagaTCACTGatgagtcagtGATCTTatgcagataaaactttacggcctttacgacgacggcgcgctaaa,C:33 CT:0
+1,promoter,U203,NC_007795,482168,482269,agtagtaagaaagcacaattcagtattaatctcacggataaaTGGATAATTcaaatcgcaTATGGTAAATTAATAATAAtggctaaaaataatggcgatac,T:38 C:0/A:38 G:0/A:38 G:0
+1,promoter,U227,NC_007795,529493,529594,gctttagcctcttgttatttttatgtaaattatttgatttaatgtTGACGAattctcttgttcAATGTTAATATATTAAAGGttgatgcaagcagaacttt,T:60 C:0
+1,promoter,U228,NC_007795,529535,529636,ttaaagcgtgcaactttttccttagacaataatttatCCTCcaaagttctgcttGCatcaacctttaatatattaacattgaacaagagaattcgtcaaca,T:60 C:0
+1,promoter,U233,NC_007795,538484,538585,ttagaggagcctcatatgtaaatgtatgagggctcttttTTTTGGCAAAatttaagtgatACTTGTAAAATAGAACCTATtatgagtatgatttaagaaaa,C:29 T:0/C:29 T:0
+1,promoter,U268,NC_007795,584803,584904,taaccacacctaattcaacacttttcaaacataaGTATTGACACattgagcaaaaTGATTTTTAATTGTAACTAAtacagttacaattatgaggtgagaaa,A:57 T:0
+1,promoter,U338,NC_007795,701541,701642,tcaatggaaagcgtatgatttcacagcccccctagcTTGTAGAAATcatactttcctTTTTTCAATATATATACAACtattaaatcccataagattgcaga,G:33 GA:0/C:34 CT:0
+1,promoter,U374,NC_007795,756327,756428,ctatgtttgtttttctttgttcgacatttttacgaacaaacgtTTGCTTTTTgtgtgactacTTTGCTAAAATATGTAATGagaaagcaaagagttgagcg,T:180 C:0
+1,promoter,U400,NC_007795,795846,795947,aaatatattgtttgaatataattaataattaattcatcaacagtTAATTATtttaaaaaggtagaTGTTATATAATTTGGCTTGGcgaaaaaatagggtgt,G:15 A:0/G:15 A:0/G:15 A:0/C:15 T:0/G:15 A:0/G:15 A:0/C:15 T:0
+1,promoter,U401,NC_007795,795880,795981,catcaacagttaattattttaaaaaggtagatgttatataatttgGCTTGgcgaaaaaatagggtgTAAGGTAGGTTGTTAattagggaaaattaaggaga,G:15 A:0/G:15 A:0/G:15 A:0/C:15 T:0/G:15 A:0/G:15 A:0/C:15 T:0
+1,promoter,U442,NC_007795,853949,854050,aataaagcacaacaaggagtgtgtaCGTTTTTCAGaactatatcatTCATGTATAATGAATAACATaaatattttttaaaggaggacaacatagtgagttt,G:63 C:0
+1,promoter,U462,NC_007795,889862,889963,tttatttttaaaaacaagtaaacaatttacatacttataatttttgaaaattttcaattTGTGTTATATTGATTTTGTaagatactttaactcacaaagga,C:26 T:0/C:26 T:0
+1,promoter,U480,NC_007795,919878,919979,gactaaatcaaacatttatcgttgtaatacgtttaaataactttattaaaaagtcataaTAGTGTTAAAATGTATTGACgaataaaaagttagttaaaact,A:13 G:0
+1,promoter,U486,NC_007795,928191,928292,tttataaagcaatttattgttctatgtttTATTTGTATAtttaaaattatcCAGTATACAATTATAGCATAtttttggaaacaattatgatattataccat,T:26 TAGA:0/G:26 GTTC:0
+1,promoter,U499,NC_007795,942837,942938,aatagtcaaggttaatttatttgctgcaaatttcaacCACTTTATGTtaaatggacatCAAAGTATAATTGTATTATTattaaattgtgcagtgtataaat,T:28 G:0
+1,promoter,U509,NC_007795,952748,952849,gaattgcttaaacttatcttgcaatttttcacgtCAATTGACCTttatgctacttTCTATTAAAATATCTTTGTTataaaaaatatgatttaaagaggttt,T:43 C:0
+1,promoter,U510,NC_007795,952807,952908,gtcaattgacgtgaaaaattgcaagataagtttaagcaattcttgTAACACAattatccaaaAATGATACAATATAATAATgagtgaaaaaagacgaagaa,T:43 C:0
+1,promoter,U522,NC_007795,976531,976632,ccaaataatagaagcaaagacttaaattttgacacttttttgaCCTCCTaatactacaaatGTAgggcttaacattaattttaagttattacacaatattt,T:15 C:0/A:15 G:0
+1,promoter,U544,NC_007795,1008283,1008384,ctgtatctttttttattaaaacagaactttttcaaatggTTTAACAgtcccatttattTGTGGTACAATTAGTAAGGAtaaaatgaatttctatacaatta,T:74 TA:1
+1,promoter,U560,NC_007795,1033562,1033663,ttaacgacaagagaaaatgtcaattttgtgacacaaataacatttaatttATTGCTATAATGTATATGTtagaaaattttaataagtagaatcatgcatct,TTT:21 ATA:0
+1,promoter,U572,NC_007795,1045459,1045560,tgtcaatatttattttataatcaatttaTTATTGTTATacgaaaatagaTGTGCTAGTATAATTGATAAccattatcaattgcaatggttaatcatctcat,G:29 A:0/G:29 A:0/G:29 A:0/G:29 A:0
+1,promoter,U612,NC_007795,1124101,1124202,caggccaataagacgtttgtcattcgtgcacataacggtacgacgcgcttttgtcattttaatTATGTTAAGATAATAGTAGttatagaagttcaatctat,T:99 C:0
+1,promoter,U62,NC_007795,169165,169266,taagattattacaatgaacaggctttaactgattaATATTGTAATgtgttttctctTATAGTAAAATGTAAGCGATtacacaaatcaactatattttccta,C:37 T:0/G:37 A:0
+1,promoter,U633,NC_007795,1169115,1169216,tacaatagctttataaaacaaagaaaattttaaTTAAAATAtatagcgcacTATGTTATAATGTTTGTATattattgtaaggagtgtttcatcatgaataa,G:23 T:0
+1,promoter,U634,NC_007795,1172507,1172608,tagagcaaaatagaaatgtttatgttttacctggatctATGTTTAAtcctatgacaaaaGGTAATTTAttacgtatccaagaaggtgctaaggtagtatta,G:83 A:0/G:83 A:0
+1,promoter,U641,NC_007795,1193976,1194077,aacttttacaagaatctctgattaatagtgaagtCATTTGTTTCaagcataaactTATGCTATAATTAAGTTGCTtaaaaattagtgaactcaggcagaag,T:76 A:1/T:76 A:1/A:76 T:1
+1,promoter,U65,NC_007795,181976,182077,ttctaataaatttgacatgatgttgtgcctccCTATTCACAAatgtgtaaattTATTCTATACTTTTGTATATcatagtaatctactcaagattattttac,G:49 A:0/G:49 A:0/C:49 T:0
+1,promoter,U650,NC_007795,1217475,1217576,tcaatatagtgcaaaagtgcaaattgatAACTTGACACttatctcctataAACCGTACAATTAATTTGTAtgatttatatataatttcataaagtcatatt,T:33 TTTATGAAATTA:0/T:33 TTTATGAAATTA:0
+1,promoter,U66,NC_007795,182017,182118,cttaaaagattctaaataagtaattatgataatcacTCCTTGTAAAataatcttgagTAGATTACTATGATATACAAaagtatagaataaatttacacatt,G:49 A:0/G:49 A:0/C:49 T:0
+1,promoter,U701,NC_007795,1304725,1304826,atcctttcattagaccttagtacgatttattaagaaatCACTTGCTTTttgaattgtttTTATATAACGTTAATATGTGattattatagtacacaaaaatc,T:40 C:0
+1,promoter,U707,NC_007795,1308821,1308922,ataaaaatcgataatagcatTAATAGATAAacggagataaaTCATCTACAATAAAGAGTATagtaacacaatggcaacggaggggtaaatcaatggaacca,G:66 A:0/G:66 A:0
+1,promoter,U713,NC_007795,1321627,1321728,caagcattttcatattagttatttaAGAATGCGATaattctagactTGTTATAAAATATAGATAAAtcaagtattttaatctagacacttatctattttat,A:17 G:0
+1,promoter,U718,NC_007795,1332362,1332463,taacaattttttatgtaacatttacagtttctaaaaatgaggttaataattcAAGGTTAAGATAAAGATGTaatcaatacaaatactatttgttgttcata,A:25 G:0
+1,promoter,U834,NC_007795,1610794,1610895,actaatcatatcaattacatcaaccaatcgtgtcaagaAACTTTATTAaataacaggaaAATGATATGTTTAAAATAATaatgatgaaataagaggatttt,A:19 G:0
+1,promoter,U850,NC_007795,1646542,1646643,gttagatgattgagcattataccttaataacaTCGTTTATTTatttcataaatTGTAGTATCATAGAACTAATatttaaaaaatgaaacagtagatttagg,G:30 A:0
+1,promoter,U856,NC_007795,1653456,1653557,gtggttacaacccggaaatgatattatcaaacacgctgggggattaCATAAATTcatgaattggGATGGTCCGATCCTTACAGattcaggcggtttccaag,C:147 T:0
+1,promoter,U857,NC_007795,1653490,1653591,aagcaaaaatcattttgggcaacacatatcatttgtggttacaacccggaAATGATATTATCAAACACGctgggggattacataaattcatgaattgggat,C:147 T:0
+1,promoter,U859,NC_007795,1659628,1659729,tgattataaagttccttaaaaaaacaaacaatgACATTGACATgaaacgtcgtcAATGGTAAGATGCAATAGTTgagtagttataagtagctacatacaac,G:78 GT:0/G:78 GT:0/G:78 GT:0
+1,promoter,U898,NC_007795,1724683,1724784,cattttgaaagcgcaatcaaaaatccacaaaattgtaaaggttattacaCTGACTTttccgaaaatTGTGGTAAAATATAATTAAgaaagaacaaggaggc,C:68 T:0/G:68 A:0
+1,promoter,U974,NC_007795,1864358,1864459,agtcatacaagcagaagtgaaatatcgcttctgtttttttattacatatttattgttgaggaaggttgtccgagctggccgaaggagcacgcctggaaagt,A:93 G:0/A:93 G:0/A:93 G:0/T:93 C:0
+1,sRNA,USA300_FPR3757_srn_0100_sRNA6,NA,NA,NA,NA,A:348 C:0/T:348 G:0/A:348 C:0/A:348 C:0
+1,sRNA,USA300_FPR3757_srn_0280_sRNA16,NA,NA,NA,NA,T:144 C:2/T:55 C:0
+1,sRNA,USA300_FPR3757_srn_0390_sRNA24,NA,NA,NA,NA,G:229 A:0/C:229 T:0
+1,sRNA,USA300_FPR3757_srn_0430_sau53,NA,NA,NA,NA,T:196 C:0/T:196 C:0/T:196 C:0/T:196 C:0/A:196 G:0
+1,sRNA,USA300_FPR3757_srn_1000_sRNA88,NA,NA,NA,NA,TGT:32 GC:0/TGT:32 GC:0/ACA:32 GC:0
+1,sRNA,USA300_FPR3757_srn_1030_sRNA91,NA,NA,NA,NA,G:56 T:0/C:56 A:0
+1,sRNA,USA300_FPR3757_srn_1210_sRNA106,NA,NA,NA,NA,A:147 G:0/T:147 C:0
+1,sRNA,USA300_FPR3757_srn_1220_sRNA107,NA,NA,NA,NA,T:94 C:0/A:94 G:0/A:94 G:0/T:94 C:0/T:94 C:0/T:94 C:0/T:94 C:0/A:94 G:0/T:94 C:0
+1,sRNA,USA300_FPR3757_srn_1430_sRNA126,NA,NA,NA,NA,A:160 G:0/A:161 G:0
+1,sRNA,USA300_FPR3757_srn_1470_sRNA129,NA,NA,NA,NA,A:189 T:1/T:179 G:0
+1,sRNA,USA300_FPR3757_srn_1480_sRNA130,NA,NA,NA,NA,A:12 G:1/G:15 A:1/ATCT:17 GTCC:0/ACTG:23 GCTA:0/G:37 A:0
+1,sRNA,USA300_FPR3757_srn_1800_sRNA151,NA,NA,NA,NA,TGGGA:15 GGCGT:0/TGGGA:15 GGCGT:0/TGGGA:15 GGCGT:0/TGGGA:15 GGCGT:0
+1,sRNA,USA300_FPR3757_srn_1920_Teg95,NA,NA,NA,NA,A:59 C:0/A:59 C:0
+1,sRNA,USA300_FPR3757_srn_2310_sRNA194,NA,NA,NA,NA,A:136 G:0
+1,sRNA,USA300_FPR3757_srn_2390_sRNA200,NA,NA,NA,NA,T:41 C:0/A:41 G:0
+1,sRNA,USA300_FPR3757_srn_2460_Teg58,NA,NA,NA,NA,A:113 G:0
+1,sRNA,USA300_FPR3757_srn_2570_sRNA213,NA,NA,NA,NA,G:214 T:0/G:214 T:0
+1,sRNA,USA300_FPR3757_srn_2600_sRNA215,NA,NA,NA,NA,T:296 C:0/T:296 C:0
+1,sRNA,USA300_FPR3757_srn_2660_sRNA219,NA,NA,NA,NA,A:10 T:0
+1,sRNA,USA300_FPR3757_srn_2975_tsr25,NA,NA,NA,NA,T:30 TG:0
+1,sRNA,USA300_FPR3757_srn_3040_Sau50,NA,NA,NA,NA,C:66 A:0/C:66 A:0
+1,sRNA,USA300_FPR3757_srn_3230_Sau6936,NA,NA,NA,NA,T:94 C:0
+1,sRNA,USA300_FPR3757_srn_3270_sRNA259,NA,NA,NA,NA,G:26 A:0/C:26 T:0
+1,sRNA,USA300_FPR3757_srn_3420_Teg89,NA,NA,NA,NA,C:52 T:0
+1,sRNA,USA300_FPR3757_srn_3790_sRNA301,NA,NA,NA,NA,A:28 T:0/A:60 G:0/A:28 T:0/A:60 G:0
+1,sRNA,USA300_FPR3757_srn_3800_sprD,NA,NA,NA,NA,C:32 CT:0
+1,sRNA,USA300_FPR3757_srn_3820_SprX,NA,NA,NA,NA,T:157 C:0/T:157 C:0
+1,sRNA,USA300_FPR3757_srn_3830_sprF1,NA,NA,NA,NA,T:50 G:0/T:50 G:0
+1,sRNA,USA300_FPR3757_srn_3840_sprG1,NA,NA,NA,NA,T:50 G:0/G:113 C:0/G:77 A:0/C:63 A:0/T:50 G:0/G:113 C:0/G:77 A:0/C:63 A:0
+1,sRNA,USA300_FPR3757_srn_3860_sRNA315,NA,NA,NA,NA,T:15 C:0/C:10 T:0
+1,sRNA,USA300_FPR3757_srn_4010_sRNA327,NA,NA,NA,NA,T:132 G:0/A:132 C:0
+1,sRNA,USA300_FPR3757_srn_4280_Sau73,NA,NA,NA,NA,T:250 G:1/A:249 C:1
+1,sRNA,USA300_FPR3757_srn_4420_Teg25,NA,NA,NA,NA,G:216 A:0/C:216 T:0
+1,sRNA,USA300_FPR3757_srn_4550_sprA2,NA,NA,NA,NA,G:104 T:0
+1,sRNA,USA300_FPR3757_srn_4605_tsr34,NA,NA,NA,NA,T:55 C:0/A:55 G:0
+1,sRNA,USA300_FPR3757_srn_4650_Sau6902,NA,NA,NA,NA,C:243 T:0/C:243 T:0/C:243 T:0/G:243 A:0
+1,sRNA,USA300_FPR3757_srn_4930_Sau6872,NA,NA,NA,NA,C:341 T:0/G:341 A:0
+1,sRNA,USA300_FPR3757_srn_5130_Sau6728,NA,NA,NA,NA,C:152 A:1/C:152 A:1
+1,sRNA,USA300_FPR3757_srn_9500_sRNA368,NA,NA,NA,NA,C:10 T:0/AACTC:30 TACTA:0/TCT:40 CCC:0
+1,sRNA,USA300_FPR3757_srn_9525_tsr26,NA,NA,NA,NA,T:27 C:0
+1,sRNA,USA300_FPR3757_srn_9610_tsr4,NA,NA,NA,NA,T:112 A:0/T:112 A:0/A:112 T:0/T:112 A:0
+2,promoter,U1100,NC_007795,2101967,2102068,gtgtggcacattttattccaaaagatgtaataaaacttaacgcaTTTTTGCTTTttataaattgtCAGATTATTATGAAAAAAAGggagtggtaagtatga,CT:53 C:0/CT:53 C:0/CT:34 C:1
+2,promoter,U523,NC_007795,976580,976681,tcaacatttttgatacaattttattaatttttttcccataagCCCTTGTAAAtattgtgtaaTAACTTAAAATTAATGTTAAgccctacatttgtagtatt,T:15 C:0/A:15 G:0/A:35 AT:0
+2,sRNA,USA300_FPR3757_srn_2130_rsaE,NA,NA,NA,NA,C:25 A:0/C:25 A:0/G:52 GT:0
+2,sRNA,USA300_FPR3757_srn_4710_Teg34,NA,NA,NA,NA,A:31 C:0/A:31 C:0/CT:170 C:0
+3,promoter,U1327,NC_007795,2502736,2502837,actaaaaaaaactttacttaagccttaatattgcgtgaaatataataaataAATGATATAATATGATGGTcgcctaacatctcgggcgttactttaacgca,G:33 GT:0/G:33 GT:0/G:33 GT:0/T:34 TA:0/G:33 GT:0/G:33 GT:0/G:33 GT:0/G:33 GT:0/G:33 GT:0/GT:18 G:0/TA:18 T:0/G:104 T:0

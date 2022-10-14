@@ -1,0 +1,849 @@
+---
+title: "VANANZ closely related pairs: mutations"
+author: "Stefano Giulieri"
+date: "13/11/2020"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+Here we check for convergent mutations / convergently mutated genes in genetic pairs of the VANANZ dataset with contrasting phenotypes:
+
+1. iso1: survived - iso2: died
+2. iso1: high toxicity - iso2: low toxicity
+3. iso1: normal growth - iso2: slow growth
+
+# Set/check knitR option and working directory
+
+```{r setup, include=T}
+library(tidyverse)
+library(ggpubr)
+library(harrietr)
+library(here)
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = here())
+setwd(here())
+print(paste("My working directory is:" ,here()))
+rm(list = ls())
+```
+
+# Import raw data
+
+## Snippy output
+
+```{r}
+snippy_data <- read_tsv("Ideas_Grant_2020_analysis/Raw_data/all_pair_id_snps.mask.tab") %>%
+  arrange(PAIR_ID) 
+snippy_data 
+
+# modify snippy output: 
+# 1) generate iso1 and iso2 for merging with the phenotypic analysis
+# 2) modify CHROM (contig name) to be consistent with the labelling in bed files down the track
+# 3) extract mutation effects for easier interpretation
+
+
+source("Functions/all_functions.R")
+snippy_data_modified <- snippy_data %>%
+  mutate(iso1 = str_remove(REFERENCE, ".gbk"),
+         iso2 = ISOLATE,
+         CHROM = str_c(iso1, "_", CHROM)) %>%
+  mutate(pair_id = str_c(iso1, "-", iso2)) %>%
+  rename(old_pair_id = PAIR_ID) %>%
+  separate(EFFECT, 
+           into = c("EFFTYPE", "NUCLEOTIDE_CHANGE", "MUTATION"), 
+           sep = "\\s", 
+           remove = T, 
+           extra = "merge") %>%
+  mutate(NUCLEOTIDE_CHANGE = str_remove(NUCLEOTIDE_CHANGE, "c."),
+         MUTATION = str_remove(MUTATION, "p."),
+         MUTATION_SHORT = aa_convert(MUTATION)) %>%
+  separate(AA_POS, 
+           into = c("AA_POS", "AA_LENGTH"), 
+           sep = "/", 
+           remove = T) %>%
+  mutate_at(vars(starts_with("AA")), 
+            as.numeric)
+snippy_data_modified
+
+snippy_data_modified %>%
+  .$ISOLATE %>%
+  n_distinct()
+
+df_n_mutations <- snippy_data_modified %>%
+  count(pair_id, sort = T)
+df_n_mutations %>%
+  ggplot(aes(x = n)) +
+  geom_histogram(binwidth = 10) +
+  geom_density(aes(y = 10* ..count..)) +
+  theme_bw()
+
+# Genetic distance filter threshold:
+# - n mutation <= 100 indel or SNP as determined by snippy pairwise mapping 
+
+distant_pairs <- df_n_mutations %>%
+  filter(n > 100) %>%
+  .$pair_id
+snippy_data_modified_no_distant_pairs <- snippy_data_modified %>%
+  filter(!pair_id %in% distant_pairs)
+rm(distant_pairs)
+
+df_n_mutations <- snippy_data_modified_no_distant_pairs%>%
+  count(pair_id, sort = T)
+df_n_mutations %>%
+  ggplot(aes(x = n)) +
+  geom_histogram(binwidth = 5) +
+  geom_density(aes(y = 5* ..count..)) +
+  theme_bw()
+
+```
+
+Check filtering: was it symmetric?
+
+# clustering of protein genes (cd-hit)
+
+```{r}
+protein_clusters_data <- read_tsv("Ideas_Grant_2020_analysis/Raw_data/mutated_proteins.cd-hit.tab") %>%
+  rename_all(funs(str_c(., "_prot"))) 
+
+nebraska_clusters <- read_tsv("Ideas_Grant_2020_analysis/Raw_data/representative_proteins_FPR3757_cd-hit.tab") %>%
+  mutate(source = if_else(str_detect(id, "SAUSA300"), "FPR3757", "mutated_proteins")) %>%
+  group_by(clstr) %>%
+  filter(any(str_detect(id, "BPH"))) %>%
+  group_by(clstr, source) %>%
+  arrange(desc(clstr_cov, clstr_id)) %>%
+  filter(!(source == "FPR3757" & row_number() > 1)) %>%
+  mutate(source_long = str_c(source, "_", row_number())) %>%
+  ungroup() %>%
+  select(id, clstr, source_long) %>%
+  pivot_wider(names_from = source_long, values_from = id) %>%
+  pivot_longer(cols = starts_with("mutated_proteins"), names_to = "source_long", values_to = "id_prot") %>%
+  drop_na(id_prot) %>%
+  select(id_prot, clstr, nebraska_locus_tag = FPR3757_1) 
+
+df_neb <- read_csv("Ideas_Grant_2020_analysis/Raw_data/nebraska_all_proteins.csv") %>%
+  rename(neb_mutant_id = `Strain Name`, neb_gene = `Gene name`, neb_product = `gene discription`)
+
+protein_clusters_data <- protein_clusters_data %>%
+  left_join(nebraska_clusters) %>%
+  group_by(clstr_prot) %>%
+  mutate(nebraska_locus_tag = nebraska_locus_tag[which(clstr_rep_prot == 1)]) %>%
+  left_join(df_neb)
+
+
+
+protein_seq_data <- read_tsv("Ideas_Grant_2020_analysis/Raw_data/mutated_proteins.tab") %>%
+  rename_all(funs(str_c(., "_prot")))
+```
+
+RG comment: not 100% sure how exactly all protein_id have been matched together but we probably need to discuss this to make sure everything is done as carefully as possible. In my experience error/loss of matching at each step could lead to spurious results or missing some genes etc...
+
+I am wondering if we the current cd-hit approach we would miss frameshift/truncating mutation that in Nterm of prot as short residual prot would not be annotated by prokka or not clustered by cd-hit. We don't want to miss those!
+For this reason we should probably align reads to all pan genes representative individually? 
+
+May be using a pangenome tool would be the best way here to provide each individual genome a gene_id that match a unique pangenome_gene_id. I used PIRATE to generate this for the BPA sepsis data but not ideal (Surprinsingly, I couldn't find a single pangenome tool that provide a pangenome_gene_id to every gene_id in an easy parsable format... To me it is the primary/1st role of pangenome tool). 
+
+Ideally, we should do this including all useful genomes (all VANANZ, JE2/FPR3757 annot, aureowiki representative genome to match with all their genomes and pangenome_id, NRS384, BPH model strain of the lab (BPA sepsis strain (annotated PACBIO reference publicly available)). 
+
+Even more ideally :) we also would like to use a tool that allow to work with custom multifasta for annotation to get pangenome_id for sRNA, intergenic region, promoter, SSR... 
+
+SSR would be tricky and probably need to be annotated individually for each reference using kmer-ssr without providing pangenome_id (without genome to genome universal matching). But the other can be matched based on cd-hit or blast alignment.
+
+May be the best/easier way would be to complile multifasta(s) (with all CDS, all prom, all_intergenic?, all sRNA, all TSS) and cd-hit as you did. 
+
+## merge clusters and sequences with snippy data
+
+```{r}
+snippy_data_modified_proteins <- snippy_data_modified_no_distant_pairs %>%
+  left_join(protein_clusters_data,
+            by = c("LOCUS_TAG" = "id_prot")) %>%
+  left_join(protein_seq_data,
+            by = c("LOCUS_TAG" = "FASTA_ID_prot"))
+snippy_data_modified_proteins
+```
+
+# clustering and annotation of intergenic regions 
+
+Needs to be updated using the same approach as in the within-evolution meta-analysis.
+
+# Mortality switches and phenotypes
+
+```{r}
+df_genetic_pairs_metadata <- readRDS(file = "Genetic_pairs_analysis_Oct_2020/metadata/distinct_genetic_pairs_id_metadata.Rda") %>%
+  left_join(df_n_mutations) %>%
+  rename(n_mutations_snippy_denovo = n) %>%
+  # RG comment: I guess you are replacing na by 0 in case some comparison gave 0 mutations. But would be good to double check that we aren't missing any snippy comparison here. 
+  replace_na(list(n_mutations_snippy_denovo = 0))
+```
+
+# Analyse mortality switches
+
+### Generate dataset of clusters of mortality switches
+
+```{r}
+df_mortality_close_clusters <- df_genetic_pairs_metadata %>%
+  arrange(iso2) %>%
+  filter(switches %in% c("Survived-Died")) %>%
+  group_by(iso2) %>%
+  mutate(iso_cluster = str_c(iso2, "-cluster")) %>%
+  select(iso1, iso2, switches, iso_cluster, dist, n_mutations_snippy_denovo, contains("_ST")) 
+
+
+
+df_mortality_close_clusters %>%
+  .$iso_cluster %>%
+  n_distinct()
+
+df_mortality_close_clusters %>%
+  .$iso1 %>%
+  n_distinct()
+  
+df_mortality_close_clusters %>%
+  ggplot(aes(x = fct_infreq(iso_cluster))) +
+  geom_bar() +
+  coord_flip() +
+  labs(x = "") +
+  theme_bw()
+```
+
+# Plot genetic pairs as graph
+```{r}
+library(ggraph)
+library(igraph)
+
+graph.df <- df_mortality_close_clusters %>%
+  ungroup() %>%
+  select(iso1, iso2, dist, n_mutations_snippy_denovo) #%>%
+  #filter(n_mutations_snippy_denovo <= 30)
+
+graph <- graph_from_data_frame(graph.df, directed = F)
+
+deadly_strain <- df_mortality_close_clusters$iso2
+
+ggraph(graph, layout = 'fr') + 
+  geom_edge_link(aes(colour = n_mutations_snippy_denovo)) + 
+  geom_node_point(aes(colour = !name %in% deadly_strain))
+
+# cluster/group strain by relatedness
+graph_gp <- cluster_edge_betweenness(graph) 
+#graph_gp <- components(graph) 
+
+membership(graph_gp)
+length(graph_gp)
+
+# Ideally plot this with ggraph and ovelray deadly strain annotation on plot
+plot(graph_gp, graph) 
+
+```
+
+# Alternative way to generate a dataset
+
+The clusters we have generated use the same control for multiple cases. This is problematic because it means that clusters are not independent and therefore we overestimate convergence.
+
+To remove redundant controls, we first generate a dataframe of 28 independent pairs (one case - one control). We then select supplementary controls from a reserve of isolates that are not already included in the independent pairs.
+
+RG comment: Not sure how you select/assign this supplementary control to cases?
+
+The final dataframe of clusters with no redundant controls consists of 77 pairs including 28 cases and 76 controls, meaning that only one control is used twice. This is due to the structure of the dataset with many cases and controls belonging to the clonal ST239. If we want to remove redundant controls completely we have to remove one case.
+
+RG comment: 3 alternative possibilities to discuss
+1- For each case (iso2-cluster) pick only the closest isolate 
+if several equally close just pick one
+make sure each control is not used for several cases
+
+2- Each interconnected cases-controls are grouped/clustered together (as defined by node interconnection in graph
+using components() (other more elaborated graph clustering method could be used). All case-control mutations are extracted and assigned to interconnected nodes groups. Only unique mutations among interconnected groups are retained
+
+3- For each case (iso2-cluster) pick all control isolates with a very small genetic distance (<30 variants?) when control is connected to several case assign to the closest case only (if equal distance assign randomly)
+keep only unique mutations for all (multiple controls)vs(single case) comparisons
+
+Methods discussion:
+1- will not optimally exploit genetic information
+2- is easy to implement but would miss mutations survived -> died mutations that are recurrent in a same interconnected group.
+I think 3 is probably the best for screening purpose (as in the contrary to 1- it will not exclude mutations from a very close isolate that would equally be likely to kill host and capture a broader repertoire of mutations that might contribute to death). 3 is also probably very similar to what you have already done but using closest genetic distance to optimally assign all control cases.  
+
+```{r}
+df_mortality_close_pairs <- df_mortality_close_clusters %>%
+  group_by(iso1) %>%
+  mutate(n = n()) %>%
+  arrange(n) %>%
+  group_by(iso_cluster) %>%
+  filter(row_number() == 1) %>%
+  select(iso1, iso2, switches, iso_cluster, dist, contains("_ST")) %>%
+  mutate(dataset = "pairs")
+
+df_mortality_close_pairs %>%
+  .$iso_cluster %>%
+  n_distinct()
+
+iso1_pairs <- sort(df_mortality_close_pairs$iso1)
+
+iso1_reserve <- df_mortality_close_clusters %>%
+  filter(!iso1 %in% iso1_pairs) %>%
+  .$iso1 %>%
+  unique() %>%
+  sort()
+
+df_mortality_close_clusters_reserve <- df_mortality_close_clusters %>%
+  filter(iso1 %in% iso1_reserve) %>%
+  ungroup() %>%
+  arrange(iso1) %>%
+  distinct(iso1, .keep_all = T) %>%
+  mutate(dataset = "reserve")
+
+df_mortality_close_clusters_no_redundancy <- bind_rows(df_mortality_close_pairs, 
+                                 df_mortality_close_clusters_reserve)
+
+df_mortality_close_clusters_no_redundancy %>%
+  .$iso_cluster %>%
+  n_distinct()
+
+df_mortality_close_clusters_no_redundancy %>%
+  .$iso1 %>%
+  n_distinct()
+  
+df_mortality_close_clusters_no_redundancy %>%
+  ggplot(aes(x = fct_infreq(iso_cluster))) +
+  geom_bar() +
+  coord_flip() +
+  labs(x = "") +
+  theme_bw()
+
+rm(iso1_pairs, iso1_reserve, df_mortality_close_clusters_reserve, df_mortality_close_clusters, df_mortality_close_pairs)
+```
+
+# Plot non redundant mortality genetic pairs as graph
+```{r}
+
+graph.df <- df_mortality_close_clusters_no_redundancy %>%
+  ungroup() %>%
+  select(iso1, iso2, dist, n_mutations_snippy_denovo) #%>%
+  #filter(n_mutations_snippy_denovo <= 30)
+
+graph <- graph_from_data_frame(graph.df, directed = F)
+
+deadly_strain <- df_mortality_close_clusters_no_redundancy$iso2
+
+ggraph(graph, layout = 'fr') + 
+  geom_edge_link(aes(colour = n_mutations_snippy_denovo)) + 
+  geom_node_point(aes(colour = !name %in% deadly_strain))
+
+# cluster/group strain by relatedness
+graph_gp <- cluster_edge_betweenness(graph) 
+#graph_gp <- components(graph) 
+
+membership(graph_gp)
+length(graph_gp)
+
+# Ideally plot this with ggraph and ovelray deadly strain annotation on plot
+plot(graph_gp, graph) 
+
+```
+
+Seems that you effectively filtered redundancy in comparisons!
+
+### Convergence analysis of mortality
+
+```{r}
+df_mutations_mortality <- snippy_data_modified_proteins %>%
+  right_join(df_mortality_close_clusters_no_redundancy) 
+
+df_convergence_mortality <- df_mutations_mortality %>%
+  drop_na(clstr_prot) %>%
+  filter(EFFTYPE != "synonymous_variant") %>%
+  group_by(clstr_prot, clstr_size_prot) %>%
+   mutate(n_clusters = n_distinct(iso_cluster), 
+          n_pairs = n_distinct(pair_id),
+         n_references = n_distinct(REFERENCE),
+         n_st = n_distinct(iso2_ST),
+         n_positions = n_distinct(AA_POS)) %>%
+  select(n_references, n_clusters, n_pairs, n_st, n_positions, clstr_prot, clstr_size_prot, GENE, PRODUCT, MUTATION_SHORT, iso_cluster, pair_id, switches, everything()) %>%
+  arrange(clstr_prot, desc(n_clusters))
+
+t_mortality_clusters <- df_convergence_mortality %>%
+ group_by(clstr_prot) %>%
+  mutate(SEQUENCE_prot = SEQUENCE_prot[1]) %>%
+  distinct(n_references, n_clusters, n_pairs, n_positions, n_st, clstr_prot, clstr_size_prot, SEQUENCE_prot, GENE, PRODUCT, MUTATION_SHORT, nebraska_locus_tag, neb_mutant_id, neb_gene, neb_product) %>%
+  group_by(n_clusters, n_pairs, n_positions, n_st, clstr_prot, clstr_size_prot, SEQUENCE_prot, nebraska_locus_tag, neb_mutant_id, neb_gene, neb_product) %>%
+  summarise_at(vars(GENE, PRODUCT, MUTATION_SHORT),
+               funs(str_c(unique(.), collapse = "|"))) %>%
+  mutate(phenotype = "SAB mortality") %>%
+  arrange(desc(n_clusters))
+t_mortality_clusters
+```
+
+RG comment: Ca marche probalement pas mal comme ca, comme on a fait pour la grant, regarder/valider sur la'arbre annote est une bonne maniere rapide de selectionner nos mutant pour la plaque
+
+# Analyse cell death switches
+
+Here, the analysis is preliminary while we work out the best way to define contrasting pairs. We use the AUC and set difference threshold between iso1 and iso2
+
+# dataset of PI parameters
+
+```{r}
+df_PI_parameters_samples <- readRDS("Genetic_pairs_analysis_Oct_2020/processed_data/PI/dataframes/parameters/PI_sample_parameters.Rda")
+```
+
+# explore AUC parameters
+
+```{r}
+for (i in str_subset(colnames(df_PI_parameters_samples), "AUC")){
+  
+  s <- rlang::sym(i)
+  
+  p <- df_PI_parameters_samples %>%
+    ggplot(aes(x = {{s}})) +
+    geom_histogram(binwidth = 5) +
+    geom_density(aes(y = 5 * ..count..)) +
+    theme_bw()
+    
+  print(p)
+}
+```
+
+# Calculate per-pair AUC differences
+
+```{r}
+df_genetic_pairs_metadata_PI <- df_genetic_pairs_metadata %>%
+  left_join(df_PI_parameters_samples %>% select(sample_id, AUC_death_mean), by = c("iso1" = "sample_id")) %>%
+  rename(iso1_AUC_death_mean = AUC_death_mean) %>%
+  left_join(df_PI_parameters_samples %>% select(sample_id, AUC_death_mean), by = c("iso2" = "sample_id")) %>%
+  rename(iso2_AUC_death_mean = AUC_death_mean) %>%
+  mutate(delta_AUC_mean = iso1_AUC_death_mean - iso2_AUC_death_mean)
+
+df_genetic_pairs_metadata_PI %>%
+    ggplot(aes(x = delta_AUC_mean)) +
+    geom_histogram(binwidth = 5) +
+    geom_density(aes(y = 5 * ..count..)) +
+    theme_bw()
+
+df_genetic_pairs_metadata_PI %>%
+    ggplot(aes(x = abs(delta_AUC_mean))) +
+    geom_histogram(binwidth = 5) +
+    geom_density(aes(y = 5 * ..count..)) +
+    theme_bw()
+```
+
+
+# Plot PI AUC along phylogenetic tree
+```{r}
+library(ape)
+library(ggtree)
+
+# Plot all isolates tree with PI AUC
+tree <- ape::read.tree("Ideas_Grant_2020_analysis/Raw_data/VANANZ_phenotypes_n843.tree") %>%
+  # ape::root(c("BPH2704", "BPH2705"))
+  phytools::midpoint.root()
+p <- ggtree::ggtree(tree, layout = "circular")
+p
+
+# RG comment: this tree is very strange why some branches are disproportionately long?? Problem with tree building?? Midpoint rooting issue??
+
+df_metadata <- df_PI_parameters_samples %>% filter(grepl(pattern = "BPH", x = sample_id))
+matrix <- df_metadata %>%
+  column_to_rownames("sample_id")
+
+p <- ggtree(tree, layout = "rectangular")#, branch.length = "none")
+p
+gheatmap(p, matrix %>%
+           select(AUC_death_mean), width = .1, offset = .00001, colnames = F, color = NA) +
+  scale_fill_viridis_c(direction = -1, na.value = "white", name = "PI uptake (AUC)")
+
+# Check genetic pairs
+length(tree$tip.label)
+
+paired_strains <- unique(c(df_genetic_pairs_metadata$iso1, df_genetic_pairs_metadata$iso2))
+length(paired_strains)
+
+# Keep only paired strain in tree
+tree_pairs <- ape::keep.tip(tree, paired_strains)
+tree_pairs <- phytools::midpoint.root(tree_pairs)
+
+p <- ggtree::ggtree(tree_pairs, layout = "circular", branch.length = "none")
+p
+
+
+# dataframe with all metadata
+df_metadata <- df_genetic_pairs_metadata_PI %>%
+  select(sample_id = iso1, ST = iso1_ST, mortality = iso1_mortality, AUC_death = iso1_AUC_death_mean) %>%
+  distinct()
+
+# add mortality
+matrix <- df_metadata %>%
+  column_to_rownames("sample_id")
+
+p2 <- ggtree::gheatmap(p, matrix %>% select(mortality), width = .05, colnames = F, color = NA) +
+  # geom_tiplab2() +
+  scale_fill_manual(values = c("orange", "navy"), name = "Patient outcome", guide = guide_legend(order = 1), na.translate = F)
+p2
+
+library(ggnewscale)
+p3 <- p2 + new_scale_fill()
+
+p4 <- ggtree::gheatmap(p3, matrix %>%
+           select(AUC_death), width = .05, offset = 3, colnames = F, color = NA) +
+  scale_fill_viridis_c(direction = -1, na.value = "white", name = "PI uptake (AUC)")
+p5 <- p4 + new_scale_fill()
+p5
+
+# RG comment: Why there are so many isolates without PI measurement???
+# What threshold of genetic distance did we use to set up the plates?
+
+# Will keep only isolates with PI measurement for tree plot
+
+
+
+
+get_st_mrca <- function(st){
+  tips <- df_metadata %>%
+    filter(ST == st) %>%
+    .$sample_id
+  node <- ape::getMRCA(tree, tips)
+  return(node)
+}
+
+
+#get_st_mrca("8")
+p6 <- p5
+for (i in df_metadata %>% filter(ST != "-") %>% count(ST, sort = T) %>% slice(1:5) %>% .$ST){
+  p6 <- p6 +
+    geom_hilight(node = get_st_mrca(i), fill = "blue") +
+    geom_cladelabel2(node = get_st_mrca(i), label = str_c("ST", i), offset = 7, offset.text = 10, align = T, fontsize = 10)
+}
+p6
+
+#ggsave("processed_data/tree_AUC_PI.pdf", width = 5, height = 4)
+
+```
+
+
+
+
+
+# Try: list of pairs with delta AUC >= 50
+
+```{r}
+df_genetic_pairs_PI_discordant <- df_genetic_pairs_metadata_PI %>%
+  filter(abs(delta_AUC_mean) >= 50)
+```
+
+# How do iso1 and iso2 in these pairs compare?
+
+```{r}
+# create directory of plots
+dir <- "Genetic_pairs_analysis_Oct_2020/processed_data/PI/QC_plots/genetic_pairs_comparison/"
+subdir <- str_c(dir, "delta_AUC_40")
+dir.create(subdir, showWarnings = T)
+
+discordant_pairs <- unique(df_genetic_pairs_PI_discordant$pair_id)
+
+for (i in 1:length(discordant_pairs)){
+  
+  pair <- discordant_pairs[i]
+  
+  f <- list.files(path = dir,
+                     pattern = pair)
+  
+  print(f)
+  
+  file.copy(from = str_c(dir, f),
+            to = subdir)
+}
+
+
+```
+
+Some of these pairs appear to be clearly discordant but some are not because there is a large variation within the pair
+
+# Dataset of contrasting clusters
+
+```{r}
+df_PI_clusters <- df_genetic_pairs_PI_discordant %>%
+  arrange(iso2) %>%
+  group_by(iso2) %>%
+  mutate(iso_cluster = str_c(iso2, "-cluster"), 
+         n = n()) #%>%
+  #select(iso1, iso2, pair_id, iso_cluster, dist, n_mutations_snippy_denovo, delta_AUC_mean) 
+
+df_PI_clusters %>%
+  .$iso_cluster %>%
+  n_distinct()
+
+df_PI_clusters %>%
+  .$iso1 %>%
+  n_distinct()
+  
+df_PI_clusters %>%
+  ggplot(aes(x = fct_infreq(iso_cluster))) +
+  geom_bar() +
+  coord_flip() +
+  labs(x = "") +
+  theme_bw()
+```
+
+# Plot PI contrasting genetic pairs as graph
+```{r}
+
+graph.df <- df_PI_clusters %>%
+  ungroup() %>%
+  select(iso1, iso2, delta_AUC_mean, dist, n_mutations_snippy_denovo) 
+  #filter(n_mutations_snippy_denovo <= 30)
+
+graph <- graph_from_data_frame(graph.df, directed = T)
+graph
+deadly_strain <- df_mortality_close_clusters_no_redundancy$iso2
+
+
+
+ggraph(graph, layout = 'fr') + 
+  geom_edge_link(arrow = arrow(
+      angle = 10,
+      length = unit(0.1, "inches"),
+      ends = "last",
+      type = "closed"),
+      aes(colour = delta_AUC_mean)) + 
+  scale_edge_colour_gradient2(
+  low = "blue",
+  mid = "white",
+  high = "red",
+  space = "Lab",
+  na.value = "grey50")+
+  geom_node_point(aes(colour = !name %in% deadly_strain), size =3)
+
+# cluster/group strain by relatedness
+graph_gp <- cluster_edge_betweenness(graph) 
+#graph_gp <- components(graph) 
+
+membership(graph_gp)
+length(graph_gp)
+
+# Ideally plot this with ggraph and ovelray deadly strain annotation on plot
+plot(graph_gp, graph) 
+
+# make the graph oriented high to low
+graph.df <- df_PI_clusters %>%
+  ungroup() %>%
+  #select(iso1, iso2, iso1_AUC_death_mean ,delta_AUC_mean, dist, n_mutations_snippy_denovo) %>%
+  # make pairs oriented AUC high to low
+  mutate(iso_high = ifelse(iso1_AUC_death_mean > iso2_AUC_death_mean, yes = iso1, no = iso2)) %>%
+  mutate(iso_low =  ifelse(iso1_AUC_death_mean < iso2_AUC_death_mean, yes = iso1, no = iso2)) %>%
+  mutate(iso_high_AUC = ifelse(iso1_AUC_death_mean > iso2_AUC_death_mean, yes = iso1_AUC_death_mean, no = iso2_AUC_death_mean)) %>%
+  mutate(iso_low_AUC =  ifelse(iso1_AUC_death_mean < iso2_AUC_death_mean, yes = iso1_AUC_death_mean , no = iso2_AUC_death_mean)) %>%
+  mutate(increase_AUC = iso_high_AUC - iso_low_AUC) %>%
+  select(iso_high, iso_low, increase_AUC, dist, n_mutations_snippy_denovo)
+
+graph <- graph_from_data_frame(graph.df, directed = T)
+graph
+deadly_strain <- df_mortality_close_clusters_no_redundancy$iso2
+
+t <- ggraph(graph, layout = 'fr') + 
+  geom_edge_link(arrow = arrow(
+      angle = 10,
+      length = unit(0.1, "inches"),
+      ends = "last",
+      type = "closed"),
+      aes(colour = increase_AUC)) + 
+  scale_edge_colour_gradient(
+  low = "yellow",
+  high = "red",
+  space = "Lab",
+  na.value = "grey50")
+  #
+
+t$data
+
+node_annot <- t$data %>%
+  merge(., df_PI_parameters_samples %>% select(sample_id, AUC_death_mean), by.x = "name", by.y = "sample_id") 
+
+#t$data <- node_annot
+
+t + 
+  scale_color_viridis(direction = -1) +
+  geom_node_point(aes(colour = node_annot$AUC_death_mean, shape = !name %in% deadly_strain), size =3) 
+
+# Something wrong with arrow direction and AUC of sample... Need to fix
+```
+
+
+
+### Dataset of pairs and cluster with no redundancy
+
+
+Here, we were able to generate a genuine dataframe with no redundant controls. Lenght of the dataframe is 20, as is the number of controls!
+
+RG comment: why 20 controls? Probably need to split this into 2 analysis: 
+increase AUC and decrease AUC from median?
+alternatively orientate pairs low AUC to high or vice-versa
+my tentative networks wanted to investigate this may be phylo tree would be better for exploration 
+
+
+```{r}
+iso2 <- unique(df_PI_clusters$iso2)
+
+df_prepare <- df_PI_clusters %>%
+  ungroup() %>%
+  filter(!iso1 %in% iso2) %>%
+  group_by(iso2) %>%
+  mutate(iso1_all = str_c(sort(iso1), collapse = "")) %>%
+  group_by(iso1_all) %>%
+  mutate(iso_cluster = iso_cluster[1])
+
+df_PI_close_pairs <- df_prepare %>%
+  group_by(iso1) %>%
+  mutate(n = n()) %>%
+  arrange(n) %>%
+  group_by(iso_cluster) %>%
+  filter(row_number() == 1) %>%
+  mutate(dataset = "pairs")
+
+df_PI_close_pairs %>%
+  .$iso_cluster %>%
+  n_distinct()
+
+iso1_pairs <- sort(df_PI_close_pairs$iso1)
+
+iso1_reserve <- df_prepare %>%
+  filter(!iso1 %in% iso1_pairs) %>%
+  filter(!iso1 %in% iso2) %>%
+  .$iso1 %>%
+  unique() %>%
+  sort()
+
+df_PI_close_clusters_reserve <- df_prepare %>%
+  filter(iso1 %in% iso1_reserve) %>%
+  ungroup() %>%
+  arrange(iso1) %>%
+  distinct(iso1, .keep_all = T) %>%
+  mutate(dataset = "reserve")
+
+df_PI_clusters_no_redundancy <- bind_rows(df_PI_close_pairs, 
+                                 df_PI_close_clusters_reserve)
+
+df_PI_clusters_no_redundancy %>%
+  .$iso_cluster %>%
+  n_distinct()
+
+df_PI_clusters_no_redundancy %>%
+  .$iso1 %>%
+  n_distinct()
+
+df_PI_clusters_no_redundancy %>%
+  ggplot(aes(x = fct_infreq(iso_cluster))) +
+  geom_bar() +
+  coord_flip() +
+  labs(x = "") +
+  theme_bw()
+
+rm(iso2, iso1_pairs, iso1_reserve, df_cell_death_close_clusters_reserve, df_prepare, df_cell_death_close_clusters, df_cell_death_close_pairs)
+```
+
+
+# Plot non redundant PI AUC genetic pairs as graph
+```{r}
+
+graph.df <- df_PI_clusters_no_redundancy %>%
+  ungroup() %>%
+  select(iso1, iso2, dist, n_mutations_snippy_denovo) #%>%
+  #filter(n_mutations_snippy_denovo <= 30)
+
+graph <- graph_from_data_frame(graph.df, directed = F)
+
+deadly_strain <- df_mortality_close_clusters_no_redundancy$iso2
+
+ggraph(graph, layout = 'fr') + 
+  geom_edge_link(aes(colour = n_mutations_snippy_denovo)) + 
+  geom_node_point(aes(colour = !name %in% deadly_strain))
+
+# cluster/group strain by relatedness
+graph_gp <- cluster_edge_betweenness(graph) 
+#graph_gp <- components(graph) 
+
+membership(graph_gp)
+length(graph_gp)
+
+# Ideally plot this with ggraph and ovelray deadly strain annotation on plot
+plot(graph_gp, graph) 
+
+```
+
+RG comment: Seems that redundancy filtering is too stringent, it removes a lot of possible genetic comparison
+Need to find a better way to do this
+
+```{r}
+# df_cell_death_close_pairs <- df_cell_death_close_clusters %>%
+#   group_by(iso1) %>%
+#   mutate(n = n()) %>%
+#   arrange(n) %>%
+#   group_by(iso_cluster) %>%
+#   filter(row_number() == 1) %>%
+#   mutate(dataset = "pairs")
+# 
+# df_cell_death_close_pairs %>%
+#   .$iso_cluster %>%
+#   n_distinct()
+# 
+# iso1_pairs <- sort(df_cell_death_close_pairs$iso1)
+# 
+# iso1_reserve <- df_cell_death_close_clusters %>%
+#   filter(!iso1 %in% iso1_pairs) %>%
+#   .$iso1 %>%
+#   unique() %>%
+#   sort()
+# 
+# df_cell_death_close_clusters_reserve <- df_cell_death_close_clusters %>%
+#   filter(iso1 %in% iso1_reserve) %>%
+#   ungroup() %>%
+#   arrange(iso1) %>%
+#   distinct(iso1, .keep_all = T) %>%
+#   mutate(dataset = "reserve")
+# 
+# df_cell_death_close_clusters_no_redundancy <- bind_rows(df_cell_death_close_pairs, 
+#                                  df_cell_death_close_clusters_reserve)
+# 
+# df_cell_death_close_clusters_no_redundancy %>%
+#   .$iso_cluster %>%
+#   n_distinct()
+# 
+# df_cell_death_close_clusters_no_redundancy %>%
+#   .$iso1 %>%
+#   n_distinct()
+# 
+# df_cell_death_close_clusters_no_redundancy %>%
+#   ggplot(aes(x = fct_infreq(iso_cluster))) +
+#   geom_bar() +
+#   coord_flip() +
+#   labs(x = "") +
+#   theme_bw()
+# 
+# rm(iso1_pairs, iso1_reserve, df_cell_death_close_clusters_reserve)
+```
+
+## Convergence analysis of cell death
+
+```{r}
+df_mutations_PI <- snippy_data_modified_proteins %>%
+  right_join(df_PI_clusters_no_redundancy) 
+nrow(df_mutations_PI)
+
+df_convergence_PI <- df_mutations_PI %>%
+  drop_na(clstr_prot) %>%
+  filter(EFFTYPE != "synonymous_variant") %>%
+  group_by(clstr_prot, clstr_size_prot) %>%
+   mutate(n_clusters = n_distinct(iso_cluster), 
+          n_pairs = n_distinct(pair_id),
+         n_references = n_distinct(REFERENCE),
+         n_positions = n_distinct(AA_POS)) %>%
+  select(n_references, n_clusters, n_pairs, n_positions, clstr_prot, clstr_size_prot, GENE, PRODUCT, MUTATION_SHORT, iso_cluster, pair_id,  everything()) %>%
+  arrange(desc(n_clusters), desc(n_positions), clstr_prot)
+
+t_PI_clusters <- df_convergence_PI %>%
+  group_by(clstr_prot) %>%
+  mutate(SEQUENCE_prot = SEQUENCE_prot[1]) %>%
+  distinct(n_references, n_clusters, n_pairs, n_positions,  clstr_prot, clstr_size_prot, SEQUENCE_prot, GENE, PRODUCT, MUTATION_SHORT, nebraska_locus_tag, neb_mutant_id, neb_gene, neb_product) %>%
+  group_by(n_clusters, n_pairs, n_positions, clstr_prot, clstr_size_prot, SEQUENCE_prot, nebraska_locus_tag, neb_mutant_id, neb_gene, neb_product) %>%
+  summarise_at(vars(GENE, PRODUCT, MUTATION_SHORT),
+               funs(str_c(unique(.), collapse = "|"))) %>%
+  mutate(phenotype = "Cell death (AUC)")
+```
+
+
+

@@ -1,0 +1,71 @@
+---
+title: "strain library plateG"
+author: "Stefano Giulieri"
+date: "12/03/2020"
+output: html_document
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = here::here())
+msg <- stringr::str_c("My directory is ", here::here())
+print(msg)
+```
+
+```{r}
+library(tidyverse)
+library(magrittr)
+rm(list = ls())
+source("Functions/all_functions.R")
+```
+
+# Get list of all NEB mutants of interest
+
+```{r}
+df_neb_whost <- read_csv("Within_host_analysis/dataframes/nebraska_mutants_to_test.csv") %>%
+  mutate(source = "whost")
+df_neb_meta_1 <- read_csv("Within_host_analysis/dataframes/nebraska_mutants_meta_analysis.csv") %>%
+  mutate(source = "meta_1")
+df_neb_meta_2 <- read_csv("Within_host_analysis/dataframes/nebraska_mutants_meta_analysis_overlap.csv") %>%
+   mutate(source = "meta_2")
+df_neb_gp <- read_csv("Genetic_pairs_analysis/dataframes/genetic_pairs_contrasting_phenotypes.csv") %>%
+  mutate(source = "genetic_pairs")
+df_neb <- df_neb_whost %>%
+  full_join(df_neb_meta_1) %>%
+  full_join(df_neb_meta_2) %>%
+  full_join(df_neb_gp) %>%
+  drop_na(`Strain Name`) %>%
+  #remove agrA
+  filter(`Strain Name` != "NE1532")
+```
+
+# List of 24 unique mutants
+
+```{r}
+neb <- unique(df_neb$`Strain Name`)
+neb
+```
+
+# Plan plate G
+
+```{r}
+well_info <- plate_planner(isolates = neb )
+well_info
+write_csv(well_info, "Mutant_Nebraska_screen/Plate_info/dataframes/well_info_plateG.csv")
+plate_info <- plate_mapper(well_info)
+plate_info
+write_csv(plate_info, "Mutant_Nebraska_screen/Plate_info/plate_G.csv")
+
+df_metadata <- df_neb %>%
+  select(`Strain Name`:Column384, source, nebraska_locus_tag, nebraska_aa_seq)
+df_unique <- df_metadata %>% group_by(nebraska_locus_tag) %>%
+  summarise(source = str_c(unique(source), collapse = "##"))
+df_metadata <- df_metadata %>%
+  select(-source) %>%
+  distinct() %>%
+  left_join(df_unique)
+write_csv(df_metadata, "Mutant_Nebraska_screen/Plate_info/dataframes/plateG_metadata.csv")
+```
+

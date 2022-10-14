@@ -1,0 +1,116 @@
+sample_id,strain_group,ST,mecA,mortality,intrahost_index,included,unrelated_to_index,mut_count,scv,vanco_difference,persister_type,intrahost_sampledelay,sample_type,genes,add_to_plate,comment
+BPH2704,VAN-004,93,1,Survived,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,P1,Positive PI kinetics screening
+BPH2705,VAN-004,93,1,NA,0,TRUE,0,0,FALSE,0,Persistent,10,paired-invasive,NA,P1,Positive PI kinetics screening
+BPH2708,VAN-007,97,0,Survived,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,,
+BPH2709,VAN-007,97,0,NA,0,TRUE,0,0,FALSE,0.5,Persistent,5,paired-invasive,NA,,
+BPH2726,VAN-023,239,0,Survived,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,P1,Positive PI kinetics screening
+BPH2727,VAN-023,239,0,NA,0,TRUE,0,16,FALSE,0.5,NA,0,paired-colonising,pglF / AAA-like domain protein / ebh_1 / norB_6 / tatC2 / yhfS / hypothetical protein,P1,Positive PI kinetics screening
+BPH2728,VAN-024,45,1,Survived,1,TRUE,NA,NA,TRUE,0,NA,NA,index,NA,P1,Positive PI kinetics screening
+BPH2729,VAN-024,45,1,NA,0,TRUE,0,5,TRUE,1.25,Relapse (after treatment),38,paired-invasive,ptsG_3 / rpoB / rplV / rplD,P1,Positive PI kinetics screening
+BPH2730,VAN-024,45,1,NA,0,TRUE,0,0,TRUE,0.75,NA,-13,paired-colonising,NA,P1,Positive PI kinetics screening
+BPH2732,VAN-026,45,0,Survived,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,,
+BPH2733,VAN-026,45,0,NA,0,TRUE,0,0,FALSE,0,Relapse (on treatment),4,paired-invasive,NA,,
+BPH2737,VAN-029,-,0,Survived,1,TRUE,NA,NA,TRUE,0,NA,NA,index,NA,,
+BPH2738,VAN-029,-,0,NA,0,TRUE,0,1,TRUE,0.5,Relapse (after treatment),18,paired-invasive,stp,,
+BPH2747,VAN-038,239,1,Survived,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,,
+BPH2748,VAN-038,239,1,NA,0,TRUE,0,2,FALSE,0,NA,8,paired-colonising,NA,,
+BPH2750,VAN-040,39,0,Died,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,,
+BPH2751,VAN-040,39,0,NA,0,TRUE,0,1,FALSE,0.5,Relapse (on treatment),4,paired-invasive,prfA,,
+BPH2754,VAN-043,5,0,Survived,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,,
+BPH2755,VAN-043,-,0,NA,0,TRUE,0,0,FALSE,-0.25,Persistent,3,paired-invasive,NA,,
+BPH2763,VAN-050,78,1,Survived,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,P1,Positive PI kinetics screening
+BPH2764,VAN-050,78,1,NA,0,TRUE,0,29,FALSE,0,NA,-3,paired-colonising,hypothetical protein / superantigen-like protein / accB_1 / grsB / Transcriptional regulator / cydD / pepT_2 / yveA / pbuE / Putative esterase / Replication initiation and membrane attachment,P1,Positive PI kinetics screening
+BPH2770,VAN-056,45,1,Survived,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,,
+BPH2771,VAN-056,45,1,NA,0,TRUE,0,2,FALSE,0.25,NA,0,paired-colonising,recU,,
+BPH2777,VAN-062,30,0,Survived,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,,
+BPH2778,VAN-062,30,0,NA,0,TRUE,0,0,FALSE,0,Persistent,3,paired-invasive,NA,,
+BPH2801,VAN-083,59,0,Survived,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,,
+BPH2803,VAN-083,59,0,NA,0,TRUE,0,24,FALSE,-0.5,Relapse (after treatment),31,paired-invasive,putative epimerase/dehydratase / pta / nfo / comEA / cycA_2 / Hyaluronate lyase / ebh_3 / msbA,,
+BPH2819,VAN-094,5,0,Survived,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,,
+BPH2820,VAN-094,5,0,NA,0,TRUE,0,2,FALSE,-0.5,Persistent,3,paired-invasive,cmpD / pckA,,
+BPH2840,VAN-111,8,0,Survived,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,,
+BPH2841,VAN-111,8,0,NA,0,TRUE,0,1,FALSE,0,Persistent,5,paired-invasive,NA,,
+BPH2861,VAN-129,39,0,Survived,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,,
+BPH2862,VAN-129,39,0,NA,0,TRUE,0,1,FALSE,0,Persistent,3,paired-invasive,NA,,
+BPH2863,VAN-130,-,0,Survived,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,,
+BPH2864,VAN-130,-,0,NA,0,TRUE,0,0,FALSE,0,Persistent,4,paired-invasive,NA,,
+BPH2872,VAN-137,-,0,Survived,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,,
+BPH2873,VAN-137,-,0,NA,0,TRUE,0,0,FALSE,0,Persistent,5,paired-invasive,NA,,
+BPH2881,VAN-144,1756,1,Survived,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,,
+BPH2882,VAN-144,1756,1,NA,0,TRUE,0,12,FALSE,0,NA,127,paired-colonising,hepT / era / Type I restriction modification DNA specificity domain protein / sraP / hypothetical protein / Phage terminase large subunit,,
+BPH2883,VAN-145,5,0,Survived,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,,
+BPH2884,VAN-145,5,0,NA,0,TRUE,0,0,FALSE,0,Persistent,5,paired-invasive,NA,,
+BPH2887,VAN-148,45,1,Died,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,,
+BPH2888,VAN-148,45,1,NA,0,TRUE,0,0,FALSE,0,Persistent,6,paired-invasive,NA,,
+BPH2897,VAN-156,34,0,Died,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,,
+BPH2898,VAN-156,34,0,NA,0,TRUE,0,0,FALSE,-0.5,Persistent,3,paired-invasive,NA,,
+BPH2902,VAN-160,45,1,Survived,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,P2,agrA mutation
+BPH2904,VAN-160,45,1,NA,0,TRUE,0,3,FALSE,0,NA,1,paired-colonising,clfA / agrA / Nitroreductase family protein,P2,agrA mutation
+BPH2942,VAN-192,5,0,Survived,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,P2,SaPI2 deletion
+BPH2943,VAN-192,5,0,NA,0,TRUE,0,0,FALSE,-0.5,Relapse (after treatment),65,paired-invasive,NA,P2,SaPI2 deletion
+BPH2947,VAN-196,239,1,Survived,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,,
+BPH2948,VAN-196,239,1,NA,0,TRUE,0,0,FALSE,0,Relapse (on treatment),9,paired-invasive,NA,,
+BPH2952,VAN-200,45,1,Survived,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,,
+BPH2953,VAN-200,45,1,NA,0,TRUE,0,2,FALSE,0,NA,-85,paired-colonising,hypothetical protein,,
+BPH2959,VAN-206,5,0,Survived,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,,
+BPH2960,VAN-206,5,0,NA,0,TRUE,0,0,FALSE,-0.25,Persistent,3,paired-invasive,NA,,
+BPH2961,VAN-206,5,0,NA,0,TRUE,0,0,FALSE,0,Persistent,4,paired-invasive,NA,,
+BPH2962,VAN-207,20,0,Survived,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,P2,Sigma W regulon mutation
+BPH2963,VAN-207,20,0,NA,0,TRUE,0,5,FALSE,0,Persistent,3,paired-invasive,ggt_1 / SigmaW regulon antibacterial / hutG / entB,P2,Sigma W regulon mutation
+BPH2964,VAN-207,20,0,NA,0,TRUE,0,0,FALSE,0,Persistent,7,paired-invasive,NA,,
+BPH2965,VAN-208,8,0,Died,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,,
+BPH2966,VAN-208,8,0,NA,0,TRUE,0,0,FALSE,0.25,Persistent,3,paired-invasive,NA,,
+BPH2973,VAN-215,39,0,Survived,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,,
+BPH2974,VAN-215,39,0,NA,0,TRUE,0,0,FALSE,0,Persistent,3,paired-invasive,NA,,
+BPH2975,VAN-215,39,0,NA,0,TRUE,0,0,FALSE,0,Persistent,5,paired-invasive,NA,,
+BPH2976,VAN-216,-,1,Survived,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,P1,Multiple isolates / IS256 insertions
+BPH2977,VAN-216,-,1,NA,0,TRUE,0,0,FALSE,0.5,Persistent,3,paired-invasive,NA,P1,Multiple isolates / IS256 insertions
+BPH2978,VAN-216,-,1,NA,0,TRUE,0,1,FALSE,0,Persistent,6,paired-invasive,fabF,P1,Multiple isolates / IS256 insertions
+BPH2979,VAN-216,-,1,NA,0,TRUE,0,1,FALSE,0.5,Persistent,8,paired-invasive,NA,P1,Multiple isolates / IS256 insertions
+BPH2980,VAN-216,-,1,NA,0,TRUE,0,2,FALSE,0,Persistent,12,paired-invasive,bcr_1 / pepS,P1,Multiple isolates / IS256 insertions
+BPH2981,VAN-216,-,1,NA,0,TRUE,0,12,FALSE,0.5,NA,5,paired-colonising,gpsA / lepA / blaZ / hypothetical protein,P1,Multiple isolates / IS256 insertions
+BPH2982,VAN-216,-,1,NA,0,TRUE,0,17,FALSE,1,NA,-139,paired-colonising,gpsA / hypothetical protein / rny,P1,Multiple isolates / IS256 insertions
+BPH2987,VAN-222,39,0,Died,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,,
+BPH2988,VAN-222,39,0,NA,0,TRUE,0,0,FALSE,0,Persistent,5,paired-invasive,NA,,
+BPH2989,VAN-223,2176,0,Survived,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,,
+BPH2990,VAN-223,2176,0,NA,0,TRUE,0,0,FALSE,0,Persistent,6,paired-invasive,NA,,
+BPH2991,VAN-223,2176,0,NA,0,TRUE,0,0,FALSE,0,Persistent,7,paired-invasive,NA,,
+BPH3336,VSS-137,5,1,Survived,1,TRUE,NA,NA,TRUE,0,NA,NA,index,NA,P2,Secondary SCV
+BPH3733,VSS-137,5,1,NA,0,TRUE,0,2,TRUE,0.5,Persistent,14,paired-invasive,hypothetical protein / ywlC,P2,Secondary SCV
+BPH3337,VSS-138,8,0,Survived,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,P2,isdH mutation
+BPH3734,VSS-138,8,0,NA,0,TRUE,0,4,FALSE,0,Relapse (on treatment),7,paired-invasive,isdH / sdrD_2,P2,isdH mutation
+BPH3348,VSS-149,239,1,Survived,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,,
+BPH3735,VSS-149,239,1,NA,0,TRUE,0,0,FALSE,0,Relapse (after treatment),15,paired-invasive,NA,,
+BPH3352,VSS-153,45,1,Survived,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,,
+BPH3736,VSS-153,45,1,NA,0,TRUE,0,1,FALSE,0,Persistent,5,paired-invasive,hslU,,
+BPH3356,VSS-157,239,1,Survived,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,,
+BPH3737,VSS-157,239,1,NA,0,TRUE,0,0,FALSE,0,Relapse (on treatment),9,paired-invasive,NA,,
+BPH3381,VSS-184,1795,0,Survived,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,,
+BPH3738,VSS-184,1795,0,NA,0,TRUE,0,2,FALSE,0.5,Persistent,5,paired-invasive,NA,,
+BPH3399,VSS-203,93,1,Survived,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,,
+BPH3740,VSS-203,93,1,NA,0,TRUE,0,0,FALSE,0.5,Relapse (on treatment),13,paired-invasive,NA,,
+BPH3401,VSS-205,239,1,Survived,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,,
+BPH3741,VSS-205,239,1,NA,0,TRUE,0,6,FALSE,0,Relapse (on treatment),20,paired-invasive,Nucleoid-associated protein / mecA / phage phi3 protein / lss / bceB_2 / lpl2_3,,
+BPH3742,VSS-205,239,1,NA,0,TRUE,0,4,FALSE,0,Relapse (after treatment),47,paired-invasive,phage phi3 protein / blaI / bceB_2,,
+BPH3743,VSS-205,239,1,NA,0,TRUE,0,9,FALSE,0,Relapse (after treatment),78,paired-invasive,Nucleoid-associated protein / phage phi3 protein / lss / rpmD / fhuD_1 / blaI / bceB_2 / lpl2_3,,
+BPH3744,VSS-205,239,1,NA,0,TRUE,0,8,FALSE,0,Relapse (after treatment),478,paired-invasive,Nucleoid-associated protein / phage phi3 protein / lss / rpmD / fhuD_1 / bceB_2 / lpl2_3,,
+BPH3417,VSS-221,239,1,Survived,0,TRUE,0,1,FALSE,0,Unknown,23,paired-invasive,NA,,
+BPH3745,VSS-221,239,1,NA,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,,
+BPH3423,VSS-227,20,0,Died,0,TRUE,0,0,FALSE,-0.5,Unknown,8,paired-invasive,NA,,
+BPH3746,VSS-227,20,0,NA,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,,
+BPH3427,VSS-231,22,1,Survived,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,P2,gsiD mutation
+BPH3747,VSS-231,22,1,NA,0,TRUE,0,1,FALSE,0,Unknown,8,paired-invasive,gsiD_2,P2,gsiD mutation
+BPH3433,VSS-237,239,1,Died,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,,
+BPH3748,VSS-237,239,1,NA,0,TRUE,0,0,FALSE,1,Persistent,9,paired-invasive,NA,,
+BPH3437,VSS-241,22,1,Survived,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,,
+BPH3749,VSS-241,22,1,NA,0,TRUE,0,4,FALSE,0.5,Unknown,30,paired-invasive,Ureidoglycolate lyase / hypothetical protein / emrY,,
+BPH3535,VSS-339,239,1,Survived,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,P2,Multiple IS256 insertions
+BPH3752,VSS-339,239,1,NA,0,TRUE,0,0,FALSE,1,Relapse (on treatment),23,paired-invasive,NA,P2,Multiple IS256 insertions
+BPH3674,VSS-493,239,1,Survived,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,,
+BPH3753,VSS-493,239,1,NA,0,TRUE,0,0,FALSE,0,Unknown,38,paired-invasive,NA,,
+BPH3690,VSS-515,22,1,Died,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,,
+BPH3754,VSS-515,22,1,NA,0,TRUE,0,0,FALSE,0.5,Persistent,15,paired-invasive,NA,,
+BPH3694,VSS-525,239,1,Survived,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,,
+BPH3755,VSS-525,239,1,NA,0,TRUE,0,0,FALSE,0,Unknown,10,paired-invasive,NA,,
+BPH3706,VSS-541,239,1,Survived,1,TRUE,NA,NA,FALSE,0,NA,NA,index,NA,P2,agrA mutation
+BPH3757,VSS-541,239,1,NA,0,TRUE,0,1,FALSE,0,Unknown,36,paired-invasive,agrA,P2,agrA mutation

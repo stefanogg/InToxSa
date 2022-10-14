@@ -1,0 +1,904 @@
+---
+title: "Analysis of plate 1-6 of the VANANZ collection"
+author: "Stefano Giulieri"
+date: "13/01/2020"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = here::here())
+msg <- stringr::str_c("My directory is ", here::here())
+print(msg)
+```
+
+### Library
+
+```{r message=FALSE, warning=TRUE}
+library(tidyverse)
+library(magrittr)
+```
+
+## Remove content from the environment (optional)
+
+```{r}
+# rm(list = ls())
+```
+
+### Upload data
+
+```{r message=FALSE, warning=FALSE}
+file <- "Data_parsing/dataframes/partial_datasets/all_PI_kinetics_well_info.csv"
+df_cell_death <- read_csv(file)
+```
+
+## How many isolates, experiments, plates
+
+```{r}
+df_cell_death %>%
+  filter(strain_group != "CONTROL") %>%
+  group_by(plate, experiment) %>%
+  summarise(n_isolates = n_distinct(sample_id),
+            n_groups = n_distinct(strain_group))
+# total number of isolates
+strains <- df_cell_death %>%
+  filter(strain_group != "CONTROL") %>%
+  .$sample_id %>%
+  unique()
+length(strains)
+```
+
+### Standardisation
+
+Here, we install the package grofit based on an old repository, since the package is no longer mantained.
+
+```{r}
+# grofit <- "https://cran.r-project.org/src/contrib/Archive/grofit/grofit_1.1.1-1.tar.gz"
+# if(!require("grofit")) install.packages(grofit, repos = NULL, type = "source")
+```
+
+# Upload functions to standardise and plot the data.
+
+```{r}
+source("Functions/all_functions.R")
+```
+
+
+# Standardise according to JE2 and cut experiment duration to the shortest experiment
+
+How does the standardisation work? First the duration of the experiments is cut to the shortest experiment in the dataset. Second, each signal is standardised as follows: $f\_signal.std = (f\_signal - f\_signal\_JE2.min) / (f\_signal\_JE2.max - f\_signal\_JE2.min)$, where $f\_signal\_JE2.min$ and $f\_signal\_JE2.max$ are the maximum and the minimum of the mean JE2 signal for the experiment, respectively.
+
+```{r fig.height=30, fig.width=21}
+df_cell_death_std <- JE2_POMS_standardisation(df_cell_death,
+                                              cut = T, # cut the experiment duration to the length of the shortest experiment
+                                              plot = F)
+```
+
+# Plot PI kinetics all replicates combined and identify outliers
+
+We first plot all strains and plates (optional)
+
+```{r fig.height=360, fig.width=21}
+# plot_cell_death(df = df_cell_death_std, 
+#                 fitted = F, 
+#                 standardized = T, 
+#                 combine_experiments = T, 
+#                 annotate = T,
+#                 all_replicates = 24) # plot measure every 12 min only
+```
+
+Now we plot JE2 only (optional).
+
+```{r fig.height=10, fig.width=10}
+df <- df_cell_death_std %>%
+  filter(sample_id == "JE2")
+plot_cell_death(df = df,
+                fitted = F,
+                standardized = T,
+                combine_experiments = "all",
+                annotate = T,
+                all_replicates = 12,
+                title = "") # plot measure every 12 min only
+```
+
+## Remove outliers
+
+We will remove outliers using a two-step approach: first remove two JE2 outliers and then repeat the standardisation step. Note: the two JE2 outliers belong to the same experiment. We plot the experiment.
+
+``` {r fig.height=20, fig.width=21}
+JE2.outliers <- c("exp191121_4_B06", "exp191121_4_D06")
+# df <- df_cell_death_std %>%
+#   filter(plate == 4)
+# plot_cell_death(df = df, 
+#                 fitted = F, 
+#                 standardized = T, 
+#                 combine_experiments = T, 
+#                 annotate = T,
+#                 all_replicates = 24,
+#                 title = NULL) 
+```
+
+This shows that there were several outliers in exp191121, possibly due to the JE2 outliers.
+
+## repeat standardisation after removing the JE2 outliers
+
+```{r fig.height=40, fig.width=21}
+df_cell_death_noJE2.outliers <- df_cell_death %>%
+  filter(!well_id %in% JE2.outliers)
+df_cell_death_noJE2.outliers_std <- JE2_POMS_standardisation(df_cell_death_noJE2.outliers,
+                                                             plot = F)
+# plot_cell_death(df = df_cell_death_noJE2.outliers_std, 
+#                 fitted = F, 
+#                 standardized = T, 
+#                 annotate = T,
+#                 all_replicates = 24,
+#                 combine_experiments = "plate",
+#                 save_plot = "Data_analysis/figures",
+#                 plot_size = c(24, 12),
+#                 print_plot = F) 
+```
+
+## Manual annotation of outliers
+
+We can now note the remaining outliers after removing the JE2 outliers. This will be done by manual annotation of a csv files with the list of well_id.
+
+```{r}
+# df_well_id <- df_cell_death_noJE2.outliers %>%
+#   filter(strain_group != "CONTROL") %>%
+#   select(sample_id, well_id) %>%
+#   distinct() %>%
+#   arrange(sample_id)
+# # export into the outliers directory
+# dir <- "Data_analysis/outliers"
+# if (!dir.exists(dir)) dir.create(dir)
+# df_well_id %>%
+#   write_csv(str_c(dir, "/df_well_id.csv"))
+```
+
+We reimport manually annotated outliers. We also want to check if there are wells that are overrpresented in outliers.
+
+```{r message=TRUE}
+outliers <- read_csv("Data_analysis/outliers/PI_kinetics_VANANZ_outliers.csv") %>%
+  .$well_id
+# Total number of outliers
+length(outliers)
+# Identify wells that are repetitely problematic
+tibble(well_id = outliers) %>%
+  mutate(well = str_extract(well_id, "[A-H]\\d{2}")) %>%
+  ggplot(aes(x = fct_infreq(well))) +
+  geom_bar() +
+  labs(x = "\nWell", y = "") +
+  theme_bw() 
+```
+
+Although G12 appears four times (consistent with the analysis of the Nebraska mutants), there is a flat distribution of the 26 outliers across the wells. We will remove all of them. No need to repeat the standardisation, because the JE2 outliers have been removed already.
+
+## Clean dataset
+
+```{r}
+df_cell_death_clean_std <- df_cell_death_noJE2.outliers_std %>%
+  filter(!well_id %in% outliers)
+```
+
+Here, we check the plots after removing outliers. This is not run systematically.
+
+```{r}
+# check plots without outliers
+# dir <- "Data_analysis/tmp"
+# if (!dir.exists(dir)) dir.create(dir)
+# plot_cell_death(df = df_cell_death_clean_std,
+#                 fitted = F,
+#                 standardized = T,
+#                 annotate = T,
+#                 all_replicates = 24,
+#                 combine_experiments = "plate",
+#                 save_plot = "Data_analysis/tmp",
+#                 plot_size = c(24, 12),
+#                 print_plot = F)
+# unlink(dir, recursive = TRUE)
+```
+
+# plot fit smooth spline for all experimens combined
+
+```{r}
+df_cell_death_clean_std_fit <- fit_smooth_spline(df_cell_death_clean_std)
+
+# understand fit_smooth_spline
+my_well_id <- "exp191115_1_A03"
+df <- df_cell_death_clean_std %>%
+  filter(well_id == my_well_id)
+out <- smooth.spline(x = df$timepoint,
+                     y = df$f_signal.std)
+
+str(out)
+str(out$fit)
+pred <- predict(out, deriv = 1)
+str(pred)
+
+df_fit <- df %>% 
+      group_by(well_id) %>% 
+      do(out = smooth.spline(x = .$timepoint, y = .$f_signal.std, spar = .8, keep.data = T))
+df_fit_augment <- df_fit %>% augment(out)
+df_fit_augment
+
+# plot_cell_death(df = df_cell_death_clean_std_fit,
+#                 all_replicates = 24, 
+#                 fitted = T,
+#                 combine_experiments = "plate",
+#                 save_plot = "Data_analysis/figures/fitted",
+#                 plot_size = c(24, 12),
+#                 print_plot = F) 
+```
+
+# Plot residuals, 1st derivative and 2nd derivative (optional)
+
+```{r}
+# # residuals
+# plot_cell_death(df = df_cell_death_clean_std_fit, residual = T, all_replicates = 24, combine_experiments = "none")
+# 
+# # 1st derivative
+# plot_cell_death(df = df_cell_death_clean_std_fit, derivative1 = T, all_replicates = 24, combine_experiments = "none")
+# 
+# # 2nd derivative
+# plot_cell_death(df = df_cell_death_clean_std_fit, derivative2 = T, all_replicates = 24, combine_experiments = "none")
+```
+
+## Plot strains with a comparator
+
+# General case: comparator is JE2
+
+```{r}
+# df <- df_cell_death_clean_std_fit %>%
+#   filter(sample_id != "Complete lysis") 
+# plot_cell_death(df = df, fitted = T, combine_experiments = "plate", comparator = "JE2", all_replicates = 24)
+# plot_cell_death(df = df, fitted = T, combine_experiments = "none", comparator = "JE2", all_replicates = 24)
+```
+
+### Episode specific comparisons
+
+This is the first attempt to study within-host phenotypic evolution
+
+# Systematical generation of comparison for all pairs
+
+```{r}
+# Attach pair metadata
+df_metadata <- read_csv("plate_info/strain_metadata.csv")
+df_cell_death_clean_std_fit_metadata <- df_cell_death_clean_std_fit %>%
+  left_join(df_metadata) %>%
+  arrange(strain_group)
+
+# Subset of data from pairs
+df_cell_death_pairs <- df_cell_death_clean_std_fit_metadata %>%
+  filter(included | strain_group == "CONTROL") %>%
+  filter(sample_id != "Complete lysis")
+print(str_c("The number of included paired isolates is ", 
+            df_cell_death_pairs %>% filter(included) %>% .$sample_id %>% n_distinct())) 
+included_pairs <- df_cell_death_pairs %>%
+  filter(included) %>%
+  .$strain_group %>%
+  unique()
+print(str_c("The number of included pairs is ", length(included_pairs)))
+
+# Total number of pairs and paired isolates
+print(str_c("We have ",
+            df_cell_death_pairs %>% group_by(strain_group) %>% filter(n() > 1) %>% .$sample_id %>% n_distinct(),
+            " isolates from ",
+            df_cell_death_pairs %>% group_by(strain_group) %>% filter(n() > 1) %>% .$strain_group %>% n_distinct(),
+            " episodes"))
+```
+
+
+# Plot pair data: example VAN-024
+
+```{r}
+my_df <- df_cell_death_pairs %>%
+  filter(plate == 2) %>%
+    filter(strain_group %in% c("VAN-024", "CONTROL")) %>%
+    mutate(sample_id = if_else(
+    strain_group == "VAN-024",
+    str_c(sample_id, "\n(", sample_type, ")"),
+    sample_id
+    ))
+p <- plot_cell_death(df = my_df,
+                  fitted = T,
+                  combine_experiments = "plate", 
+                  comparator = "BPH2728\n(index)",
+                  all_replicates = 24,
+                  title = "Plate 2 - VAN-024/ST45 - fitted smooth spline",
+                  print_plot = FALSE,
+                return_plots = TRUE)
+
+# generate table with minimal metadata
+library(gridExtra)
+library(patchwork)
+s <- my_df %>%
+  filter(str_detect(sample_id, "BPH2729")) %>%
+  .$genes %>%
+  unique() %>%
+  str_pad(70, side = "right", pad = "*")
+
+# function to insert new line at specified length
+insert_new_line <- function(string, pos,  check_length = TRUE){
+ 
+  if (check_length){
+    if (str_length(string) < pos) return(str_c("String length is less than ", pos))
+  }
+  
+  str_sub(string, pos, pos) <- "\n"
+  return(string)
+}
+insert_new_line(s, 50)
+str_wrap(s, 60)
+
+# run functions iteratively to keep mx string length
+
+
+
+
+my_metadata <- my_df %>%
+  filter(intrahost_index == 0) %>%
+  mutate(genes = str_pad(genes, 70, side = "right", pad = "*")) %>%
+  mutate(genes_short = str_wrap(genes, 50)) %>%
+  select(sample = sample_id, delay = intrahost_sampledelay, persister_type, scv, vancodiff = vanco_difference, mut = mut_count, genes = genes_short) %>%
+  distinct()
+t <- tableGrob(my_metadata)
+p / t
+
+```
+
+
+```{r}
+# Plot within-host evolution in 17 pairs tested so far
+
+type = "fitted smooth spline"
+dir <- "Data_analysis/figures/pairs"
+if (!dir.exists(dir)) dir.create(dir)
+
+for (i in included_pairs) {
+  my_plate <- df_cell_death_pairs %>%
+  filter(strain_group == i) %>%
+  .$plate %>%
+  unique()
+  
+  my_group <- c(i, "CONTROL")
+  
+  my_df <- df_cell_death_pairs %>%
+    filter(plate == my_plate) %>%
+    filter(strain_group %in% my_group) %>%
+    mutate(sample_id = if_else(
+    strain_group == i,
+    str_c(sample_id, "\n(", sample_type, ")"),
+    sample_id
+    ))
+  
+  my_comparator <- my_df %>%
+    filter(intrahost_index == 1) %>%
+    .$sample_id %>%
+    unique()
+  
+  my_st <- unique(my_df %>% drop_na(ST) %>% .$ST %>% unique())
+    my_pair <- str_c(i, " / ST ", my_st)
+    
+  my_title = str_c("Plate ", my_plate, " - ", my_pair, " - ", type)
+  
+  p <- plot_cell_death(df = my_df,
+                  fitted = T,
+                  combine_experiments = "plate", 
+                  comparator = my_comparator,
+                  all_replicates = 24,
+                  title = my_title,
+                  print_plot = FALSE,
+                  return_plots = TRUE)
+  
+  my_metadata <- my_df %>%
+    filter(intrahost_index == 0) %>%
+    mutate(genes_short = str_wrap(genes, 50)) %>%
+     # mutate(genes_short = if_else(str_length(genes) >= 50,
+     #                           insert_new_line(genes, 50, check_length = FALSE),
+     #                           genes)) %>%
+    select(
+      sample = sample_id,
+      delay = intrahost_sampledelay,
+      persister_type,
+      scv,
+      vancodiff = vanco_difference,
+      mut = mut_count,
+      genes = genes_short
+    ) %>%
+    distinct()
+  
+t <- tableGrob(my_metadata)
+
+p / t
+  
+  file <- str_c(dir, "/PI_kinetics_", i, "_", type, "_with_", unique(my_df$cell_number), "_cells.pdf")
+  
+  # calculate size based on number of graphs ( width = 3.5 in per graph)
+  my_width <- n_distinct(my_df$sample_id) * 2
+  
+  ggsave(file, width = my_width, height = 5)
+  
+}
+```
+
+Inspection of the fitted toxicity curves identifies four pairs with within-host phenotypic changes: VAN-024 and VAN-050 have a dramatic loss of cytotoxicity in one of the isolates, while VAN-004 and VAN-023 have more subtle changes that may or may not be significant.
+
+# Get growth parameters individually
+
+```{r}
+# AUC
+df_AUC <- get_AUC(df_cell_death_clean_std_fit_metadata)
+
+# max death
+df_max_death <- get_point_max_death(df_cell_death_clean_std_fit_metadata)
+
+# max death rate
+df_max_death_rate <- get_point_max_death_rate(df_cell_death_clean_std_fit_metadata)
+
+# merge
+df_cell_death_parameters <- df_cell_death_clean_std_fit_metadata %>%
+  select(well_id, plate, cell_number, sample_id, strain_group, included, intrahost_index, sample_type, ST, mecA, mortality) %>%
+  distinct() %>%
+  left_join(df_AUC) %>%
+  left_join(df_max_death) %>%
+  left_join(df_max_death_rate)
+```
+
+
+# Check linear correlation between parameters
+```{r}
+cor <- cor(df_cell_death_parameters[2:6], df_cell_death_parameters[2:6], method = "pearson")
+corrplot::corrplot(cor, addCoef.col = "white", number.cex = .7, tl.col = "black")
+```
+
+# Check rank correlation between parameters
+```{r}
+cor <- cor(df_cell_death_parameters[2:6], df_cell_death_parameters[2:6], method = "spearman")
+corrplot::corrplot(cor, addCoef.col = "white", number.cex = .7, tl.col = "black")
+```
+
+## Compare toxicity parameters across pairs
+
+```{r}
+library(ggpubr)
+# example: VAN-024
+my_df <- df_cell_death_parameters %>%
+  filter(plate == 2) %>%
+  filter(strain_group %in% c("VAN-024", "CONTROL")) %>%
+  filter(sample_id != "Complete lysis")
+
+my_order <- my_df %>%
+    arrange(sample_id) %>%
+    .$sample_id %>%
+    unique()
+
+plot_parameters <- function(parameter, label, refgroup) {
+  p <- ggboxplot(data = my_df,
+                 y = parameter,
+                 x = "sample_id",
+                 color = "strain_group",
+                 order = my_order ) +
+    stat_compare_means(ref.group = refgroup,
+                       method = "wilcox.test",
+                       label = "p.signif") +
+    labs(x = "", y = label) +
+    theme_bw() +
+    theme(legend.position = "none")
+
+  return(p)
+  
+}
+parameters <- my_df %>%
+  select(AUC, max_death, max_death_rate, time_of_max_death_rate) %>%
+  colnames()
+names(parameters) <- c("AUC\n",
+                       "Peak cell death\n",
+                       "Peak cell death rate (slope)\n",
+                       "Timepoint of peak cell death rate\n")
+plots <- imap(parameters, plot_parameters, refgroup = "BPH2728")
+wrap_plots(plots) +
+  plot_annotation(title = "Cell death parameters - VAN-024 (plate2)",
+                  subtitle = "Comparator: BPH2728")
+
+``` 
+
+Now we can plot the toxicity parameters for all pairs
+
+``` {r}
+# extend to all pairs
+cell_death_parameters_pairs <- df_cell_death_parameters %>%
+  filter(included | strain_group == "CONTROL") %>%
+  filter(sample_id != "Complete lysis")
+
+# prepare for saving
+dir <- "Data_analysis/figures/parameters/pairs"
+if (!dir.exists(dir)) dir.create(dir, recursive = TRUE)
+
+for (i in included_pairs) {
+  
+  my_plate <- df_cell_death_pairs %>%
+    filter(strain_group == i) %>%
+    .$plate %>%
+    unique()
+  
+  my_group <- c(i, "CONTROL")
+  
+  my_df <- cell_death_parameters_pairs %>%
+    filter(plate == my_plate) %>%
+    filter(strain_group %in% my_group) %>%
+    mutate(sample_id = if_else(
+      strain_group == i,
+      str_c(sample_id, "\n(", sample_type, ")"),
+      sample_id
+    ))
+  
+  my_refgroup <- my_df %>%
+    filter(intrahost_index == 1) %>%
+    .$sample_id %>%
+    unique()
+  
+  my_st <- unique(my_df %>% drop_na(ST) %>% .$ST %>% unique())
+  
+  my_pair <- str_c(i, " / ST ", my_st)
+  
+  my_title = str_c("Cell death parameters - ", my_pair, " (plate  ", my_plate, ")")
+  my_subtitle = str_c("Comparator: ", str_remove(my_refgroup, "\\(index\\)"))
+  
+  my_order <- my_df %>%
+    arrange(sample_id) %>%
+    .$sample_id %>%
+    unique()
+  
+  plots <- purrr::imap(parameters, plot_parameters, refgroup = my_refgroup)
+  
+  wrap_plots(plots) +
+    plot_annotation(title = my_title,
+                    subtitle = my_subtitle)
+  
+  # save the plot
+  my_dir <- str_c(dir, "/", i)
+  if (!dir.exists(my_dir))
+    dir.create(my_dir)
+  
+  file <- str_c(my_dir,
+                "/Cell_death_parameters_",
+                i,
+                "_with_",
+                unique(my_df$cell_number),
+                "_cells.pdf")
+  
+  ggsave(file, width = 9, height = 6)
+ 
+}
+
+```
+
+### Population-level analysis
+
+# Compare growth parameters across STs 
+
+```{r}
+df <- df_cell_death_parameters %>%
+  filter(plate != 4) %>%
+  filter(sample_id != "Complete lysis") %>%
+  mutate(ST = fct_lump(ST, n = 10)) %>%
+  mutate(group = if_else(strain_group == "CONTROL", 
+                         sample_id, 
+                         as.character(ST))) %>%
+  group_by(sample_id, group, plate) %>%
+  summarise(AUC = mean(AUC))
+
+df %>%
+  ggplot(aes(x = fct_reorder(group, AUC, .desc = TRUE), y = AUC)) +
+  geom_boxplot() +
+  geom_jitter() +
+  geom_hline(yintercept = df_cell_death_parameters %>%
+  filter(sample_id == "JE2") %>% .$AUC %>% mean()) +
+  coord_flip() +
+  theme_bw() +
+  theme(legend.position = "none")
+
+# file <- "Data_analysis/figures/parameters/Cell_death_AUC_major_STs_no_plate4.pdf"
+# ggsave(file)
+  
+```
+
+# Compare growth parameters across outcome groups
+
+```{r}
+df <- df_cell_death_parameters %>% 
+  # filter(plate != 4) %>%
+            filter(sample_id != "Complete lysis") %>%
+            mutate(group = if_else(strain_group == "CONTROL", 
+                                   sample_id,
+                                   mortality)) %>%
+  group_by(sample_id, group, plate, ST) %>%
+  summarise(AUC = mean(AUC))
+df %>% 
+  ggplot(aes(x = group, y = AUC)) +
+  geom_boxplot() +
+  geom_jitter() +
+  geom_hline(yintercept = df_cell_death_parameters %>%
+               filter(sample_id == "JE2") %>% .$AUC %>% mean()) +
+  coord_flip() +
+  theme_bw() +
+    theme(legend.position = "none") 
+# stratify by ST
+df %>% 
+  ggplot(aes(x = group, y = AUC)) +
+  geom_boxplot() +
+  geom_jitter() +
+  geom_hline(yintercept = df_cell_death_parameters %>%
+               filter(sample_id == "JE2") %>% .$AUC %>% mean()) +
+  coord_flip() +
+  facet_wrap(~ST) +
+  theme_bw() +
+    theme(legend.position = "none") 
+# stratify by ST239 vs non ST239
+df <- df_cell_death_parameters %>% 
+  filter(plate != 4) %>%
+            filter(sample_id != "Complete lysis") %>%
+            mutate(group = if_else(strain_group == "CONTROL", 
+                                   sample_id,
+                                   mortality),
+                   st239 = if_else(ST == "239", "ST239", "Other ST")) %>%
+  group_by(sample_id, group, plate, st239) %>%
+  summarise(AUC = mean(AUC))
+df %>% 
+  ggplot(aes(x = group, y = AUC)) +
+  geom_boxplot() +
+  geom_jitter() +
+  geom_hline(yintercept = df_cell_death_parameters %>%
+               filter(sample_id == "JE2") %>% .$AUC %>% mean()) +
+  coord_flip() +
+  facet_wrap(~st239) +
+  theme_bw() +
+    theme(legend.position = "none") 
+
+# file <- "Data_analysis/figures/parameters/Cell_death_AUC_patient_mortality_no_plate4.pdf"
+# ggsave(file)
+
+df <- df_cell_death_parameters %>%
+  drop_na(mortality) %>%
+  group_by(sample_id, mortality) %>%
+  summarise(AUC = mean(AUC))
+nrow(df)
+wilcox.test(x = df[df$mortality == "Survived", ]$AUC,
+            y = df[df$mortality == "Died", ]$AUC)
+
+wilcox.test(x = df[df$mortality == "Survived", ]$AUC,
+            y = df[df$mortality == "Died", ]$AUC, alternative = "greater")
+```
+
+### Assembling of supplementary plates
+
+Abdou wants to run more advanced host-pathogen phenotypic testing on a subset of selected isolates: these tests will include PI kinetics over 72h and high-throughput microscopy.
+
+This plate should include:
+- the 4 pairs that showed significant differences in AUC and max cell death (the cell death rate seems less sensitive) (9 isolates)
+- representatives from selected STs and toxicity profiles
+
+# List of interesting pairs
+
+For this plate(s) we will avoid using the external wells. This leaves 60 wells (10 columns x 6 rows). The controls will take 12 wells:
+- JE2 (3x)
+- TOX-4 (3x)
+- Non infected (3x)
+- Complete lysis (3x)
+This will leave 48 wells for 16 isolates
+
+We have created a dataframe of interesting pairs 
+
+```{r}
+# list of pairs to annotate
+file <- "Data_analysis/interesting_pairs.csv"
+# df_metadata %>%
+#   filter(included) %>%
+#   write_csv(file)
+pairs_select <- read_csv(file)  %>%
+  filter(!is.na(add_to_plate)) %>%
+  select(sample_id, strain_group, add_to_plate, comment)
+
+# create plates info
+isolates <- pairs_select %>% filter(add_to_plate == "P1") %>% .$sample_id
+controls <- c(
+  "Non infected",
+  "TOX-4",
+  "JE2",
+  "Complete lysis"
+)
+fixed <- "Complete lysis"
+plate_planner(isolates, controls, fixed, exclude_outer_wells = TRUE, n_replicates = 3, randomise = TRUE)
+plates <- c("P1", "P2")
+
+well_info <- bind_rows(lapply(plates, function(x){
+  isolates <- pairs_select %>%
+    filter(add_to_plate == x) %>%
+    .$sample_id
+  well_info <- plate_planner(
+  isolates = isolates,
+  controls = controls,
+  exclude_outer_wells = TRUE,
+  randomise = TRUE,
+  fixed = "Complete lysis"
+) %>%
+    mutate(plate_number = x)
+  return(well_info)
+}))
+write_csv(well_info, "plate_info/well_info_plates_P1_P2.csv")
+```
+
+# Create plate maps
+
+```{r}
+plate_info <- lapply(plates, function(x){
+  df <- well_info %>%
+    filter(plate_number == x)
+  plate_info <- plate_mapper(df)
+  return(plate_info)
+})
+names(plate_info) <- str_c("plate_", plates)
+
+```
+
+# The plate maps can now be exported in csv format
+
+```{r warning=FALSE}
+
+# unlink("dataframes/plate_maps/*.csv", recursive = TRUE)
+purrr::walk(names(plate_info), function(x){
+  df <- plate_info[[x]]
+  file <- str_c(
+    "plate_info/plate_maps/",
+    x,
+    ".csv"
+  )
+  write_csv(df, file)
+})
+```
+
+# Select two more plates 
+
+Isolates for plates 7-15 have been already stored. We select two more plates in this group, with the aim of enriching in isolates from patients who died.
+
+To identify these plates, we need a file with isolates metadata and plate location
+
+```{r}
+sample_list_plate <- read_csv("plate_info/sample_list_plate.csv") %>%
+  select(sample_id = mdu_id, plate)
+df_metadata_plate <- df_metadata %>%
+  left_join(sample_list_plate)
+# plot mortality
+p1 <- df_metadata_plate %>%
+  mutate(plate_status = case_when(
+    plate <= 6 & plate != 4 ~ "Done",
+    plate > 6 & plate <= 15 ~ "Stored",
+    plate == 4 | plate > 15 ~ "Not stored"
+  )) %>%
+  filter(mortality == "Died") %>%
+  ggplot(aes(x = as.factor(plate), fill = plate_status)) +
+  geom_bar() +
+  labs(title = "Number of isolates from patients who died",
+       x = "Plate number",
+       y = "Count",
+       fill = "Plate status",
+       caption = "Note: plate 4 needs to be repeated") +
+  theme_bw()
+# plot STs
+p2 <- df_metadata_plate %>%
+  mutate(plate_status = case_when(
+    plate <= 6 & plate != 4 ~ "Done",
+    plate > 6 & plate <= 15 ~ "Stored",
+    plate == 4 | plate > 15 ~ "Not stored"
+  )) %>%
+  filter(ST %in% c("22", "239", "45", "30", "5")) %>%
+  ggplot(aes(x = as.factor(plate), fill = plate_status)) +
+  geom_bar() +
+  labs(title = "Number of isolates from top 5 STs: 5, 22, 30, 45 and 239",
+       x = "Plate number",
+       y = "Number of isolates",
+       fill = "Plate status",
+       caption = "Note: plate 4 needs to be repeated") +
+  theme_bw()
+# plot median number of isolates per pair
+p3 <- df_metadata_plate %>%
+  mutate(plate_status = case_when(
+    plate <= 6 & plate != 4 ~ "Done",
+    plate > 6 & plate <= 15 ~ "Stored",
+    plate == 4 | plate > 15 ~ "Not stored"
+  )) %>%
+  group_by(plate, plate_status) %>%
+  summarise(n_included = length(which(included))) %>%
+  ggplot(aes(x = as.factor(plate), y = n_included,
+             fill = plate_status)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Number of isolates suitable for within-host evolution analysis",
+       x = "Plate number",
+       y = "Number of isolates",
+       fill = "Plate status",
+       caption = "Note: plate 4 needs to be repeated") +
+  theme_bw()
+p1 / p2 / p3
+ggsave("Data_analysis/figures/plates_select.pdf",
+       width = 12, height = 8)
+```
+
+# Assembling of mortality plates
+
+After review the results, we have decided to enrich the existing collection with lethal isolates, to increase the power of detecting a difference in toxicity.
+
+Therefore, we will assemble two new plates (M1 and M2) with lethal episodes only
+
+```{r}
+# select lethal episodes 
+set.seed(1)
+lethal_strains <- df_metadata_plate %>%
+  filter(mortality == "Died")
+lethal_select <- lethal_strains %>%
+  inner_join(read_csv("plate_info/well_info_plates_M1_M2.csv") %>% select(sample_id, plate_number) %>% distinct()) 
+# lethal_select <- lethal_strains %>%
+#   filter(plate > 6) %>%
+#   sample_n(56) %>%
+#   arrange(sample_id) %>%
+#   mutate(plate = if_else(row_number() <= 28, "M1", "M2"))
+# lethal_select
+write_csv(lethal_select,
+          "Data_analysis/lethal_isolates.csv")
+```
+
+We have randomly selected 56 isolates from 97 lethal isolates assigned to plates 7-31. We will now generate plate maps for plates M1 and M2.
+
+```{r}
+controls <- c(
+  "Non infected",
+  "TOX-4",
+  "JE2",
+  "Complete lysis"
+)
+
+plates <- c("M1", "M2")
+well_info_lethal_strains <- bind_rows(lapply(plates, function(x){
+  isolates <- lethal_select %>% filter(plate == x) %>% .$sample_id
+  plate_planner(isolates = isolates,
+                n_replicates = 3,
+                controls = controls,
+                exclude_outer_wells = FALSE, 
+                randomise = TRUE, 
+                fixed = "Complete lysis") %>%
+    mutate(plate_number = x)
+}))
+write_csv(well_info_lethal_strains,
+          "plate_info/well_info_plates_M1_M2.csv")
+
+# Create plate maps
+plate_info <- lapply(plates, function(x){
+  df <- well_info_lethal_strains %>%
+    filter(plate_number == x)
+  plate_info <- plate_mapper(df)
+  return(plate_info)
+})
+names(plate_info) <- str_c("plate_", plates)
+
+
+# The plate maps can now be exported in csv format
+# unlink("dataframes/plate_maps/*.csv", recursive = TRUE)
+purrr::walk(names(plate_info), function(x){
+  df <- plate_info[[x]]
+  file <- str_c(
+    "plate_info/plate_maps/",
+    x,
+    ".csv"
+  )
+  write_csv(df, file)
+})
+```
+
+
+# Check the new genetic pair (not within host) that have been already assesed (see genetic pairs analysis)
+
+```{r}
+plot_cell_death(df_cell_death_clean_std_fit_metadata %>% filter(sample_id %in% c("BPH2852", "BPH2857")), standardized = T, fitted = T, all_replicates = 24, combine_experiments = "all", comparator = "BPH2857") 
+```
+No clear differences between 

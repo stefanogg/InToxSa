@@ -1,0 +1,200 @@
+---
+title: "Count mutations based on the denovo method"
+author: "Stefano Giulieri"
+date: "17/02/2021"
+output: html_document
+---
+
+```{r setup}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = here::here())
+msg <- glue::glue("My directory is {here::here()}")
+message(msg)
+```
+
+This script focuses on counts of mutations using the denovo method
+
+```{r message=F}
+library(tidyverse)
+library(ggpubr)
+library(patchwork)
+library(broom)
+library(skimr)
+rm(list = ls())
+```
+
+# Raw data
+
+List with all (current) genetic pairs run on snippy (from the server)
+
+```{r}
+f <- "~/Documents/Transfer_with_server/genetic_pairs.tab"
+dir <- "Genetic_pairs_analysis_Oct_2020/raw_data/pairs_metadata/"
+fname <- basename(f)
+# file.copy(f,
+#           str_c(dir, fname),
+#           overwrite = T)
+df_pairs <- read_tsv(f, 
+                     col_names = c("PAIR_ID", 
+                                   "iso1",
+                                   "iso2"))
+
+# Total number of pairs
+nrow(df_pairs)
+```
+
+
+Mutations counts
+
+This table was generated on the server using the commands
+
+```
+# count mutations
+for i in GP-*; do wc -l $i/all_snps.tab | cut -f1 -d ' '| awk -v OFS='\t' -v var=$i '{print var,$1-1}'; done > snps.counts.tab
+for i in GP-*; do wc -l $i/all_snps.noref.tab | cut -f1 -d ' '| awk -v OFS='\t' -v var=$i '{print var,$1-1}'; done > snps.noref.counts.tab
+for i in GP-*; do wc -l $i/all_snps.mask.tab | cut -f1 -d ' '| awk -v OFS='\t' -v var=$i '{print var,$1-1}'; done snps.mask.counts.tab
+
+# merge into one dataset
+csvtk join -t snps.counts.tab snps.noref.counts.tab snps.mask.counts.tab | csvtk add-header -t -n PAIR_ID,n_snippy,n_noref,n_mask > mutation.counts.tab
+```
+
+
+```{r}
+dir <- "Genetic_pairs_analysis_Oct_2020/raw_data/snippy/denovo/"
+dir.create(dir)
+f <- "~/Documents/Transfer_with_server/mutation.counts.tab"
+fname <- basename(f)
+# file.copy(f, str_c(dir, fname), overwrite = T)
+
+df_denovo_mutation_counts <- read_tsv(str_c(dir, fname))
+```
+
+# Explore mutation counts
+
+Overall number of mutations
+
+```{r}
+df_denovo_mutation_counts <- df_denovo_mutation_counts %>%
+  left_join(df_pairs)
+
+summary(df_denovo_mutation_counts)
+
+df_denovo_mutation_counts <- df_denovo_mutation_counts %>%
+  pivot_longer(cols = starts_with("n_"),
+               names_to = "filter_type",
+               values_to = "n_mutations") %>%
+  mutate(filter_type = fct_relevel(filter_type,
+                                   c("n_snippy", "n_noref", "n_mask"))) %>%
+  mutate(filter_label = fct_recode(filter_type,
+                                  `No filter` = "n_snippy",
+                                  `Remove reference variants` = "n_noref",
+                                  `Remove reference variants and variants with low coverage` = "n_mask"))
+
+binw <- 5
+df_denovo_mutation_counts %>%
+  ggplot(aes(x = n_mutations)) +
+  geom_histogram(aes(fill = filter_label),
+                 binwidth = binw) +
+  geom_density(aes(y = binw* ..count.. )) +
+  facet_wrap(~filter_label, ncol = 1) +
+  scale_fill_discrete(guide = F) +
+  theme_bw()
+```
+
+Correlation of n mutation within symmetric pairs?
+
+```{r}
+df_denovo_mutation_counts <- df_denovo_mutation_counts %>%
+  rowwise() %>%
+  mutate(non_directional_pair_id = str_c(str_sort(c(iso1, iso2)),
+                                         collapse = "-")) 
+
+df_symmetric <- df_denovo_mutation_counts %>%
+  arrange(non_directional_pair_id, iso1) %>%
+  group_by(non_directional_pair_id, filter_type) %>%
+  transmute(non_directional_pair_id, filter_type, n_mutations, comparison = if_else(row_number() == 1, 
+                                                                       "first_comparison",
+                                                                       "second_comparison")) %>%
+  pivot_wider(names_from = comparison, values_from = n_mutations) %>%
+  mutate(difference = abs(first_comparison - second_comparison))
+
+p1 <- df_symmetric %>%
+  ggscatter(x = "first_comparison",
+            y = "second_comparison",
+            add = "reg.line",
+            add.params = list(color = "blue", fill = "lightblue"),
+            conf.int = T) +
+  stat_cor(aes(label = str_c(..rr.label.., ..p.label.., sep = "~`,`~"))) +
+  facet_wrap(~filter_type) +
+  labs(title = "Number of mutations after mapping on the de novo assembly",
+       subtitle = "All") +
+  theme_bw()
+
+p2 <- df_symmetric %>%
+  filter(first_comparison < 200 & second_comparison < 200) %>%
+  ggscatter(x = "first_comparison",
+            y = "second_comparison",
+            add = "reg.line",
+            add.params = list(color = "blue", fill = "lightblue"),
+            conf.int = T) +
+stat_cor(aes(label = str_c(..rr.label.., ..p.label.., sep = "~`,`~"))) +
+  facet_wrap(~filter_type) +
+  labs(title = "Number of mutations after mapping on the de novo assembly",
+       subtitle = "N < 200") +
+  theme_bw()
+
+p1/p2
+
+
+dir <- "Genetic_pairs_analysis_Oct_2020/figures/mutation_counts/"
+dir.create(dir)
+ggsave(str_c(dir, "denovo_mutation_counts_correlation_within_pairs.pdf"), width = 11, height = 10)
+
+binw <- 5
+df_symmetric %>%
+  ggplot(aes(x = difference)) +
+  geom_histogram(aes(fill = filter_type),
+                 binwidth = binw) +
+  geom_density(aes(y = binw* ..count.. )) +
+  facet_wrap(~filter_type, ncol = 1) +
+  theme_bw()
+```
+
+Extract regression parameters
+
+```{r}
+df_summary <- df_denovo_mutation_counts %>%
+  ungroup() %>%
+  group_by(filter_type) %>%
+  skim(n_mutations)
+
+df_summary
+
+
+df_stats <- df_symmetric %>%
+  rename(x = first_comparison,
+         y = second_comparison) %>%
+  group_by(filter_type) %>%
+  do(fit = glance(lm(y ~ x, data = .))) %>%
+  unnest(fit)
+
+df_stats
+
+
+```
+
+# Export processed data
+
+```{r}
+dir <- "Genetic_pairs_analysis_Oct_2020/processed_data/snippy/"
+dir.create(dir)
+
+# snippy denovo
+subdir <- str_c(dir, "denovo/")
+dir.create(subdir)
+# df_denovo_mutation_counts %>%
+#   saveRDS(str_c(subdir, "snippy_denovo_mutcounts.Rda"))
+# df_stats %>%
+#   saveRDS(str_c(subdir, "snippy_denovo_counts_correlations.Rda"))
+```
+

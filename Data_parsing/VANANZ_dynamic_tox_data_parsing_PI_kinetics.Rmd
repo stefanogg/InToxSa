@@ -1,0 +1,519 @@
+---
+title: 'VANANZ dynamic cytotoxicity: parsing PI kinetics data'
+author: "Stefano Giulieri"
+date: "06/10/2019"
+output: html_document
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = here::here())
+msg <- stringr::str_c("My directory is ", here::here())
+print(msg)
+```
+
+```{r message=FALSE}
+library(tidyverse)
+library(magrittr)
+
+rm(list = ls())
+```
+
+
+### Create the file structure for the first 5 plates
+
+```{r}
+# plates and experiments
+plate2 <- c(
+  "exp_190831",
+  "exp_190905",
+  "exp_190909",
+  "exp_190921",
+  "exp_191107"
+)
+plate3 <- c(
+  "exp_190923",
+  "exp_191109",
+  "exp_191111"
+)
+plate1 <- c(
+  "exp_191115",
+  "exp_191116"
+)
+plate4 <- c(
+  "exp_191120",
+  "exp_191121"
+)
+plate5 <- c(
+  "exp_191129",
+  "exp_191130"
+)
+plate_exp_list <- list(plate1, plate2, plate3, plate4, plate5)
+names(plate_exp_list) <- sapply(1:5, function(x){
+  str_c("plate", x)
+})
+# folders
+folders <- c(
+  "Growth_curves",
+  "Inocula_OD",
+  "LDH",
+  "PI_endpoints",
+  "PI_kinetics",
+  "Parameters"
+)
+# Generate file structure 
+directories <- sapply(1:length(plate_exp_list), function(i){
+  dir <- str_c("Raw_data/", names(plate_exp_list[i]))
+  if (!dir.exists(dir)) dir.create(dir)
+  directories <-sapply(plate_exp_list[[i]], function(x){
+    dir <- str_c(dir, "/", x)
+    if (!dir.exists(dir)) dir.create(dir)
+    return(dir)
+  })
+  return(directories)
+})
+
+# Move existing data manually
+# plate2 <- c(
+#   "exp_190831",
+#   "exp_190905",
+#   "exp_190909",
+#   "exp_190921",
+#   "exp_191107"
+# )
+# plate3 <- c(
+#   "exp_190923",
+#   "exp_191109",
+#   "exp_191111"
+# )
+# plate1 <- c(
+#   "exp_191115",
+#   "exp_191116"
+# )
+
+# Create folder structure
+# vector of directories
+directories <- Reduce(c, directories)
+purrr::walk(directories, function(x){
+  lapply(folders, function(y){
+    dir <- str_c(x, "/", y)
+    print(str_c("Checking if ", dir, "exists ..."))
+    if (!dir.exists(dir)) dir.create(dir)
+  })
+})
+```
+
+
+### PI kinetics
+
+## Import raw data, one table at the time
+
+```{r message=FALSE}
+source("Functions/parse_results.R")
+```
+
+# experiment 190831
+
+```{r message=FALSE, warning=FALSE}
+# arguments for parse function
+file <- "Raw_data/plate2/exp_190831/PI_kinetics/190831 LD PI Assay VANANZ 24 hours.xlsx"
+duration <- c(22, 42)
+wavelength <- c(493, 535)
+
+# new variables
+exp <- "exp190831"
+cell_number <- 40e3
+plate <- 2
+
+# parse results
+data <- parse_kinetics(file = file, duration = duration, wavelength = wavelength, exp = exp, cell_number = cell_number, plate = plate)
+ 
+data
+
+# add to list
+kinetics_data <- list()
+kinetics_data[[1]] <- data
+```
+
+# exp 090905
+
+```{r message=FALSE}
+file <- "Raw_data/plate2/exp_190905/PI_kinetics/190830 HeLa 25000 Cell death rate dynamic.xlsx"
+duration <- c(20, 6)
+wavelength <- c(493, 535)
+
+# new variables
+exp <- "exp190905"
+cell_number <- 25e3
+plate <- 2
+
+# parse results
+# parse results
+data <- parse_kinetics(file = file,  duration = duration, wavelength = wavelength, exp = exp, cell_number = cell_number, plate = plate)
+data
+
+# add to list
+kinetics_data[[2]] <- data
+
+```
+
+# exp 190909
+
+```{r message=FALSE}
+file <- "Raw_data/plate2/exp_190909/PI_kinetics/190910.Plate.Vananz.2.HeLa.20000.cell.death.rate.dynamic.run.3.xlsx"
+duration <- c(21, 0)
+wavelength <- 535
+
+# new variables
+exp <- "exp190909"
+cell_number <- 20e3
+plate <- 2
+
+# parse results
+data <- parse_kinetics(file = file,  duration = duration, wavelength = wavelength, exp = exp, cell_number = cell_number, plate = plate)
+data
+
+# add to list
+kinetics_data[[3]] <- data
+```
+
+## exp 190921
+
+```{r message=FALSE}
+file <- "Raw_data/plate2/exp_190921/PI_kinetics/190921 HeLa real time cell death assay n4 using 20000 cells .xlsx"
+n_skip <- 13
+duration <- c(20, 48)
+wavelength <- c(493, 535)
+
+# new variables
+exp <- "exp190921"
+cell_number <- 20e3
+plate <- 2
+
+# parse results
+data <- parse_kinetics(file = file,  duration = duration, wavelength = wavelength, exp = exp, cell_number = cell_number, plate = plate)
+data
+
+# add to list
+kinetics_data[[4]] <- data
+```
+
+## exp 190923
+
+```{r message=FALSE}
+file <- "Raw_data/plate3/exp_190923/PI_kinetics/190923 plate VANANZ 3 HeLa real time cell death n5.xlsx"
+n_skip <- 13
+duration <- c(22, 18)
+wavelength <- 535
+
+# new variables
+exp <- "exp190923"
+cell_number <- 2e4
+plate <- 3
+
+# parse results
+data <- parse_kinetics(file = file,  duration = duration, wavelength = wavelength, exp = exp, cell_number = cell_number, plate = plate)
+data
+
+# add to list
+kinetics_data[[5]] <- data
+```
+
+
+## exp 191107
+
+```{r message=FALSE}
+file <- "Raw_data/plate2/exp_191107/PI_kinetics/191107 plate 2  HeLa 40000 real time cell death .xlsx"
+n_skip <- 13
+duration <- c(24, 54)
+wavelength <- 535
+
+# new variables
+exp <- "exp191107"
+cell_number <- 4e4
+plate <- 2
+
+# parse results
+data <- parse_kinetics(file = file,  duration = duration, wavelength = wavelength, exp = exp, cell_number = cell_number, plate = plate)
+data
+
+# add to list
+kinetics_data[[6]] <- data
+```
+
+## exp 191109
+
+```{r message=FALSE}
+file <- "Raw_data/plate3/exp_191109/PI_kinetics/Vananz plate 3 191109 real time cell death n1.xlsx"
+n_skip <- 13
+duration <- c(20, 48)
+wavelength <- 535
+
+# new variables
+exp <- "exp191109"
+cell_number <- 4e4
+plate <- 3
+
+# parse results
+data <- parse_kinetics(file = file,  duration = duration, wavelength = wavelength, exp = exp, cell_number = cell_number, plate = plate)
+data
+
+# add to list
+kinetics_data[[7]] <- data
+```
+## exp 191111
+
+```{r message=FALSE}
+file <- "Raw_data/plate3/exp_191111/PI_kinetics/Vananz plate 3 191111 real time cell death n2.xlsx"
+n_skip <- 13
+duration <- c(21, 36)
+wavelength <- 535
+
+# new variables
+exp <- "exp191111"
+cell_number <- 4e4
+plate <- 3
+
+# parse results
+data <- parse_kinetics(file = file,  duration = duration, wavelength = wavelength, exp = exp, cell_number = cell_number, plate = plate)
+data
+
+# add to list
+kinetics_data[[8]] <- data
+```
+
+## exp 191115
+
+```{r message=FALSE}
+file <- "Raw_data/plate1/exp_191115/PI_kinetics/Vananz plate 1 191115 HeLa 40000 real time cell death assay n1.xlsx"
+n_skip <- 13
+duration <- c(22, 42)
+wavelength <- c(493, 535)
+
+# new variables
+exp <- "exp191115"
+cell_number <- 4e4
+plate <- 1
+
+# parse results
+data <- parse_kinetics(file = file,  duration = duration, wavelength = wavelength, exp = exp, cell_number = cell_number, plate = plate)
+data
+
+# add to list
+kinetics_data[[9]] <- data
+```
+
+## exp 191116
+
+```{r message=FALSE}
+file <- "Raw_data/plate1/exp_191116/PI_kinetics/Vananz plate 1 191116 HeLa 40000 real time cell death assay n2.xlsx"
+n_skip <- 13
+duration <- c(21, 0)
+wavelength <- c(493, 535)
+
+# new variables
+exp <- "exp191116"
+cell_number <- 4e4
+plate <- 1
+
+# parse results
+data <- parse_kinetics(file = file,  duration = duration, wavelength = wavelength, exp = exp, cell_number = cell_number, plate = plate)
+data
+
+# add to list
+kinetics_data[[10]] <- data
+```
+
+## exp 191120
+
+```{r message=FALSE}
+file <- "Raw_data/plate4/exp_191120/PI_kinetics/Vananz plate 4 191120 real time cell death n1.xlsx"
+n_skip <- 13
+duration <- c(22, 24)
+wavelength <- c(493, 535)
+
+# new variables
+exp <- "exp191120"
+cell_number <- 4e4
+plate <- 4
+
+# parse results
+data <- parse_kinetics(file = file,  duration = duration, wavelength = wavelength, exp = exp, cell_number = cell_number, plate = plate)
+data
+
+# add to list
+kinetics_data[[11]] <- data
+```
+
+## exp 191121
+
+```{r message=FALSE}
+file <- "Raw_data/plate4/exp_191121/PI_kinetics/Vananz plate 4 191121 real time cell death n2.xlsx"
+n_skip <- 13
+duration <- c(22, 12)
+wavelength <- c(493, 535)
+
+# new variables
+exp <- "exp191121"
+cell_number <- 4e4
+plate <- 4
+
+# parse results
+data <- parse_kinetics(file = file,  duration = duration, wavelength = wavelength, exp = exp, cell_number = cell_number, plate = plate)
+data
+
+# add to list
+kinetics_data[[12]] <- data
+```
+
+## exp 191129
+
+```{r message=FALSE}
+file <- "Raw_data/plate5/exp_191129/PI_kinetics/Vananz plate 5 191129 real time cell death n1.xlsx"
+n_skip <- 13
+duration <- c(19, 12)
+wavelength <- c(493, 535)
+
+# new variables
+exp <- "exp191129"
+cell_number <- 4e4
+plate <- 5
+
+# parse results
+data <- parse_kinetics(file = file,  duration = duration, wavelength = wavelength, exp = exp, cell_number = cell_number, plate = plate)
+data
+
+# add to list
+kinetics_data[[13]] <- data
+```
+
+## exp 191130
+
+```{r message=FALSE}
+file <- "Raw_data/plate5/exp_191130/PI_kinetics/Vananz plate 5 191130 real time cell death n2.xlsx"
+n_skip <- 13
+duration <- c(24, 48)
+wavelength <- c(493, 535)
+
+# new variables
+exp <- "exp191130"
+cell_number <- 4e4
+plate <- 5
+
+# parse results
+data <- parse_kinetics(file = file,  duration = duration, wavelength = wavelength, exp = exp, cell_number = cell_number, plate = plate)
+data
+
+# add to list
+kinetics_data[[14]] <- data
+```
+
+## exp 191205
+
+```{r message=FALSE}
+file <- "Raw_data/plate6/exp_191205/PI_kinetics/191205 plate vananz 6 HeLa 40000 cell death rate n1.xlsx"
+n_skip <- 13
+duration <- c(22, 30)
+wavelength <- 535
+
+# new variables
+exp <- "exp191205"
+cell_number <- 4e4
+plate <- 6
+
+# parse results
+data <- parse_kinetics(file = file,  duration = duration, wavelength = wavelength, exp = exp, cell_number = cell_number, plate = plate)
+data
+
+# add to list
+kinetics_data[[15]] <- data
+```
+
+## exp 191206
+
+```{r message=FALSE}
+file <- "Raw_data/plate6/exp_191206/PI_kinetics/191206 plate vananz 6 HeLa 40000 cell death rate n2.xlsx"
+n_skip <- 13
+duration <- c(24, 36)
+wavelength <- 535
+
+# new variables
+exp <- "exp191206"
+cell_number <- 4e4
+plate <- 6
+
+# parse results
+data <- parse_kinetics(file = file,  duration = duration, wavelength = wavelength, exp = exp, cell_number = cell_number, plate = plate)
+data
+
+# add to list
+kinetics_data[[16]] <- data
+```
+
+
+## Merge the dataframes
+
+```{r message=FALSE}
+kinetics_dat <- bind_rows(kinetics_data)
+
+# Merge with isolate metadata
+
+# Get pair info (= group)
+group_info <- read_csv("plate_info/sample_list_plate.csv") %>%
+  mutate(sample_id = mdu_id,
+         strain_group = studyid) %>%
+  select(sample_id, strain_group)
+# Get well info and merge with group info
+well_info <- read_csv("plate_info/well_info_n843.csv") %>%
+  select(well, sample_id, replicate, plate = plate_number) %>%
+  # We no longer use TOX-5 as positive toxicity control
+  mutate(sample_id = if_else(sample_id == "TOX-5",
+                             "JE2", sample_id)) %>%
+  # We use max PI signal (lysis of all cells) instead of total LDH
+  mutate(sample_id = if_else(sample_id == "Total LDH",
+                             "Complete lysis", sample_id)) %>%
+  # Replace "blank" with "non infected"
+  mutate(sample_id = if_else(sample_id == "Blank",
+                             "Non infected", sample_id)) %>%
+  left_join(group_info) %>%
+  replace_na(list(strain_group = "CONTROL"))
+well_info
+df_kinetics <- kinetics_dat %>%
+  left_join(well_info)
+  
+df_kinetics
+
+
+```
+
+### Plot plates
+
+We using a function to plot all replicates together and generate a fitted growth curve.
+
+``` {r  fig.width = 18, fig.height = 7}
+source("Functions/plot_results.R")
+
+# devtools::install_github("briandconnelly/growthcurve", build_vignettes = TRUE)
+
+# Plot plates
+plot_toxicity(df = df_kinetics, plate_number = 2)
+plot_toxicity(df = df_kinetics, plate_number = 3)
+plot_toxicity(df = df_kinetics, plate_number = 1)
+plot_toxicity(df = df_kinetics, plate_number = 4)
+plot_toxicity(df = df_kinetics, plate_number = 5)
+plot_toxicity(df = df_kinetics, plate_number = 6)
+
+  
+```
+
+### Filter before saving experiments data
+
+```{r}
+df_kinetics_filtered <- df_kinetics %>%
+  filter(cell_number == 4e4)
+file <- "Data_parsing/dataframes/all_PI_kinetics_well_info.csv"
+write_csv(df_kinetics_filtered, file)
+```
+

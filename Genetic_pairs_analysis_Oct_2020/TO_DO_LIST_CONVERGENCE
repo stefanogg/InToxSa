@@ -1,0 +1,10 @@
+DONE 1. fix directionality pairs PI
+DONE 2. double check significant differences PI/GC 
+DONE 3. check structural variants breseq2
+DONE 4. remove 1 pair when multipe symetric mutation between 2 pairs -> likely indicate clonal origin/redoundance between pairs
+DONE 4. make summary plots with all mutations per gene for all pairs and all phenotype (GC/PI/lethality)(as for grant) 
+DONE 5. check convergence in PSM! (not annotated by snippy) 
+DONE 6. check convergence intergenic sequence/promoter/sRNA
+7. Repeat special annotation including TSS Emote 
+8. Figure with operon maps
+

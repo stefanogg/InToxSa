@@ -1,0 +1,257 @@
+---
+title: 'Convergence analysis at gene level'
+author: "Stefano Giulieri"
+date: "15/06/2022"
+output: 
+  html_document:
+    toc: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd(stringr::str_c(here::here(), "/InToxSa_paper/Genetic_pairs"))
+msg <- glue::glue("My directory is {getwd()}")
+message(msg)
+```
+
+Here, we perform the convergence analysis at gene level.
+
+The convergence analysis is structured as follows:
+
+1. Keep only variants in the final dataset of genetic pairs with contrasting PI
+2. Filter the dataset: remove syn mutations and intergenic, *remove large deletions*, keep FPR3757 only and mask phage regions
+3. Count number of independent mutations and summarise mutations
+4. Perform GSEA analysis (on the server)
+
+In a separate script
+5. Create a dataset with convergence data and generate summary figures
+
+Optional
+6. (optional) separate analysis of large deletions, copy number variants etc
+
+```{r}
+library(tidyverse)
+library(patchwork)
+rm(list = ls())
+```
+
+# Raw data
+
+```{r}
+df_combined_annot <- readRDS("processed_data/variants_combined_annotation/df_changes_multi_annotated.Rda")
+```
+
+Clean list of genetic pairs with contrasting PI. This list was generated manually in `Genetic_pairs_analysis_Oct_2020/Convergence_analysis_contrasting_PI.Rmd `. Note that we *know* that 4 of these pairs have no point mutations.
+
+```{r}
+df_pairs <- readRDS("../../Genetic_pairs_analysis_Oct_2020/processed_data/convergence/PI/df_cleaned_pair_PI.Rda")
+n_distinct(df_pairs)
+```
+
+# 1) Keep only variants in the final dataset of genetic pairs with contrasting PI
+
+```{r}
+df_pairs_combined_annot <- df_pairs %>%
+  inner_join(df_combined_annot) %>%
+  as_tibble()
+ 
+n_distinct(df_pairs_combined_annot$pair_id) 
+```
+
+
+# 2) Filter dataset
+
+The curated list of FPR3757 genes - phages removed
+
+```{r}
+df_neb_curated <- readRDS("../../../SAUREUS-GENERAL/ref_genomes/processed_data/FPR3757/df_neb_curated.Rda")
+
+phage_genes <- read_lines("../../../SAUREUS-GENERAL/ref_genomes/raw_data/Sa_FPR3757/FPR3757_phage_locus_tag.txt")
+
+df_neb_curated <- df_neb_curated %>%
+  filter(!neb_locus_tag %in% phage_genes)
+```
+
+Get a sense on how the mutations are distributed
+
+```{r}
+df_pairs_combined_annot %>%
+  ggplot(aes(x = fct_infreq(EFFTYPE_SHORT))) +
+  geom_bar() +
+  labs(x = "", title = "Distribution of genetic changes") +
+  coord_flip() +
+  theme_bw()
+```
+
+And using the PROVEAN score
+
+```{r}
+# df_combined_annot %>%
+#   ggplot(aes(x = fct_infreq(EFFTYPE_SHORT_2), 
+#              fill = mutation_compartment)) +
+#   geom_bar() +
+#   scale_fill_discrete(type = oneclust::cud()) +
+#   labs(x = "", title = "Distribution of genetic changes") +
+#   coord_flip() +
+#   theme_bw()
+```
+
+Clean multi-annotation dataset
+
+```{r}
+df_combined_annot_clean <- df_pairs_combined_annot %>%
+  select(-c("neb_mutant_id", "neb_comment", "neb_locus_tag2", "pan_gene_symbol", "pan_locus_tag", "neb_product", "neb_gene", "neb_strand", "neb_start", "neb_end", "neb_gene_length", "MicrobesOnline", "BioCyc", "neb_operon", "operon_id")) %>%
+  inner_join(df_neb_curated) %>%
+  filter(! EFFTYPE_SHORT %in% c("synonymous", "intergenic", "IS insertion (intergenic)", "large deletion"))
+```
+
+How many genes have a FPR3757 homolog? 
+
+```{r}
+df_pairs_combined_annot %>%
+  mutate(neb_homolog = !is.na(neb_locus_tag)) %>%
+  count(cdhit_group, neb_locus_tag, neb_homolog) %>%
+  count(neb_homolog) %>%
+  mutate(frac = scales::percent(n/sum(n)))
+```
+
+
+# 3) Count number of independent mutations and summarise mutations
+
+Check for convergent *mutations*: same gene, same mutation
+
+```{r}
+df_converg_mutations <- df_combined_annot_clean %>%
+  drop_na(MUTATION_SHORT) %>%
+  group_by(neb_gene_symbol, MUTATION_SHORT ) %>%
+  mutate(n_events = n_distinct(pair_id)) %>%
+  relocate(n_events)
+
+df_converg_mutations <- df_converg_mutations %>%
+  ungroup() %>%
+  filter(n_events > 1) %>%
+  distinct(n_events, pair_id, neb_gene_symbol, MUTATION_SHORT, neb_product) %>%
+  arrange(neb_gene_symbol, MUTATION_SHORT) 
+```
+
+Check for convergent *positions*: same gene, same position
+
+```{r}
+df_converg_positions <- df_combined_annot_clean %>%
+  drop_na(MUTATION_SHORT) %>%
+  group_by(neb_gene_symbol, AA_POS ) %>%
+  mutate(n_events = n_distinct(pair_id)) %>%
+  relocate(n_events)
+
+df_converg_positions <- df_converg_positions %>%
+  ungroup() %>%
+  filter(n_events > 1) %>%
+  select(n_events, pair_id, neb_gene_symbol, AA_POS, MUTATION_SHORT, neb_product) %>%
+  distinct() %>%
+  arrange(desc(n_events), neb_gene_symbol, AA_POS , MUTATION_SHORT) 
+```
+
+Check for convergent *genes*: same neb gene
+
+```{r}
+df_converg_genes <- df_combined_annot_clean %>%
+  group_by(neb_gene_symbol) %>%
+  mutate(n_events = n_distinct(pair_id)) %>%
+  relocate(n_events) %>%
+  arrange( desc(n_events), neb_gene_symbol)
+
+t_converg_genes <- df_combined_annot_clean %>%
+  group_by(neb_gene_symbol, neb_gene, neb_product, neb_locus_tag, pan_gene_symbol) %>%
+  summarise(n_events = n_distinct(pair_id),
+            mutations = str_c(unique(MUTATION_SHORT),
+                              collapse = ", "),
+            gene_prokka = str_c(unique(GENE),
+                                collapse = ", "),
+            product_prokka = str_c(unique(PRODUCT),
+                                   collapse = ", ")) %>%
+  arrange(desc(n_events)) %>%
+  relocate(n_events, pan_gene_symbol, neb_gene, gene_prokka, neb_locus_tag, neb_product, product_prokka, mutations)
+
+t_converg_genes %>%
+  ungroup() %>%
+  filter(n_events > 1) %>%
+  select(n_events, pan_gene_symbol, neb_locus_tag,  neb_product)%>%
+  knitr::kable(row.names = T)
+
+# How many episodes and strains with mutations in convergent genes 
+df_converg_genes %>%
+  filter(n_events >= 2) %>%
+  pull(pair_id) %>%
+  n_distinct()
+```
+
+## Save processed data
+
+```{r}
+dir <- "processed_data/gene_convergence/"
+dir.create(dir)
+
+df_combined_annot_clean %>%
+  saveRDS(str_c(dir, "df_changes_multi_annot_for_gene_converg.Rda"))
+df_combined_annot_clean %>%
+  write_csv(str_c(dir, "df_changes_multi_annot_for_gene_converg.csv"))
+
+df_converg_positions %>%
+  write_csv(str_c(dir, "df_converg_positions.csv"))
+```
+
+
+# 3) Perform GSEA
+
+This is an analysis that could be performed as sensitivity analysis with the question: how does the PROVEAN prediction affect the convergence analysis? However, probably not necessary at this stage
+
+We will perform this analysis on the server. Here, we prepare the input files for the analysis of all mutations
+
+
+# Create the file structure
+
+```{r}
+dir <- "GSEA/"
+dir.create(dir)
+dir <- str_c(dir, "genes/")
+dir.create(dir)
+
+# Create files for "all"
+gene_info <- df_neb_curated %>%
+  ungroup() %>%
+  select(Name = neb_locus_tag,
+         Length = neb_gene_length) %>%
+  mutate(Length = Length/1000) %>%
+  arrange(Name)
+
+mut_info <- df_combined_annot_clean %>%
+  group_by(neb_locus_tag) %>%
+  summarise(n_mutations = n_distinct(pair_id)) %>%
+  select(Name = neb_locus_tag, replacement = n_mutations) %>%
+  right_join(gene_info %>% select(Name)) %>%
+  replace_na(list(replacement = 0)) %>%
+  arrange(Name) %>%
+  column_to_rownames("Name")
+
+ontologies <- gene_info %>%
+  transmute(Name1 = Name, Name2 = Name) %>%
+  mutate(var = 1) %>%
+  pivot_wider(names_from = Name2, values_from = var, values_fill = 0) %>%
+  column_to_rownames("Name1")
+
+gene_info %>%
+  write_tsv(str_c(dir, "/gene_info.txt"))
+
+mut_info %>%
+  write.table(str_c(dir, "/mut_info.txt"),
+              row.names = T, quote = F, sep = "\t")
+
+ontologies %>%
+  write.table(str_c(dir, "/ontologies.txt"),
+              row.names = T, quote = F, sep = "\t")
+
+# move all files to the server
+file.copy("GSEA/genes/", "~/Documents/Transfer_with_server/", recursive = T)
+```
+
+

@@ -1,0 +1,328 @@
+---
+title: "VANANZ dynamic cytotoxicity"
+author: "Stefano Giulieri"
+date: "03/09/2019"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r message=FALSE}
+library(tidyverse)
+library(magrittr)
+library(readxl)
+library(kableExtra)
+if(!require("growthcurve")) devtools::install_github("briandconnelly/growthcurve", build_vignettes = TRUE)
+library(growthcurve)
+grofit <- "https://cran.r-project.org/src/contrib/Archive/grofit/grofit_1.1.1-1.tar.gz"
+if(!require("grofit")) install.packages(grofit, repos = NULL, type = "source")
+library(grofit)
+if(!require("corrplot")) install.packages("corrplot")
+library(corrplot)
+
+rm(list = ls())
+```
+
+
+## Import data
+```{r}
+dir <- getwd()
+file <- "Preliminary_analysis/Raw_data/exp_190831/PI_kinetics/190831 LD PI Assay VANANZ 24 hours.xlsx"
+n_skip = 14 # set number of lines to skip in the Excel sheet
+timepoint_interval <- 0.1
+# generates vector of timepoints (in minutes) of fluorescence measurement. Here: every 6 minutes until 22 hours and 42 minutes
+timepoint_max <- 22.7
+timepoints <- seq(0, timepoint_max, timepoint_interval) * 60 
+# generate vector of column names based on timepoints and wavelength
+col_names_WL <- c(
+  str_c("WL493_", timepoints),
+  str_c("WL535_", timepoints)
+)
+col_names <- c(
+  "well",
+  "sample",
+  col_names_WL
+)
+data <- read_excel(path = file, col_names = col_names, skip = 14) 
+
+# kable(data) %>% 
+#   kable_styling() %>%
+#   scroll_box(width = "100%", height = "200px")
+```
+
+## Now we transform the data into a long format
+```{r}
+data_long <- data %>%
+  gather(key = condition,
+         value = f_signal,
+         starts_with("WL")) %>%
+  separate(condition, into = c("wave_length", "time"), remove = FALSE) %>%
+  mutate(timepoint = as.numeric(time),
+         well_row = str_extract(well, "[A-H]"),
+         well_col = str_extract(well, "\\d{2}")) %>%
+  select(-condition)
+    
+# data_long %>%
+#   kable() %>%
+#   kable_styling() %>%
+#   scroll_box(width = "100%", height = "200px")
+
+# if (!dir.exists("dataframes")){
+#   dir.create("./dataframes")
+# }
+
+# write_csv("dataframes/dynamic_cytotoxicity_long_format.csv")
+```
+
+## import PI endpoint with max mortality
+```{r}
+data_long <- read_excel("Preliminary_analysis/Raw_data/exp_190831/PI_endpoints/190831 LD PI Assay VANANZ endpoint  plus fixed permeabilised last well.xlsx", 
+                             col_types = c("text", "text", "numeric", "numeric"), 
+                             skip = 13,
+                             col_names = c("well", "sample", "f_signal_endpoint_493","f_signal_endpoint_535")) %>%
+  merge(data_long, ., by = "well")
+
+```
+
+## And here it the plot of the raw data
+```{r message=FALSE}
+data_long %>%
+  ggplot(aes(x = timepoint, y = f_signal, color = wave_length)) +
+  geom_point(size = .5) +
+  scale_colour_discrete(name = "Wave length", labels = c("493", "535")) +
+  facet_grid(well_row ~ well_col) +
+  labs(x = "Time (min)",
+       y = "Fluorescence intensity") +
+  theme_bw() 
+
+# if (!dir.exists("figures")){
+#   dir.create("./figures")
+# }
+# ggsave("figures/dynamic_cytoxicity_plate2_raw.pdf", width = 16, height = 16)
+```
+
+## Only plot 535 WL with PI at end point
+```{r}
+data_long %>%
+  filter(wave_length == "WL535") %>%
+  ggplot(aes(x = timepoint, y = f_signal, color = wave_length)) +
+  geom_point(size = .5) +
+  facet_grid(well_row ~ well_col) +
+  geom_hline(data_long, mapping = aes(yintercept = f_signal_endpoint_535)) +
+  labs(x = "Time (min)",
+       y = "Fluorescence intensity") +
+  theme_bw() 
+```
+
+# Extract zero and total cell death and calculate %death
+```{r}
+# total mortality defines as the mean of total lysis on non-infected  
+total_mortality_W535 <- data_long %>%
+  filter(wave_length == "WL535") %>%
+  filter(well %in% c("H10","H11","H12")) %>%
+  .$f_signal_endpoint_535 %>%
+  unique() %>%
+  mean()
+
+# zero mortality defined as the minimum fluorescence signal of the plate to avoid negative %pct cell death 
+zero_mortality_W535 <- data_long %>%
+  filter(wave_length == "WL535") %>%
+  .$f_signal %>%
+  min()
+
+data_long <- data_long %>%
+  mutate(total_cell_death = total_mortality_W535) %>%
+  mutate(zero_cell_death = zero_mortality_W535) %>%
+  mutate(pct_death = (f_signal-zero_cell_death)/(total_cell_death-zero_cell_death))
+
+data_long %>%
+  filter(wave_length == "WL535") %>%
+  ggplot(aes(x = timepoint, y = pct_death, color = wave_length)) +
+  geom_point(size = .5) +
+  scale_colour_discrete(name = "Wave length", labels = c("493", "535")) +
+  facet_grid(well_row ~ well_col) +
+  labs(x = "Time (min)",
+       y = "% cell death") +
+  scale_y_continuous(labels = scales::percent, limits = c(0,1))+
+  theme_bw() 
+```
+
+## We now merge with the sample ids so that we can group replicates and fit a spline model
+```{r message=FALSE}
+# Merge with well data
+file <- "plate_info/well_info_n843.csv"
+well_info <- read_csv(file) %>%
+  mutate(sample_id = if_else(sample_id == "TOX-5",
+                             "JE2", sample_id)) %>%
+  filter(plate_number == 2)
+df <- data_long %>%
+  left_join(well_info) %>%
+  filter(!is.na(f_signal))
+
+# Plot 
+df %>%
+  ggplot(aes(x = timepoint, y = f_signal, color =  wave_length, group = wave_length)) +
+  geom_point(size = .5) +
+  scale_colour_discrete(name = "Wave length", labels = c("493", "535")) +
+  facet_wrap(~sample_id) +
+  labs(x = "Time (min)",
+       y = "Fluorescence intensity") +
+  growthcurve::stat_growthcurve(model = "spline", color = "black")+
+  theme_bw()
+# ggsave("figures/dynamic_cytoxicity_plate2.pdf", width = 16, height = 16)
+```
+
+## Are there difference between the two different wave length?
+```{r fig.height=30, fig.width=10}
+df %>%
+  ggplot(aes(x = timepoint, y = f_signal, color =  wave_length)) +
+  geom_point(size = .5) +
+  scale_colour_discrete(name = "Wave length", labels = c("493", "535")) +
+  facet_wrap(vars(sample_id,wave_length), scales = "free_y", ncol = 2) +
+  labs(x = "Time (min)",
+       y = "Fluorescence intensity") +
+  growthcurve::stat_growthcurve(model = "spline", color = "black")+
+  theme_bw()
+```
+
+## Fitting a model to the curves with grofit and extracting curves parmeters
+
+```{r}
+require(grofit)
+
+# Remove initial cell death decrease for fitting
+df <- df %>%
+  filter(timepoint > 50)
+
+# format time matrix for grofit
+time_vector <- unique(df$timepoint)
+len_matrix <- length(unique(df$well))
+time.mat <- matrix(rep(time_vector,each=len_matrix),nrow=len_matrix)
+
+# format data df for grofit
+df_WL535 <- df %>% 
+  filter(wave_length == "WL535") %>%
+  select(well, timepoint, f_signal, sample_id) %>%
+  reshape2::dcast(., well~timepoint, value.var = "f_signal") %>%
+  mutate(concentration = 0.1, meta = "test") %>%
+  select(well, meta, concentration, everything())
+
+head(df_WL535)
+
+# gofit growth curve fitting
+res <- grofit::gcFit(time = time.mat,
+                     data = df_WL535, 
+                     grofit.control(fit.opt = "s",    # spline fit
+                                    smooth.gc = 0.8,  # smoothness parameter
+                                    interactive = F)) # non interactive
+
+# extract/rename fitted parameters
+res.df<-res$gcTable %>%
+  rename(well = TestId) %>%
+  select(well, mu.spline, A.spline, integral.spline) %>% # lambda parameter<=>lag_phase not fitted correctly
+  rename(AUC = integral.spline, max_tox_rate = mu.spline, max_tox = A.spline)
+
+# merge results with data and sort
+df_new <- merge(df, res.df, by = "well", all.x = T)
+df_new <- transform(df_new, well=reorder(well, -AUC))  # can change sorting variable here 
+
+# plot sorted data
+ggplot(df_new %>% filter(wave_length == "WL535"),aes(x = timepoint, y = f_signal, color = wave_length)) +
+  geom_point(size = .5) +
+  growthcurve::stat_growthcurve(model = "spline", color = "black")+
+  facet_wrap(~well, ncol = 12) +
+  labs(x = "Time (min)",
+       y = "Fluorescence intensity") +
+  theme_bw()
+```
+
+## Create a dataframe with summarised toxicity parameters
+```{r}
+df_summary <- df_new %>%
+  filter(time == max(time) & wave_length == "WL535") %>%
+  group_by(sample_id) %>%
+  summarise(mean_pct_death = mean(pct_death),
+            sd_pct_death = sd(pct_death),
+            mean_max_tox = mean(max_tox),
+            sd_max_tox = sd(max_tox),
+            mean_max_tox_rate = mean(max_tox_rate),
+            sd_max_tox_rate = sd(max_tox_rate),
+            mean_AUC = mean(AUC),
+            sd_AUC = sd(AUC),
+            mean_f_signal_endpoint_535 = mean(f_signal_endpoint_535),
+            sd_f_signal_endpoint_535 = sd(f_signal_endpoint_535)) %>%
+  ungroup()
+```
+
+## import/summarise LDH data and merge with PI results summary
+```{r}
+file <- "Preliminary_analysis/Raw_data/exp_190831/LDH/190831 plate 2 VANANZ HeLa cells infected 24h post PI cell death assay.xlsx"
+LDH.df <- read_excel(file,
+                     col_types = c("text", "numeric", "text", "numeric", "numeric", "numeric"),
+                     col_names = c("row", "col", "content", "raw_LDH", "blank_cor_LDH", "blank_cor_LDH2"),
+                     skip = 13)
+
+# Create well variable and permit merge with plateinfo
+require(stringr)
+LDH.df <- LDH.df %>%
+  mutate(col = stringr::str_pad(col, 2, pad = "0")) %>%
+  mutate(well = paste0(row, col)) %>%
+  merge(well_info, ., by = "well")
+
+# Summarise LDH results
+LDH.summary <- LDH.df %>%
+  group_by(sample_id) %>%
+  summarise(mean_LDH = mean(blank_cor_LDH),
+            sd_LDH = sd(blank_cor_LDH))%>%
+  ungroup()%>%
+  mutate(mean_LDH = ifelse(is.na(mean_LDH), 0, mean_LDH)) %>% # replace NA value by 0 for blank
+  mutate(sd_LDH = ifelse(is.na(sd_LDH), 0, sd_LDH)) # replace NA value by 0 for blank
+
+# Merge PI and LDH result summaries
+
+df_summary <- merge(df_summary, LDH.summary, by = "sample_id")
+
+```
+
+## Correlation analysis
+
+```{r}
+rownames(df_summary) <- df_summary$sample_id
+df_summary2 <- df_summary %>%
+  select(-sample_id) %>%
+  select_if(grepl("mean", names(.)))
+
+cor.mat = cor(df_summary2)
+cor.mat
+
+require(corrplot)
+corrplot(cor.mat, type="upper", order="hclust", tl.col="black", tl.srt=45)
+
+plot(df_summary$mean_LDH, df_summary$mean_f_signal_endpoint_535)
+
+```
+
+## Save dataframes for export
+
+We save two dataframes with experiment data: a dataframe in long format with original read out and transformed data, and aataframe  with summary variables for each isolate (i.e. averaged accross replicates)
+
+```{r}
+# Dataframe in long format
+file <- "/Preliminary_analysis/Analysis/dataframes/exp190831_df.csv"
+path <- str_c(dir, file)
+df %>%
+  mutate(exp = "exp190831") %>%
+  write_csv(path = path)
+
+# Summary dataframe
+file <- "/Preliminary_analysis/Analysis/dataframes/exp190831_df_summary.csv"
+path <- str_c(dir, file)
+df_summary %>%
+  mutate(exp = "exp190831") %>%
+  write_csv(path = path)
+```
+

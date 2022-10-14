@@ -1,0 +1,328 @@
+---
+title: "Compile genetic pairs metadata"
+author: "Romain Guerillot"
+date: "17/12/2020"
+output: html_document
+---
+
+Aim: Update genetic pairs metadata with cophenetic distance (new tree trimal + snp-sites) and check correlations between different measure of genetic distance
+
+# Set/check knitR option and working directory
+
+```{r setup, include=T}
+library(tidyverse)
+library(ape)
+library(ggpubr)
+library(here)
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = here())
+setwd(here())
+print(paste("My working directory is:" ,here()))
+rm(list = ls())
+```
+
+
+# Import all pairwise distances measures between strains and merge with strain metadata
+
+new distance from "relaxed core" trimal <10% gap + snp-sites), cophenetic distance from new tree and mash between denovo assemblies
+
+Create dataframe with all distances measure:
+dist = core snp old
+dist_new = core snp new ("relaxed core" trimal <10% gap + snp-sites)
+dist_cophenetic_new = cophenetic new from new core snp ML tree
+mash_dist = mash all vs all assemplies with 100.000 sketches
+
+# core snp old distance
+```{r}
+
+snp.dist.mat <- read.csv("Genetic_pairs_analysis_Oct_2020/metadata/VANANZ_core.aln.dist.mat", sep = "\t")%>%
+  as.matrix(.)
+str(snp.dist.mat)
+
+
+# put 1st column as row name and remove 1st column
+row.names(snp.dist.mat) <- snp.dist.mat[,1]
+snp.dist.mat <- snp.dist.mat[,2:845]
+str(snp.dist.mat)
+
+# turn to long format
+require(harrietr)
+df_dist <- reshape2::melt(snp.dist.mat)
+colnames(df_dist) <- c("iso1", "iso2", "dist")
+df_dist <- df_dist %>% 
+   filter(iso1 != "Reference") %>%
+   filter(iso2 != "Reference") %>%
+   mutate(dist = as.integer(as.character(dist))) %>%
+   mutate(pair_id = paste0(iso1, "--", iso2)) %>%
+   filter(iso1 != iso2)# %>%
+   group_by(pair_id) %>%
+   filter(dist == min(dist)) %>% # need to do this to avoid doublon of pairs with different distance??? problem with melt? take the min distance to avoid missing pairs
+   ungroup() 
+   
+
+#t1 <- df_dist %>%
+#   count(pair_id)
+
+
+```
+There are identical pairs with different dist snp-dist harietR problem???
+
+# core snp new distance
+```{r}
+df_dist_new <- read.csv("Genetic_pairs_analysis_Oct_2020/metadata/clean.core.full.aln.gt0.9.snp-site.snp-dist.tab", 
+                       sep = "\t",
+                       col.names = c("iso1", "iso2", "dist_new")) %>%
+   mutate(iso1 = as.character(iso1)) %>%
+   mutate(iso2 = as.character(iso2)) %>%
+   filter(iso1 != "Refere-ce") %>%
+   filter(iso2 != "Refere-ce") %>%
+   filter(iso1 != iso2) %>%
+   mutate(pair_id = paste0(iso1, "--", iso2)) %>%
+   distinct()
+
+t2 <- df_dist_new %>%
+   count(pair_id)
+   
+setdiff(df_dist_new$pair_id, df_dist$pair_id)
+setdiff(df_dist$pair_id, df_dist_new$pair_id)
+
+```  
+
+# cophenetic distance (from new core snp tree snippy + trimal + snp-sites)
+```{r}
+tree_new <- read.tree("Genetic_pairs_analysis_Oct_2020/metadata/iqtree.treefile")
+
+dist <- cophenetic.phylo(tree_new)
+dist_long <- reshape2::melt(dist)
+colnames(dist_long) <- c("iso1", "iso2", "dist_cophenetic_new")
+df_dist_cophenetic <- dist_long %>% 
+   mutate(dist_cophenetic_new = as.numeric(dist_cophenetic_new)) %>%
+   mutate(dist_cophenetic_new = dist_cophenetic_new * 216768) %>% # multiplication by total number of position with snp in core.aln -> provide estimated nb of core SNP substitution.
+   filter(iso1 != iso2) %>%
+   mutate(pair_id = paste0(iso1, "--", iso2)) %>%
+   group_by(pair_id) %>%
+   filter(dist_cophenetic_new == min(dist_cophenetic_new)) %>% # need to do this to avoid doublon of pairs with different distance??? problem with melt? take the min distance to avoid missing pairs
+   ungroup()
+
+t3 <- df_dist_cophenetic %>%
+   count(pair_id)
+
+setdiff(df_dist_cophenetic$pair_id, df_dist_new$pair_id)
+setdiff(df_dist_new$pair_id, df_dist_cophenetic$pair_id)
+```
+
+
+# mash distance
+```{r}
+mash_dist <- read.csv(file = "Genetic_pairs_analysis_Oct_2020/metadata/all_vs_all_s100000_assemblies.dist", sep = "\t", header = F, col.names = c("iso1", "iso2", "dist_mash", "pval", "shared-hashes")) %>%
+   select(iso1, iso2, dist_mash)
+
+mash_dist_2 <- read.csv(file = "Genetic_pairs_analysis_Oct_2020/metadata/all_vs_all_s100000_assemblies.dist", sep = "\t", header = F, col.names = c("iso2", "iso1", "dist_mash", "pval", "shared-hashes")) %>%
+   select(iso1, iso2, dist_mash)
+
+df_mash_dist <- rbind(mash_dist, mash_dist_2) %>%
+   filter(iso1 != iso2) %>%
+   mutate(pair_id = paste0(iso1, "--", iso2))
+```
+
+mash distance missing?
+
+# merge all distance measures together
+
+```{r}
+df_dist_all <- merge(df_dist_cophenetic, df_dist, by = c("pair_id", "iso1", "iso2"), all.x= T) %>%
+   merge(., df_dist_new, by = c("pair_id", "iso1", "iso2"), all.x= T) %>%
+   merge(., df_mash_dist, by = c("pair_id", "iso1", "iso2"), all.x= T)
+   
+```
+
+
+
+# create dataframes of iso1 and iso2 metadata
+```{r}
+#genetic_pairs_meta.df <- readRDS("Genetic_pairs_analysis_Oct_2020/processed_data/snippy/df_genetic_pairs_mutcounts_metadata.Rda")
+strain_meta_iso1 <- read.csv("Genetic_pairs_analysis_Oct_2020/metadata/strain_metadata_corrected_with_clade_CC.csv") %>%
+   rename_all(paste0, "_iso1") %>%
+   select(iso1 = sample_id_iso1, ST_iso1, CC_iso1, strain_group_iso1, mortality_iso1, persister_type_iso1, scv_iso1, mecA_iso1) 
+
+strain_meta_iso2 <- read.csv("Genetic_pairs_analysis_Oct_2020/metadata/strain_metadata_corrected_with_clade_CC.csv") %>%
+   rename_all(paste0, "_iso2") %>%
+   select(iso2 = sample_id_iso2, ST_iso2, CC_iso2, strain_group_iso2, mortality_iso2, persister_type_iso2, scv_iso2, mecA_iso2) 
+
+```
+
+# merge metadata and distance
+```{r}
+df_dist_all_meta <- merge(df_dist_all, strain_meta_iso2, by = "iso2", all.x = T) %>%
+   merge(.,  strain_meta_iso1, by = "iso1", all.x = T)
+
+```
+
+# Save all strain pairs with distance and metadata
+```{r}
+saveRDS(object = df_dist_all_meta, file = "Genetic_pairs_analysis_Oct_2020/processed_data/snippy/df_all_pairs_distances_metadata.Rda")
+```
+
+# Check correlation of pairwise distance 
+```{r}
+
+sp <- ggscatter(genetic_pairs_meta.df, x = "dist", y = "dist_new",
+   add = "reg.line",  # Add regressin line
+   add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+   conf.int = TRUE, # Add confidence interval.
+   size =.5 )
+
+p4 <- sp + stat_cor(method = "pearson", label.x = 3, label.y = max(genetic_pairs_meta.df$dist_new))
+p4
+
+sp <- ggscatter(genetic_pairs_meta.df, x = "dist_cophenetic_new", y = "dist_new",
+   add = "reg.line",  # Add regression line
+   add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+   conf.int = TRUE, # Add confidence interval.
+   size =.5 )
+
+p7 <- sp + stat_cor(method = "pearson", label.x = 0, label.y = max(genetic_pairs_meta.df$dist_new))
+p7
+
+sp <- ggscatter(genetic_pairs_meta.df, x = "dist_mash", y = "dist_cophenetic_new",
+   add = "reg.line",  # Add regression line
+   add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+   conf.int = TRUE, # Add confidence interval.
+   size =.5 )
+
+p10 <- sp + stat_cor(method = "pearson", label.x = 0, label.y = max(genetic_pairs_meta.df$dist_cophenetic_new))
+p10
+
+sp <- ggscatter(genetic_pairs_meta.df, x = "dist_mash", y = "dist_new",
+   add = "reg.line",  # Add regression line
+   add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+   conf.int = TRUE, # Add confidence interval.
+   size =.5 )
+
+p11 <- sp + stat_cor(method = "pearson", label.x = 0, label.y = max(genetic_pairs_meta.df$dist_new))
+p11
+
+
+
+cowplot::plot_grid(p4,p7,p10,p11, ncol = 4)
+```
+
+# Check ST239 only
+```{r}
+strain_ST239_iso1 <- genetic_pairs_meta.df %>%
+   filter(iso1_ST == 239) %>%
+   .$iso1 %>%
+   unique()
+strain_ST239_iso2 <- genetic_pairs_meta.df %>%
+   filter(iso2_ST == 239) %>%
+   .$iso2 %>%
+   unique()
+strain_ST239 <- c(strain_ST239_iso1, strain_ST239_iso2) %>% unique()
+
+genetic_pairs_meta_ST239.df <- genetic_pairs_meta.df %>%
+   filter(iso1 %in% strain_ST239 & iso2 %in% strain_ST239)
+
+
+sp <- ggscatter(genetic_pairs_meta_ST239.df, x = "dist", y = "n_mutations_denovo",
+   add = "reg.line",  # Add regressin line
+   add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+   conf.int = TRUE, # Add confidence interval
+   size = .5
+   )
+p1 <- sp + stat_cor(method = "pearson", label.x = 3, label.y = max(genetic_pairs_meta_ST239.df$n_mutations_denovo))
+
+sp <- ggscatter(genetic_pairs_meta_ST239.df, x = "n_mutations_denovo", y = "n_mutations_BPH2947",
+   add = "reg.line",  # Add regressin line
+   add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+   conf.int = TRUE,
+   size = .5# Add confidence interval
+   )
+
+p3 <- sp + stat_cor(method = "pearson", label.x = 3, label.y = max(genetic_pairs_meta_ST239.df$n_mutations_BPH2947))
+p3
+
+sp <- ggscatter(genetic_pairs_meta_ST239.df, x = "dist", y = "n_mutations_BPH2947",
+   add = "reg.line",  # Add regressin line
+   add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+   conf.int = TRUE, # Add confidence interval.
+   size =.5 )
+
+p2 <- sp + stat_cor(method = "pearson", label.x = 3, label.y = max(genetic_pairs_meta_ST239.df$n_mutations_BPH2947))
+p2
+
+sp <- ggscatter(genetic_pairs_meta_ST239.df, x = "dist", y = "dist_new",
+   add = "reg.line",  # Add regressin line
+   add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+   conf.int = TRUE, # Add confidence interval.
+   size =.5 )
+
+p4 <- sp + stat_cor(method = "pearson", label.x = 3, label.y = max(genetic_pairs_meta_ST239.df$dist_new))
+p4
+
+sp <- ggscatter(genetic_pairs_meta_ST239.df, x = "dist_new", y = "n_mutations_denovo",
+   add = "reg.line",  # Add regressin line
+   add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+   conf.int = TRUE, # Add confidence interval.
+   size =.5 )
+
+p5 <- sp + stat_cor(method = "pearson", label.x = 3, label.y = max(genetic_pairs_meta_ST239.df$n_mutations_denovo))
+p5
+
+sp <- ggscatter(genetic_pairs_meta_ST239.df, x = "dist_new", y = "n_mutations_BPH2947",
+   add = "reg.line",  # Add regressin line
+   add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+   conf.int = TRUE, # Add confidence interval.
+   size =.5 )
+
+p6 <- sp + stat_cor(method = "pearson", label.x = 3, label.y = max(genetic_pairs_meta_ST239.df$n_mutations_BPH2947))
+p6
+
+
+
+sp <- ggscatter(genetic_pairs_meta_ST239.df, x = "dist_cophenetic_new", y = "dist_new",
+   add = "reg.line",  # Add regression line
+   add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+   conf.int = TRUE, # Add confidence interval.
+   size =.5 )
+
+p7 <- sp + stat_cor(method = "pearson", label.x = 0, label.y = max(genetic_pairs_meta_ST239.df$dist_new))
+p7
+
+sp <- ggscatter(genetic_pairs_meta_ST239.df, x = "dist_cophenetic_new", y = "n_mutations_BPH2947",
+   add = "reg.line",  # Add regression line
+   add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+   conf.int = TRUE, # Add confidence interval.
+   size =.5 )
+
+p8 <- sp + stat_cor(method = "pearson", label.x = 0, label.y = max(genetic_pairs_meta_ST239.df$n_mutations_BPH2947))
+p8
+
+sp <- ggscatter(genetic_pairs_meta_ST239.df, x = "dist_cophenetic_new", y = "n_mutations_denovo",
+   add = "reg.line",  # Add regression line
+   add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+   conf.int = TRUE, # Add confidence interval.
+   size =.5 )
+
+p9 <- sp + stat_cor(method = "pearson", label.x = 0, label.y = max(genetic_pairs_meta_ST239.df$n_mutations_denovo))
+p9
+
+sp <- ggscatter(genetic_pairs_meta_ST239.df, x = "dist_mash", y = "dist_cophenetic_new",
+   add = "reg.line",  # Add regression line
+   add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+   conf.int = TRUE, # Add confidence interval.
+   size =.5 )
+
+p10 <- sp + stat_cor(method = "pearson", label.x = 0, label.y = max(genetic_pairs_meta_ST239.df$dist_cophenetic_new))
+p10
+
+sp <- ggscatter(genetic_pairs_meta_ST239.df, x = "dist_mash", y = "n_mutations_denovo",
+   add = "reg.line",  # Add regression line
+   add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+   conf.int = TRUE, # Add confidence interval.
+   size =.5 )
+
+p11 <- sp + stat_cor(method = "pearson", label.x = 0, label.y = max(genetic_pairs_meta_ST239.df$n_mutations_denovo))
+p11
+
+cowplot::plot_grid(p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11, ncol = 4)
+```

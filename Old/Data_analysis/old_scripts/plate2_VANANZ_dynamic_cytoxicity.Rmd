@@ -1,0 +1,163 @@
+---
+title: 'VANANZ dynamic cytotoxicity: summary of plate 2'
+author: "Stefano Giulieri"
+date: "17/09/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(magrittr)
+
+rm(list = ls())
+```
+
+
+
+## Import dataframe and compare
+
+```{r message=FALSE}
+#setwd("~/Documents/Travail/Abdou_project/Staph_infection_project/github_analysis/VANANZ_phenotypes")
+dir <- getwd()
+# exp 190831
+file <- "/Preliminary_analysis/Analysis/dataframes/exp190831_df.csv"
+path <- str_c(dir, file)
+exp190831_data <- read_csv(file = path) %>%
+  mutate(cell_number = 40e3)
+
+# exp 190905
+file <- "/Preliminary_analysis/Analysis/dataframes/exp190905_df.csv"
+path <- str_c(dir, file)
+exp190905_data <- read_csv(file = path) %>%
+  mutate(cell_number = 25e3)
+
+# exp 190909
+file <- "/Preliminary_analysis/Analysis/dataframes/exp190909_df.csv"
+path <- str_c(dir, file)
+exp190909_data <- read_csv(file = path) %>%
+  mutate(cell_number = 20e3)
+```
+
+The dataframes appear to be similar with same number of variables. We can safely merge them
+
+```{r}
+plate2_data <- bind_rows(
+  exp190831_data,
+  exp190905_data,
+  exp190909_data
+)
+```
+
+We now inspect the raw results grouping by isolate
+
+```{r}
+# Plot 
+plate2_data <- plate2_data %>%
+  filter(wave_length == "WL535") %>%
+  mutate(exp = str_c(exp, "\n(", cell_number, " cells)"))
+
+plate2_data %>%
+  ggplot(aes(x = timepoint, y = f_signal, color =  wave_length, group = wave_length)) +
+  geom_point(size = .5) +
+  scale_colour_discrete(name = "Wave length", labels = c("493", "535")) +
+  facet_grid(exp~sample_id, scales = "free_y") +
+  labs(x = "Time (min)",
+       y = "Fluorescence intensity") +
+  growthcurve::stat_growthcurve(model = "spline", color = "black")+
+  theme_bw() +
+  theme(legend.position = "none",
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank())
+```
+
+Try to standardise the different repeated experiments with R scale function: 
+- subtract the mean fluoresence signal and divide the result by the fluorescence standard deviation (= z-score transformation or simply scaling)
+
+```{r}
+summary(plate2_data)
+unique(plate2_data$sample.x)
+plate2_data_std <- plate2_data %>%
+  group_by(exp, sample_id, replicate) %>%
+  mutate(f_signal.std = as.numeric(scale(f_signal, center = T, scale = F))) %>%
+  mutate(f_signal.std = f_signal.std - min(f_signal.std))
+  #summarise(mean_f = mean(f_signal)) 
+
+plate2_data_std %>%
+  ggplot(aes(x = timepoint, y = f_signal.std, color =  wave_length, group = wave_length)) +
+  geom_point(size = .5) +
+  scale_colour_discrete(name = "Wave length", labels = c("493", "535")) +
+  facet_grid(exp~sample_id, scales = "free_y") +
+  labs(x = "Time (min)",
+       y = "Fluorescence intensity") +
+  growthcurve::stat_growthcurve(model = "spline", color = "black")+
+  theme_bw() +
+  theme(legend.position = "none",
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank())
+```
+
+Standardise the different repeated experiments according to JE2 Try to standardise the different repeated experiments according to JE2 (y-mean(JE2)/std(JE2))
+
+Calculate mean and std deviation of JE2 for each experiment
+```{r}
+
+plate2_data_JE2_std <- plate2_data %>%
+  filter(sample_id == "JE2") %>%
+  group_by(exp) %>%
+  summarise(f_signal_JE2.mean = mean(f_signal),
+            f_signal_JE2.sd = sd(f_signal)) %>%
+  ungroup() %>%
+  merge(plate2_data, . , by = "exp") %>%
+  mutate(f_signal.std = (f_signal - f_signal_JE2.mean)/f_signal_JE2.sd)
+  
+plate2_data_JE2_std %>%
+  ggplot(aes(x = timepoint, y = f_signal.std, color =  wave_length, group = wave_length)) +
+  geom_point(size = .5) +
+  scale_colour_discrete(name = "Wave length", labels = c("493", "535")) +
+  facet_grid(exp~sample_id) +
+  labs(x = "Time (min)",
+       y = "Fluorescence intensity") +
+  growthcurve::stat_growthcurve(model = "spline", color = "black")+
+  theme_bw() +
+  theme(legend.position = "none",
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank())
+```
+
+
+
+Standardise the different repeated experiments according to JE2 min max (POMS: Proportion of maximum scoring or min-max transformation)
+
+```{r}
+unique(plate2_data$sample_id)
+
+plate2_data_JE2_std <- plate2_data %>%
+  filter(sample_id == "JE2") %>%
+  group_by(exp, replicate) %>%
+  summarise(f_signal_JE2_rep.max = max(f_signal),
+            f_signal_JE2_rep.min = min(f_signal)) %>%
+  ungroup() %>%
+  group_by(exp) %>% 
+  summarise(f_signal_JE2.max = median(f_signal_JE2_rep.max),
+            f_signal_JE2.min = median(f_signal_JE2_rep.min)) %>%
+  ungroup() %>%
+  merge(plate2_data, . , by = "exp") %>%
+  mutate(f_signal.std = (f_signal - f_signal_JE2.min) / (f_signal_JE2.max - f_signal_JE2.min))
+  
+plate2_data_JE2_std %>%
+  ggplot(aes(x = timepoint, y = f_signal.std, color =  wave_length, group = wave_length)) +
+  geom_point(size = .5) +
+  scale_colour_discrete(name = "Wave length", labels = c("493", "535")) +
+  facet_grid(exp~sample_id) +
+  labs(x = "Time (min)",
+       y = "Fluorescence intensity") +
+  growthcurve::stat_growthcurve(model = "spline", color = "black")+
+  theme_bw() +
+  theme(legend.position = "none",
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank())
+```

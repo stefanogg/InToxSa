@@ -1,0 +1,411 @@
+---
+title: "Analysis of plate M1"
+author: "Stefano Giulieri"
+date: "02/03/2020"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = here::here())
+msg <- stringr::str_c("My directory is ", here::here())
+print(msg)
+```
+
+```{r}
+library(tidyverse)
+library(magrittr)
+rm(list = ls())
+source("Functions/all_functions.R")
+```
+
+Here, we analyse results of plate M1. The PI data have already been parsed and saved
+
+# Upload PI data
+
+```{r}
+# df_cell_death <- read_csv("Data_parsing/parsed_experiments/exp200228/PI_data_plateM1_exp200228.csv") %>%
+#   # add metadata
+#   left_join(read_csv("plate_info/strain_metadata.csv"))
+
+
+```
+
+# Standardise data
+
+```{r}
+# df_cell_death_std <- JE2_POMS_standardisation(df = df_cell_death, plot = F)
+# # plot the data
+# plot_cell_death(df = df_cell_death_std, standardized = T, return_plots = T, print_plot = F) +
+#   ylim(0,2)
+```
+
+Based on these results, we  repeat plate M1
+
+# Plate M1 repeat
+
+```{r}
+df_cell_death <- read_csv("Data_parsing/parsed_experiments/exp200309/PI_data_plateM1_exp200309.csv") %>%
+ # add metadata
+  left_join(read_csv("plate_info/strain_metadata.csv"))
+```
+
+# Standardise data
+
+```{r fig.width=10, fig.height=6}
+df_cell_death_std <- JE2_POMS_standardisation(df = df_cell_death, plot = F)
+# plot the data
+# plot_cell_death(df = df_cell_death_std, standardized = T, return_plots = T, print_plot = F, annotate = T, save_plot = "tmp", plot_size = c(10,6)) +
+#   ylim(0,2)
+# plot_cell_death(df = df_cell_death_std %>% filter(sample_id == "BPH3412"), standardized = T, return_plots = T, print_plot = F, annotate = T) +
+#   ylim(0,2)
+# plot_cell_death(df = df_cell_death_std %>% filter(sample_id == "BPH3412" & timepoint <= 300), standardized = T, return_plots = T, print_plot = F, annotate = T, all_replicates = T) +
+#   ylim(0,2)
+```
+
+# remove outliers
+
+```{r}
+outliers_wells <- c("G11", "C04", "B04", "G10", "E12")
+outliers <- str_c("exp200309_M1_", outliers_wells)
+df_cell_death_clean <- filter(df_cell_death, !well_id %in% outliers)
+df_cell_death_clean_std <- JE2_POMS_standardisation(df = df_cell_death_clean, plot = F) 
+```
+
+
+# Fit data
+
+```{r fig.height=10, fig.width=6  }
+df_cell_death_std_fit <- fit_smooth_spline(df_cell_death_clean_std) %>%
+  filter(!sample_id %in% c("Complete lysis", "Non infected"))
+
+# plot_cell_death(df = df_cell_death_std_fit,
+#                 all_replicates = 24,
+#                 fitted = T,
+#                 combine_experiments = "plate",
+#                 plot_size = c(10, 6),
+#                 print_plot = T,
+#                 save_plot = "tmp")
+```
+
+# Extract parameters and repeat association analysis wth mortality outcome
+
+```{r}
+cell_death_parameters <- get_parameters(df_cell_death_std_fit)
+
+mean <- cell_death_parameters %>%
+               filter(sample_id == "JE2") %>% .$AUC %>% mean()
+cell_death_parameters %>%
+  ggplot(aes(x = fct_reorder(sample_id, AUC), y = AUC)) +
+  geom_boxplot() +
+  geom_vline(xintercept = mean) +
+  coord_flip() +
+  theme_bw()
+```
+
+# Plate M2
+
+```{r message=FALSE}
+df_cell_death_M2 <- read_csv("Data_parsing/parsed_experiments/exp200313/PI_data_plateM2_exp200313.csv") %>%
+  # add metadata
+  left_join(read_csv("plate_info/strain_metadata.csv"))
+```
+
+# Standardise and plot
+
+```{r}
+df_cell_death_M2_std <- JE2_POMS_standardisation(df_cell_death_M2, plot = F)
+plot_cell_death(df_cell_death_M2_std, standardized = T,
+                annotate = T)
+```
+
+There are 3 strains with potential outliers. We look at them more closely.
+
+```{r}
+x <- c("BPH3525", "BPH3541", "BPH3698")
+df_cell_death_M2_std %>% 
+  filter(sample_id %in% x) %>%
+plot_cell_death(standardized = T,
+                annotate = T)
+```
+
+Three outliers could be excluded
+
+```{r}
+o <- c("exp200313_M2_E04", "exp200313_M2_D12")
+df_cell_death_M2_std %>% 
+  filter(sample_id %in% x) %>%
+  filter(!well_id %in% o) %>%
+plot_cell_death(standardized = T,
+                annotate = T)
+```
+
+This is the new clean dataframe
+
+```{r}
+df_cell_death_M2_clean_std <- df_cell_death_M2_std %>% 
+  filter(!well_id %in% o)
+df_cell_death_M2_std_fit <- fit_smooth_spline(df_cell_death_M2_clean_std) %>%
+  filter(!sample_id %in% c("Complete lysis", "Non infected"))
+plot_cell_death(df = df_cell_death_M2_std_fit,
+                all_replicates = 24,
+                fitted = T,
+                combine_experiments = "plate")
+```
+
+# Extract parameters
+
+```{r}
+cell_death_parameters_M2 <- get_parameters(df_cell_death_M2_std_fit)
+
+mean <- cell_death_parameters_M2 %>%
+               filter(sample_id == "JE2") %>% .$AUC %>% mean()
+cell_death_parameters_M2 %>%
+  ggplot(aes(x = fct_reorder(sample_id, AUC), y = AUC)) +
+  geom_boxplot() +
+  geom_vline(xintercept = mean) +
+  coord_flip() +
+  theme_bw()
+```
+
+
+
+# Aggregate dataset for mortality analysis
+
+```{r}
+all_PI_data <- read_csv("Data_parsing/dataframes/concatenated_datasets/PI_kinetics_data.csv") %>%
+  mutate(plate = as.character(plate)) 
+# add metadata and remove datapoint with no outcome data
+df_cell_death_all <- all_PI_data %>%
+  left_join(read_csv("plate_info/strain_metadata.csv")) %>%
+  filter((strain_group == "CONTROL" & !sample_id %in% c("Complete lysis", "Non infected")) | !is.na(mortality)) 
+```
+
+# Standardise and fit
+
+```{r}
+df_cell_death_all_std <- JE2_POMS_standardisation(df_cell_death_all)
+df_cell_death_all_std_fit <- fit_smooth_spline(df_cell_death_all_std)
+```
+
+# Get parameters
+
+```{r}
+cell_death_parameters_all <- get_parameters(df_cell_death_all_std_fit) %>%
+  full_join(cell_death_parameters) %>%
+  full_join(cell_death_parameters_M2)
+
+cell_death_parameters_all %>%
+  .$sample_id %>%
+  unique
+```
+
+# Plot cell death and mortality again
+
+```{r}
+
+df <- cell_death_parameters_all %>%
+  group_by(ST, sample_id) %>%
+  summarise(AUC = mean(AUC))
+
+cell_death_parameters_all %>%
+  filter(strain_group != "CONTROL") %>%
+  mutate(st_lump = fct_lump(ST, 5)) %>%
+  group_by(sample_id, st_lump) %>%
+  summarise(AUC = mean(AUC)) %>%
+  ggplot(aes(x = AUC)) +
+  geom_density() +
+  facet_wrap(~st_lump)
+
+cell_death_parameters_all %>%
+  filter(strain_group != "CONTROL") %>%
+  mutate(st_lump = fct_lump(ST, 5)) %>%
+  group_by(sample_id, st_lump) %>%
+  summarise(AUC = mean(AUC)) %>%
+  ggplot(aes(x = AUC, fill = st_lump)) +
+  geom_density(position = "stack") 
+
+df_plot <- cell_death_parameters_all %>%
+  transmute(
+    group = case_when(
+    !is.na(mortality) ~ mortality,
+    is.na(mortality) ~ sample_id
+  ), 
+  AUC, ST,
+  sample_id,
+  plate) 
+# plot all data
+ggplot(df_plot, aes(x = fct_reorder(sample_id, AUC), y = AUC, color = group)) +
+  geom_boxplot() +
+  coord_flip()
+
+# plot means
+df_means <- df_plot %>%
+  group_by(sample_id, group, ST) %>%
+  summarise(AUC = mean(AUC))
+ggplot(df_plot, aes(x = group, y = AUC)) +
+  geom_boxplot() +
+  geom_jitter() +
+  theme_bw()
+
+# plot first 6 plates only
+df <- df_plot %>%
+  filter(plate %in% as.character(1:6))
+
+ggplot(df, aes(x = group, y = AUC)) +
+  geom_boxplot()
+
+# plot M1 only
+df <- df_plot %>%
+  filter(plate == "M1")
+ggplot(df, aes(x = group, y = AUC)) +
+  geom_boxplot()
+# plot M2 only
+df <- df_plot %>%
+  filter(plate == "M2")
+ggplot(df, aes(x = group, y = AUC)) +
+  geom_boxplot()
+
+```
+
+# Extract all sequence with low toxicity check their agrA allele
+
+We extract a list of all isolates with toxicity in the lower quartile
+
+```{r}
+df_low_tox <- df_means %>%
+  ungroup() %>%
+  mutate(AUC_c = cut(AUC, 3, labels = c("lower", "middle", "high"))) 
+```
+
+# Intersect with genetic pairs analysis
+
+```{r}
+gp_data <- read_tsv("Genetic_pairs_analysis/dataframes/genetic_pairs.tab", col_names = c("PAIR_ID", "iso1", "iso2"))
+df_gp <- gp_data %>%
+  pivot_longer(starts_with("iso"), names_to = "iso", values_to = "sample_id") %>%
+  select(-iso) %>%
+  left_join(df_low_tox) 
+df_gp_available <- df_gp %>%
+  group_by(PAIR_ID) %>%
+  filter(all(!is.na(AUC)))
+```
+
+# Get data about GP-002
+
+```{r}
+BPH2947_blast_data <- read_tsv("Within_host_analysis/BPH2947_FPR3757_blastn.tab") %>%
+  select(nebraska_locus_tag = SEQUENCE, LOCUS_TAG = QUERY)
+df_nebraska <- read_csv("Within_host_analysis/dataframes/nebraska_all_proteins.csv")
+df_snippy <- read_tsv("Genetic_pairs_analysis/all_snps_filtered.tab") %>%
+  rename(sample_id = ISOLATE)
+df_gp_available_mutations <- df_snippy %>%
+  right_join(df_gp_available) %>%
+  left_join(BPH2947_blast_data) 
+df_gp_available_proteins <- df_gp_available_mutations %>%
+  filter(!is.na(LOCUS_TAG) & !str_detect(EFFECT, "synonymous")) %>%
+  left_join(df_nebraska)
+write_csv(df_gp_available_proteins, 
+          "Genetic_pairs_analysis/dataframes/genetic_pairs_contrasting_phenotypes.csv")
+```
+
+# Analyse CFUs
+
+## Parse data
+
+```{r}
+col_names <- c("well", "sample_id", "cfu_pre_dilution3",
+               "cfu_post_dilution0", "cfu_post_dilution1", "cfu_post_dilution2", "cfu_post_dilution3")
+cfu_data <- readxl::read_xlsx(path = "Raw_data/plateM1/exp200309/CFUs/Plate M1 CFU n1.xlsx", sheet = 2, skip = 1,
+                      col_names = col_names) 
+# transform dataframe and add pair metadata
+df_cfu <- cfu_data %>%
+  mutate_at(.vars = vars(contains("dilution")),
+            .funs = as.numeric) %>%
+  pivot_longer(cols = starts_with("cfu_"), names_to = "count_type", values_to = "cfu_count") %>%
+  mutate(pre_infection = str_detect(count_type, "pre")) %>%
+  left_join(read_csv("plate_info/strain_metadata.csv")) %>%
+  select(well, sample_id, count_type, pre_infection, cfu_count, strain_group) %>%
+  replace_na(list(strain_group = "CONTROL")) %>%
+  filter(!sample_id %in% c("Complete lysis", "Non infected")) 
+# plot raw data
+df_cfu %>%
+  filter(!pre_infection) %>%
+  ggplot(aes(x = count_type, y = cfu_count, color = pre_infection)) +
+  geom_boxplot() +
+  facet_wrap(~ sample_id) +
+  scale_y_continuous(trans = "log10") +
+  theme_bw() +
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 45, hjust = 1))
+ggsave("Data_analysis/tmp/CFU_plate_M1.pdf", width = 8, height = 5)
+
+df_cfu %>%
+  filter(!pre_infection & count_type != "cfu_post_dilution0") %>%
+  ggplot(aes(x = sample_id, y = cfu_count, color = pre_infection)) +
+  geom_boxplot() +
+  facet_wrap(~ count_type) +
+  scale_y_continuous(trans = "log10") +
+   coord_flip() +
+  theme_bw() +
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggsave("Data_analysis/tmp/CFU_plate_M1_plot2.pdf", width = 8, height = 5)
+
+
+# preliminary results: post infection only
+# df_cfu_summary
+```
+
+Explore raw CFU counts
+
+```{r}
+cfu_raw_data <- purrr::map(1:3, function(x){
+  df <- read_xlsx("Raw_data/plateM1/exp200309/CFUs/Plate M1 CFU n1_raw_counts.xlsx",
+                  sheet = x, na = "na") %>%
+    plate_parser() %>%
+    mutate(dilution = x) 
+    
+  return(df)
+}) %>%
+  bind_rows() %>%
+  left_join(read_csv("plate_info/well_info_plates_M1_M2.csv") %>% filter(plate_number == "M1"))
+# plot raw data
+df_plot <- cfu_raw_data %>%
+  group_by(sample_id, dilution) %>%
+  mutate(all_available = length(which(!is.na(result))) == 3)
+df_plot <- cfu_raw_data %>%
+  filter(result > 0 & result < 40)
+df_plot %>%
+  ggplot(aes(x = as.factor(dilution), y = result)) +
+  # geom_boxplot(aes(colour = all_available)) +
+  geom_boxplot(colour = "red") +
+  geom_jitter(width = .1) +
+  scale_y_continuous(trans = "log10", breaks = c(1, 10, 100)) +
+  facet_wrap( ~ sample_id) +
+  theme_bw()
+
+# plot data distribution
+cfu_raw_data %>%
+  filter(result > 0) %>%
+  ggplot(aes(x = result)) +
+  geom_density(fill = "red") +
+  # facet_wrap(~as.factor(dilution)) +
+  theme_bw()
+```
+
+Based on the plot tentative filtering of results between 10 and 40
+
+```{r}
+cfu_raw_data_filter <- cfu_raw_data %>%
+  filter(result > 5 & result < 40)
+cfu_raw_data_filter %>%
+  ggplot(aes(x = result)) +
+  geom_density(fill = "red") +
+  # facet_wrap(~as.factor(dilution)) +
+  theme_bw()
+```
+

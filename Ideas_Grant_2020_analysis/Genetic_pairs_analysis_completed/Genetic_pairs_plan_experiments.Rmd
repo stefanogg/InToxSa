@@ -1,0 +1,282 @@
+---
+title: "VANANZ closely related pairs: planning experiments to complete the analysis"
+author: "Stefano Giulieri"
+date: "18/06/2020"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+Here, we plan the next experiments to complete the analysis of the genetic pairs in the VANANZ library.
+
+# Set/check knitR option and working directory
+
+```{r}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = here::here())
+print(paste("My working directory is:" ,here::here()))
+
+library(tidyverse)
+library(ggpubr)
+library(here)
+library(RColorBrewer)
+library(patchwork)
+```
+
+We know that 281 VANANZ isolates were categorised as genetically matched based on the core genome SNPs (<= 30, reference BPH2947). Of these, 102 were phenotyped (growth curves and PI uptake). Here, we randomise 96-well for the remaining $281-102=179$ isolates. Note that we will now use 4 wells for JE2 and only 2 for TOX-4.
+
+We will also extract the list of genes from the convergent evolution analysis and their correspoding Nebraska transposon mutants.
+
+# Plan experiment to complete phenotyping of genetically matched isolates
+
+## List of genetically matched isolates
+
+```{r}
+df_gp_pheno <- read_csv("Genetic_pairs_analysis_completed/Raw_data/genetic_pairs_pheno_changes_mortality_persist_switches.csv") %>%
+  select(starts_with("iso1")) 
+```
+
+## Merge with plate info
+
+```{r}
+well_info <- read_csv("Genetic_pairs_analysis_completed/Raw_data/well_info_n843_M1M2_P1P2.csv") %>%
+  group_by(sample_id) %>%
+  summarise(plate = str_c(unique(plate), collapse = "|")) 
+df_gp_pheno_plate <- df_gp_pheno %>%
+  left_join(well_info, by = c("iso1" = "sample_id")) %>%
+  select(iso1, plate, everything())
+```
+
+
+## List of genetically matched, phenotyped isolates
+
+```{r}
+df_gp_pheno_done <- df_gp_pheno_plate %>%
+  filter(!is.na(iso1_AUC_death)) %>%
+  distinct()
+```
+
+## List of genetically matched, non phenotyped isolates
+
+Note that we add isolates of plate 4, because we don't trust this plate and want to repeat the analysis.
+
+```{r}
+df_gp_pheno_not_done <- df_gp_pheno_plate %>%
+  filter(is.na(iso1_AUC_death) | plate == "4") %>%
+  distinct()
+```
+
+## Plan plate
+
+```{r}
+sample_list <- df_gp_pheno_not_done %>%
+  select(sample_id = iso1, strain_group = iso1_strain_group)
+```
+
+```{r}
+controls <- c("JE2", "TOX-4", "Complete lysis", "Non infected")
+n_controls <- length(controls)
+n_isolates_plate <- (96 - n_controls*3)/3
+nrow(sample_list) / n_isolates_plate
+```
+
+
+A total of 31 plates. Therefore we partition the list of samples as follows. 
+
+```{r}
+df <- sample_list %>%
+  arrange(strain_group, sample_id)
+plates_vector <- c() # empty vector with plate numbers. 
+# The for loop will generate three variables
+# x (plate number), j (number of strains on the plate including the current one), 
+# k (number of strains on the plate if all samples from the same patient are added)
+x <- 1
+j <- 1
+for (i in 1:nrow(df)){
+  if (i > 1){ # need to start from the second row to avoid NA
+    episode <- df$strain_group[i]
+    previous <- df$strain_group[i -1]
+   
+    if (episode != previous ){ # compute k only for the first strain if multiple strains per episode
+      n_isolates_episode <- length(which(df$strain_group == df$strain_group[i]))
+      k <- j + n_isolates_episode - 1 # substract 1 because first isolates already included in j
+      # if the number of strains (including expected multiple same-patient isolates) exceeds the maximum number, start a new plate
+      if (j > n_isolates_plate | k > n_isolates_plate){
+        j <- 1
+        x <- x + 1
+      }
+    } else {
+    if (j > n_isolates_plate){
+      j <- 1
+      x <- x + 1
+    }
+  }
+  }
+  plates_vector[i] <- x
+  j <- j + 1
+}
+sample_list_plate <- df %>%
+  mutate(plate = str_c("GP", plates_vector))
+```
+
+We now check that the partition worked as expected
+
+```{r}
+tab <- sample_list_plate %>%
+  count(plate)
+tab
+sample_list_plate %>%
+  count(strain_group, plate) %>%
+  ggplot(aes(x = strain_group, y = plate, fill = n)) +
+  geom_raster() +
+  scale_fill_continuous(low = "blue", high = "red") +
+  theme_bw() +
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank())
+
+sample_list_plate %>%
+  group_by(strain_group) %>%
+  mutate(n = n()) %>%
+  ggplot(aes(x = fct_reorder(sample_id, plate), y = plate, fill = n)) +
+  geom_raster() +
+  scale_fill_continuous(low = "blue", high = "red", name = "Strains per patient") +
+  labs(x = "Strain", y = "Plate") +
+  theme_bw() +
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank())
+
+```
+
+```{r}
+sample_list_check <- sample_list_plate %>%
+  group_by(strain_group) %>%
+  mutate(same_plate = n_distinct(plate) == 1 )
+length(sample_list_check$same_plate)
+```
+
+Save the plate partition
+
+```{r}
+write_csv(
+  sample_list_plate,
+  "Genetic_pairs_analysis_completed/plate_info/sample_list_plate.csv"
+)
+```
+
+## Plan the plates
+
+```{r}
+source("Functions/all_functions.R")
+well_info <- plate_planner(isolates = sample_list_plate %>% filter(plate == "GP1") %>% pull(sample_id),
+                           n_replicates_controls = c(4, 2, 3, 3),
+                           fixed = "Complete lysis")
+```
+
+```{r}
+well_info <- bind_rows(lapply(unique(sample_list_plate$plate), function(x){
+  df <- sample_list_plate %>%
+    filter(plate == x)
+  well_info <- plate_planner(
+    isolates = df$sample_id,
+  randomise = TRUE,
+  fixed = "Complete lysis",
+  n_replicates_controls = c(4, 2, 3, 3)
+) %>%
+    mutate(plate_number = x)
+  return(well_info)
+}))
+
+write_csv(
+  well_info,
+  "Genetic_pairs_analysis_completed/plate_info/well_info.csv"
+)
+```
+
+```{r}
+plate_info <- lapply(unique(sample_list_plate$plate), function(x){
+  df <- well_info %>%
+    filter(plate_number == x)
+  plate_info <- plate_mapper(df)
+  return(plate_info)
+})
+names(plate_info) <- str_c(
+  "plate_", 
+  formatC(unique(sample_list_plate$plate), width = 2, format = "d", flag = "0"))
+plate_info
+```
+
+```{r warning=FALSE}
+dir <- "Genetic_pairs_analysis_completed/plate_info/plate_maps"
+dir.create(dir)
+# unlink("dataframes/plate_maps/*.csv", recursive = TRUE)
+purrr::walk(names(plate_info), function(x){
+  df <- plate_info[[x]]
+  file <- str_c(
+    dir, "/",
+    x,
+    ".csv"
+  )
+  write_csv(df, file)
+})
+```
+
+# List of NTL mutants
+
+```{r}
+df_convergence_neb_screen <- read_csv("Genetic_pairs_analysis_completed/Raw_data/convergence_analysis_clusters_no_redundant_controls_Nebraska_screen.csv")
+```
+
+## Mask genes with no NTL mutant
+
+```{r}
+df_convergence_neb_present <- df_convergence_neb_screen %>%
+  drop_na(neb_mutant_id)
+```
+
+## Mask mutants that have already been tested
+
+```{r}
+df_convergence_neb_present_done <- df_convergence_neb_present %>%
+  drop_na(neb_c_phenotype)
+df_convergence_neb_present_not_done <- df_convergence_neb_present %>%
+  filter(is.na(neb_c_phenotype)) %>%
+  filter(neb_mutant_id != "NE1532")
+```
+
+## Try to rank mutants by convergence
+
+```{r}
+df_convergence_neb_ranked <- df_convergence_neb_present_not_done %>%
+  rowwise() %>%
+  mutate(max_recurrent = max(`n_clusters_SAB mortality`,
+                              `n_clusters_SAB persistence`,
+                              `n_clusters_Cell death (AUC)`,
+                              `n_clusters_Growth rate (AUC)`),
+         n_intersections = sum(c(`n_clusters_SAB mortality` >= 1,
+                              `n_clusters_SAB persistence` >= 1,
+                              `n_clusters_Cell death (AUC)` >= 1,
+                              `n_clusters_Growth rate (AUC)` >= 1))) %>%
+  select(neb_mutant_id, neb_gene, neb_product, nebraska_locus_tag, max_recurrent, n_intersections,
+         clstr_prot, SEQUENCE_prot, starts_with("n_"))
+```
+
+## Add aureowiki annotation
+
+```{r}
+df_aureowiki <- read_csv("Genetic_pairs_analysis_completed/Raw_data/aureowiki_USA300_FPR3757.csv") %>%
+  rename(nebraska_locus_tag = `locus tag`)
+
+df_convergence_neb_ranked_annotated <- df_convergence_neb_ranked %>%
+  left_join(df_aureowiki)
+```
+
+
+## Save dataframe of ranked NTL mutants to be screened
+
+```{r}
+dir <- "Genetic_pairs_analysis_completed/Processed_data"
+# dir.create(dir)
+# write_csv(df_convergence_neb_ranked_annotated,
+#           str_c(dir, "/convergence_analysis_NEB_to_screen.csv"))
+```
+

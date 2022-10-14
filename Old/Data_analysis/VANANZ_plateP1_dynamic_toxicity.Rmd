@@ -1,0 +1,193 @@
+---
+title: "Analysis of plate P1"
+author: "Stefano Giulieri"
+date: "21/02/2020"
+output: html_document
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = here::here())
+msg <- stringr::str_c("My directory is ", here::here())
+print(msg)
+```
+
+### Library
+
+```{r message=FALSE, warning=TRUE}
+library(tidyverse)
+library(magrittr)
+```
+
+## Remove content from the environment (optional)
+
+```{r}
+# rm(list = ls())
+```
+
+# Plate P1: experiment 200219
+
+# Parse data
+
+```{r}
+source("Functions/all_functions.R")
+
+# plate P1
+
+# arguments for parse function
+file <- "Raw_data/plateP1/exp200219/PI_kinetics/200219 Plate P1 n1 HeLa 40000 cell death assay.xlsx"
+duration <- c(23, 36)
+exp <- "exp200219"
+cell_number <- 40e3
+plate <- "P1"
+
+
+controls <- c("JE2", "TOX-4", "Complete lysis")
+df_metadata <- read_csv("plate_info/strain_metadata.csv")
+well_info <- read_csv("plate_info/well_info_plates_P1_P2.csv") %>%
+  rename(plate = plate_number)
+PI_kinetics_data <- parse_kinetics(file = file, duration = duration, exp = exp, cell_number = cell_number, plate = plate) %>% left_join(well_info) %>%
+  left_join(df_metadata %>% select(sample_id, strain_group)) %>%
+  mutate(strain_group = if_else(sample_id %in% controls, "CONTROL", strain_group))
+# save PI_kinetics_data
+PI_kinetics_data %>%
+  write_csv("Data_parsing/dataframes/partial_datasets/plateP1_PI_kinetics_well_info.csv")
+df_cell_death <- PI_kinetics_data %>%
+  left_join(df_metadata) 
+```
+
+
+# Standardise according to JE2 and cut experiment duration to the shortest experiment
+
+How does the standardisation work? First the duration of the experiments is cut to the shortest experiment in the dataset. Second, each signal is standardised as follows: $f\_signal.std = (f\_signal - f\_signal\_JE2.min) / (f\_signal\_JE2.max - f\_signal\_JE2.min)$, where $f\_signal\_JE2.min$ and $f\_signal\_JE2.max$ are the maximum and the minimum of the mean JE2 signal for the experiment, respectively.
+
+```{r fig.height=30, fig.width=21}
+df_cell_death_std <- JE2_POMS_standardisation(df_cell_death,
+                                              cut = T, # cut the experiment duration to the length of the shortest experiment
+                                              plot = F) %>%
+  filter(sample_id != "Complete lysis")
+```
+
+# Plot PI kinetics all replicates combined and identify outliers
+
+We first plot all strains and plates (optional)
+
+```{r fig.height=10, fig.width=21, message=TRUE}
+plot_cell_death(df = df_cell_death_std,
+                fitted = F,
+                standardized = T,
+                combine_experiments = "none",
+                annotate = T,
+                all_replicates = 24) # plot measure every 12 min only
+```
+
+```{r}
+df_cell_death_std_fit <- fit_smooth_spline(df_cell_death_std)
+df_cell_death_std_fit
+
+plot_cell_death(df = df_cell_death_std_fit,
+                all_replicates = 24,
+                fitted = T,
+                combine_experiments = "plate",
+                save_plot = F,
+                plot_size = c(24, 12),
+                print_plot = T)
+```
+
+# Episode specific comparisons
+
+```{r message=FALSE}
+# Total number of pairs and paired isolates
+print(str_c("We have ",
+            df_cell_death_std_fit %>% filter(strain_group != "CONTROL") %>% .$sample_id %>% n_distinct(),
+            " isolates from ",
+            df_cell_death_std_fit %>% filter(strain_group != "CONTROL") %>% .$strain_group %>% n_distinct(),
+            " episodes"))
+# Vector of pair names
+unique(df_cell_death_std_fit$strain_group)
+
+```
+
+```{r}
+# Run pair comparator function
+pair_comparator(df_pairs = df_cell_death_std_fit)
+# save figures
+```
+
+# Extract toxicity parameters and compare them across pairs
+
+```{r message=FALSE}
+df_cell_death_parameters <- get_parameters(df_cell_death_std_fit) 
+
+pair_comparator_parameters(df_param = df_cell_death_parameters, method = "t.test")
+
+```
+
+# Analyse CFUs
+
+## Parse data
+
+```{r}
+col_names <- c("well", "sample_id", "cfu_pre_dilution3", "cfu_post_dilution0", "cfu_post_dilution1", "cfu_post_dilution2")
+cfu_data <- readxl::read_xlsx(path = "Raw_data/plateP1/exp200219/CFUs/CFU_plate_P1.xlsx", sheet = 5, range = readxl::cell_limits(ul = c(2,1), lr = c(NA, 6)),
+                      col_names = col_names) 
+# transform dataframe and add pair metadata
+df_cfu <- cfu_data %>%
+  mutate(cfu_pre_dilution3 = as.numeric(str_remove(cfu_pre_dilution3, "~"))) %>%
+  pivot_longer(cols = starts_with("cfu_"), names_to = "count_type", values_to = "cfu_count") %>%
+  mutate(pre_infection = str_detect(count_type, "pre")) %>%
+  left_join(df_metadata) %>%
+  select(well, sample_id, count_type, pre_infection, cfu_count, strain_group) %>%
+  replace_na(list(strain_group = "CONTROL")) %>%
+  filter(!sample_id %in% c("Complete lysis", "Non infected")) 
+spot_vol <- 10 # spot volume in ul
+df_cfu_summary <- df_cfu %>%
+  group_by(sample_id, pre_infection) %>%
+  mutate(max_value = cfu_count == (max(cfu_count, na.rm = T))) %>%
+  group_by(sample_id, pre_infection, count_type) %>%
+  filter(any(max_value)) %>%
+  mutate(dilution = 10^as.numeric(str_remove(count_type, ".*_dilution"))) %>%
+  mutate(cfu_density = cfu_count*dilution*spot_vol) %>%
+  ungroup() %>%
+  select(-count_type) %>%
+  group_by(well, sample_id, strain_group) %>%
+  mutate(fold_change = cfu_density[which(!pre_infection)] / cfu_density[which(pre_infection)])
+  
+# plot all data
+df_cfu_summary %>%
+  ggplot(aes(x = sample_id, y = cfu_density, color = !pre_infection)) +
+  geom_boxplot() +
+  scale_y_continuous(trans = "log10") +
+  scale_color_discrete(name = "", labels = c("Pre infection", "Post infection")) +
+  facet_wrap(~strain_group, scales = "free_x") +
+  theme_bw()
+
+df_cfu_summary %>%
+  ggplot(aes(x = sample_id, y = fold_change)) +
+  geom_boxplot() +
+  scale_y_continuous(trans = "log10") +
+   facet_wrap(~strain_group, scales = "free_x", ncol = 3) +
+  labs(y = "Fold change (post-infection / pre-infection\n", x = "") +
+  theme_bw() +
+  theme(legend.position = "none")
+ggsave("Data_analysis/figures/CFUs/cfu_fold_change_plate_P1.pdf", width = 11, height = 5)
+
+df_parameters <- df_cfu_summary %>%
+  select(well, strain_group, sample_id, fold_change) %>%
+  ungroup() %>%
+  distinct()
+
+x <- df_parameters %>%
+  filter(sample_id == "JE2") %>%
+  .$fold_change
+y <- df_parameters %>%
+  filter(sample_id == "TOX-4") %>%
+  .$fold_change
+
+
+df <- compare_means(fold_change ~ sample_id, df_parameters, method = "wilcox.test", group.by = "strain_group")
+# 
+```
+

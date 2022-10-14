@@ -1,0 +1,68 @@
+---
+title: 'Parse results: plate 4 / exp201122'
+author: "Stefano Giulieri"
+date: "07/12/2020"
+output: html_document
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r setup, include=F}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = here::here())
+msg <- stringr::str_c("My directory is ", here::here())
+message(msg)
+```
+
+```{r message=FALSE}
+library(tidyverse)
+library(magrittr)
+rm(list = ls())
+source("Functions/all_functions.R")
+```
+
+# Set variable and directories
+
+```{r}
+plate <- "plate4"
+experiment <- "exp201122"
+raw_dir <- str_c("Raw_data", plate, experiment, "", sep = "/")
+parse_dir <- str_c("Data_parsing/parsed_experiments/", plate, "_", experiment, "/")
+```
+
+# Parse data
+
+```{r message=FALSE}
+# parameters
+PI_data <- parse_kinetics(file = list.files(str_c(raw_dir, "/PI_kinetics"), full.names = T, recursive = T),
+                          exp = experiment,
+                          n_cycles = 300,
+                          n_skip = 12,
+                          wavelength = 535,
+                          plate = str_remove(plate, "plate")) %>%
+  annotate_wells(well_info = "plate_info/well_info_n843.csv") #%>%
+  # mutate(sample_id = if_else(well %in% c("A4", "A9", "H3"), "JE2", sample_id )) # add supplementary JE wells. Would be easier to edit well_info 
+
+# save PI data
+PI_data %>%
+  write_csv(str_c(parse_dir, "PI_data_", plate, "_", experiment, ".csv"))
+```
+
+# Quick check
+
+```{r fig.height=7.5, fig.width=9}
+PI_data %>%
+  filter(sample_id != "Complete lysis") %>% # mask complete lysis / need to scale because of very high values in these wells
+  ggplot(aes(x = timepoint/60, y = f_signal)) +
+  geom_point(colour = "#045a8d") +
+  facet_wrap(strain_group~sample_id) +
+  theme_bw()
+```
+
+
+# Parse growth data
+
+No growth curves for this experiment.
+
+
+

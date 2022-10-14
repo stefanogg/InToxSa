@@ -1,0 +1,56 @@
+---
+title: "Create file structure to import data"
+author: "Stefano Giulieri"
+date: "09/12/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(magrittr)
+
+rm(list = ls())
+```
+
+```{r}
+folders <- c(
+  "Growth_curves",
+  "Inocula_OD",
+  "PI_kinetics",
+  "Parameters"
+)
+
+```
+
+# Plate 6
+
+```{r}
+plate_name <- "plate6"
+plate_exp <- c(
+  "exp_191205",
+  "exp_191206"
+)
+setwd("Raw_data")
+if (!dir.exists(plate_name)) dir.create(plate_name)
+
+# create folders
+purrr::walk(plate_exp, function(x){
+  dir <- str_c(plate_name, "/", x)
+  if (!dir.exists(dir)) dir.create(dir)
+  purrr::walk(folders, function(y){
+    dir <- str_c(plate_name, "/", x, "/", y)
+    print(dir)
+    if (!dir.exists(dir)) dir.create(dir)
+  })
+})
+purrr::walk(folders, function(x){
+   dir <- str_c(plate_name, "/", plate_exp, "/", x)
+   print(dir)
+  if (!dir.exists(dir)) dir.create(dir)
+})
+```
+

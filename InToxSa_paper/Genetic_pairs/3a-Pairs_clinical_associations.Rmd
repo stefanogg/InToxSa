@@ -1,0 +1,54 @@
+---
+title: "Generate dataframe of pairs information and summary plots of pairs metadata"
+author: "Stefano Giulieri"
+date: '27/06/2022'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd(stringr::str_c(here::here(), "/InToxSa_paper/Genetic_pairs"))
+msg <- glue::glue("My directory is {getwd()}")
+message(msg)
+```
+
+Here we explore associations with clinical metadata in genetic pairs
+
+```{r}
+library(tidyverse)
+
+rm(list = ls())
+```
+
+# Raw data
+
+Pairs data collected so far
+
+```{r}
+pairs_data <- readRDS("processed_data/PI_pairs_data/pairs_description_with_phylo_dataframe.Rda") %>%
+  filter(PI_pair)
+```
+
+Add mortality
+
+```{r}
+clinical <- read_csv("../../plate_info/strain_metadata.csv") %>%
+  select(sample_id, mortality) %>%
+  semi_join(PI_parameters)
+
+pairs_clinical <- pairs_data %>%
+  left_join(clinical, by = c("iso1" = "sample_id")) %>%
+  rename(iso1_mortality = mortality) %>%
+  left_join(clinical, by = c("iso2" = "sample_id")) %>%
+  rename(iso2_mortality = mortality) 
+```
+
+Plot mortality
+
+```{r}
+pairs_clinical %>%
+ count(iso1_mortality, iso2_mortality)
+```
+
+
+

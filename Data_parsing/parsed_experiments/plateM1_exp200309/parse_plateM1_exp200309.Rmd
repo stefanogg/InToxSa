@@ -1,0 +1,41 @@
+---
+title: 'Parse results: plate M1 / exp200309'
+author: "Stefano Giulieri"
+date: "02/03/2020"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = here::here())
+msg <- stringr::str_c("My directory is ", here::here())
+print(msg)
+```
+
+```{r}
+library(tidyverse)
+library(magrittr)
+rm(list = ls())
+source("Functions/all_functions.R")
+```
+
+# Parse data
+
+```{r}
+# parameters
+PI_data <- parse_kinetics(file = "Raw_data/plateM1/exp200309/PI_kinetics/200309 Plate M1 n2 HeLa 40000 cell death assay 24h.xlsx",
+                          exp = "exp200309",
+                          n_cycles = 240,
+                          plate = "M1",
+                          n_skip = 13) 
+PI_data <- annotate_wells(PI_data, well_info = "plate_info/well_info_plates_M1_M2.csv",
+                          metadata = "plate_info/strain_metadata.csv")
+
+write_csv(PI_data, "Data_parsing/parsed_experiments/exp200309/PI_data_plateM1_exp200309.csv")
+```
+
+# Parse growth data
+
+There are no growth curves available for this experiment.

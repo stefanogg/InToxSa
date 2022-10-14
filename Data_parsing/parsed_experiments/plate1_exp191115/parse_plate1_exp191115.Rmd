@@ -1,0 +1,39 @@
+---
+title: 'Parse results: plate 1 / exp191115'
+author: "Stefano Giulieri"
+date: "04/03/2020"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = here::here())
+msg <- stringr::str_c("My directory is ", here::here())
+print(msg)
+```
+
+```{r}
+library(tidyverse)
+library(magrittr)
+rm(list = ls())
+source("Functions/all_functions.R")
+```
+
+# Parse PI data
+
+```{r}
+PI_data <- parse_kinetics(file = "Raw_data/plate1/exp_191115/PI_kinetics/Vananz plate 1 191115 HeLa 40000 real time cell death assay n1.xlsx",
+                          exp = "exp191115",
+                          n_cycles = 228,
+                          plate = 1, annotate = "minimal")
+# save PI data
+write_csv(PI_data,
+          "Data_parsing/parsed_experiments/exp191115/PI_data_plate1_exp191115.csv")
+```
+
+
+# Parse growth data
+
+Growth data are not available for this experiment [in the future we might automate this using `file.exists` or similar functions]

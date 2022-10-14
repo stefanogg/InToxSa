@@ -1,0 +1,555 @@
+---
+title: "NEB mutants PI data processing"
+author: "R Guerillot, S Giulieri"
+date: "27/04/2021"
+output: html_document
+---
+
+```{r setup, include=T}
+library(tidyverse)
+library(here)
+library(patchwork)
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = here())
+print(paste("My working directory is:" ,here()))
+```
+
+# Source all function
+```{r}
+rm(list = ls())
+source("Functions/all_functions.R")
+```
+
+# Import all NEB PI data (plate GPV only)
+
+```{r}
+df_PI_raw <- list.files(path="Data_parsing/parsed_experiments/", pattern="PI_data_plateGPV1", full.names=TRUE, recursive=T) %>% 
+  map_df(~read_csv(., col_types = cols(well_row = col_factor(),
+                                      well_col = col_factor(),
+                                      f_signal = col_integer(),
+                                      well = col_factor(),
+                                      experiment = col_factor(),
+                                      cell_type = col_factor(),
+                                      cell_number = col_factor(),
+                                      plate = col_factor(),
+                                      well_id = col_factor(),
+                                      timepoint = col_integer(),
+                                      sample_id = col_factor(),
+                                      strain_group = col_factor()))) %>%
+  filter(cell_number == 40000 & cell_type == "Hela") %>%                        # Keep only data with 40000 HeLa cells
+  mutate(experiment_id = str_c(experiment, "_", plate))   # Create a experiment variable that is unique
+                                                          # -> two plate were done the same day => same exp.)
+
+```
+
+# Count plates
+```{r}
+n_plates <- df_PI_raw %>% select(experiment_id) %>% distinct() %>% nrow()
+print(glue::glue("Total number of GPV1 experiments included: {n_plates}"))
+
+nb_replicate_plate.df <- df_PI_raw %>% select(experiment, plate) %>% distinct() %>% count(plate,name = "number of plate replicate") %>% print()
+
+rm(n_plates, nb_replicate_plate.df)
+```
+
+# Check timepoints interval
+
+```{r}
+for (exp in df_PI_raw$experiment_id %>% unique()) {
+  print(paste(exp,
+               df_PI_raw %>%
+                 filter(experiment_id == exp) %>%
+                 .$timepoint %>%
+                 unique() %>%
+                 sort() %>%
+                 .[[2]],
+              "min"
+  )
+  )
+  
+}
+rm(exp)
+```
+
+# Process PI kinetics data
+
+## Check JE2 reference outlier in each plate
+
+Use stringent criteria to detect JE2 outlier curves
+ 
+Timepoint is outlier if:
+  1. |x| > 1.5 x IQR (Tukey's fences method = box plot outlier detection method)
+  2. sd > 0.2 (Only timepoints with important variation are considered; sd > 20% of JE2 max)
+Curve is outlier if: 
+  1. > 5% of timepoints are outliers (outlier_tukey_proportion = 0.05)
+
+Notes: 
+  - 3 x sd and 3 x mad methods don't identify more oulier curves as 0.05 proportion threshold; tukey is the most stringent method and therefore the only method used here 
+  - sd > 0.2 has been empirically set to avoid flagging outliers with very little variations. Could be improved by defining the sample_id~timepoints wise sd across all dataset
+  
+```{r}
+df_PI_raw_check <- df_PI_raw %>%
+  check_reference(reference = "JE2",
+                  outlier_tukey_proportion = 0.05, # 1.5 x IQR used
+                  outlier_sd_proportion = 1,       # 3 x sd not used
+                  outlier_mad_proportion = 1,      # no 3 x mad not used 
+                  k_tukey = 1.5,
+                  min_sd = 0.2,
+                  filter = F,
+                  plot = T)
+```
+
+### Plot JE2 non outliers and oultiers only
+
+```{r}
+p1 <- df_PI_raw_check %>% 
+  filter(!outlier_curve) %>%
+  plot_cell_death(fitted = T, all_replicates = T, return_plots = T)
+p1 <- p1[[1]] +
+  ylim(-0.25, 1.25) +
+  labs(subtitle = "Non-outlier curves")
+  
+p2 <- df_PI_raw_check %>% 
+  filter(outlier_curve) %>%
+  plot_cell_death(fitted = T, all_replicates = T, return_plots = T)
+p2 <- p2[[1]] +
+   ylim(-0.25, 1.25) +
+  labs(subtitle = "Outlier curves")
+
+p1 + p2 
+
+rm(p1,p2)
+```
+
+### Count number of JE2 outliers per experiment
+
+```{r}
+JE2_outliers_exp_count <- df_PI_raw_check %>% 
+  filter(sample_id == "JE2") %>% 
+  select(experiment_id, well_id, outlier_curve) %>% 
+  distinct(.) %>% 
+  group_by(experiment_id) %>% 
+  mutate(total_JE2 = n()) %>% 
+  ungroup() %>%
+  group_by(experiment_id, outlier_curve) %>%
+  mutate(number_curve = n()) %>% 
+  ungroup() %>%
+  select(-well_id) %>%
+  distinct() %>%
+  filter(outlier_curve == T) %>%
+  mutate(remaining_non_JE2_outliers = total_JE2 - number_curve) %>% 
+  select(experiment_id, outlier_curve, number_curve, total_JE2, remaining_non_JE2_outliers) %>%
+  print()
+
+
+```
+
+### Identifiy all well_id corresponding to JE2 ouliers from dataset
+
+```{r}
+JE2_outliers_well <- df_PI_raw_check %>% 
+  filter(outlier_curve == T) %>%
+  .$well_id %>%
+  unique() %>%
+  print()
+```
+
+### Identify all experiment_id with < 2 JE2 non outlier 
+
+```{r}
+JE2_outliers_exp <- JE2_outliers_exp_count %>% 
+  filter(remaining_non_JE2_outliers < 2) %>%
+  print() %>%
+  .$experiment_id 
+```
+
+Based on JE2 outlier detection:
+no experiment will be excluded (all with >= 2 valid [non-outlier] curves)
+
+### Check how many plate with < 3 JE3 non-oulier 
+
+```{r}
+JE2_outliers_exp_count %>% 
+  filter(remaining_non_JE2_outliers < 3) 
+
+rm(JE2_outliers_exp_count)
+```
+
+If we want at least 3 non outlier JE2 per plates the folowing plates should be excluded too:
+- exp210326_GPV1
+
+## Clean raw PI data: 
+
+1. remove JE2 well outliers
+2. remove experiments with < 2 JE2
+3. standardise (with max time cutting)
+4. fit curves
+5. indentify and remove outliers (default parameter with tukey + mad + sd proportion > 0.1 (>10% outlier timepoints))
+6. calculate derivatives
+
+```{r}
+df_PI_clean_with_outliers <- df_PI_raw %>%
+  filter(!well_id %in% JE2_outliers_well) %>%
+  filter(!experiment_id %in% JE2_outliers_exp) %>%
+  standardise_curves(cut = T) %>%
+  fit_curves(use_standardised = T) %>%
+  flag_outlier_curves(use_standardised = T, 
+                      min_sd = 0.2,
+                      k_sd = 3, 
+                      k_mad = 3,
+                      k_tukey = 1.5, 
+                      outlier_tukey_proportion = 0.1, 
+                      outlier_sd_proportion = 0.1, 
+                      outlier_mad_proportion = 0.1,
+                      filter = F) %>%
+  get_derivatives(use_fitted = T) 
+
+df_PI_clean <- df_PI_clean_with_outliers %>%
+  filter(!outlier_curve) %>%
+  as_tibble()
+
+# check that sample_id is not NA
+df_PI_clean %>% filter(is.na(sample_id))
+```
+
+
+### Count clean plates remaining
+
+```{r}
+n_plates <- df_PI_clean %>% select(experiment_id) %>% distinct() %>% nrow()
+print(glue::glue("Total number of validate GPV1 experiments: {n_plates}"))
+
+clean_PI_plate_count.df <- df_PI_raw %>% select(experiment, plate) %>% distinct() %>% count(plate,name = "number of plate replicate") %>% print()
+
+rm(n_plates, clean_PI_plate_count.df)
+```
+
+### Count proportion of outlier wells per plate
+```{r}
+ratio_outlier.df <- df_PI_clean_with_outliers %>%
+  select(well_id, experiment_id, outlier_curve) %>%
+  distinct() %>%
+  mutate(outlier_curve = factor(outlier_curve, levels = c(T,F))) %>%
+  complete(outlier_curve) %>%
+  count(experiment_id, outlier_curve, .drop = F) %>%
+  group_by(experiment_id) %>%
+  summarise(outlier = paste(outlier_curve, collapse = "/"), ratio_outlier = paste(n, collapse = "/")) %>%
+  ungroup() %>%
+  separate(col = ratio_outlier, sep = "/", into = c("outlier", "non_outlier")) %>%
+  mutate(proportion_outlier = as.numeric(outlier)/as.numeric(non_outlier)) %>%
+  arrange(-proportion_outlier) %>%
+  print()
+
+```
+
+### Identify excluded isolate sample (outliers)
+```{r}
+excluded_sample <- setdiff(
+df_PI_raw %>% .$sample_id%>% unique(),
+df_PI_clean %>% .$sample_id%>% unique()
+)
+
+df_PI_raw %>% filter(sample_id %in% excluded_sample) %>%
+  select(experiment_id, sample_id) %>%
+  distinct() 
+```
+
+Overall, a very low proportion of outliers and no sample excluded! Good work Abdou!
+
+### Asign plate replicate number
+
+```{r}
+df_PI_clean <- df_PI_clean %>%
+  group_by(plate, experiment_id) %>%
+  mutate(plate_replicate = cur_group_id())
+
+df_PI_clean %>%
+  distinct(plate, experiment_id, plate_replicate)
+
+# check that sample_id is not NA
+df_PI_clean %>% filter(is.na(sample_id))
+```
+
+### Set sample_id level to get controls first when plotting
+
+Also fix order of NEB mutants to be consistent with the numerical order.
+
+```{r}
+controls <- c("JE2", "NE1354", "TOX-4", "NEB agrA", "Non infected", "Complete lysis")
+samples <- tibble(sample_id = str_subset(unique(df_PI_clean$sample_id),
+                      "NE")) %>%
+  mutate(sample_id_numeric = as.integer(str_remove(sample_id, "NE"))) %>%
+  arrange(sample_id_numeric) %>%
+  .$sample_id
+blank <- "Blank"
+levels <- c(controls, samples, blank)
+
+
+df_PI_clean <- df_PI_clean %>%
+  mutate(sample_id = factor(sample_id, levels = levels)) %>%
+  arrange(sample_id)
+
+# check that sample_id is not NA
+df_PI_clean %>% filter(is.na(sample_id))
+```
+
+## Extract PI curves parameters
+
+```{r}
+df_PI_clean_parameters <- df_PI_clean %>%
+  get_parameters() %>%
+  arrange(sample_id)
+```
+
+## Calculate sample parameters mean, median, sd, mad, IQR
+
+```{r}
+df_PI_clean_parameters_sample <- df_PI_clean_parameters %>%
+  group_by(sample_id) %>%
+  select(sample_id, ends_with("_death")) %>%
+  summarise_if(is.numeric, funs(mean, sd, median, mad, IQR)) %>%
+  merge(., df_PI_clean_parameters %>% select(sample_id, -ends_with("_death")) %>% distinct(), by = "sample_id") %>%
+  arrange(sample_id)
+```
+
+# Save data
+
+## Save processed PI data
+
+```{r}
+# Save data as compressed R object (can be read with readRDS()) 
+# advantage: all variable class are kept + factor order etc...
+df_PI_clean %>%
+  saveRDS("Genetic_pairs_analysis_Oct_2020/processed_data/PI/dataframes/kinetics/PI_kinetics_plateGPV1.Rda", compress = "gzip")
+```
+
+## Save PI curves parameters
+
+```{r}
+df_PI_clean_parameters %>%
+  saveRDS("Genetic_pairs_analysis_Oct_2020/processed_data/PI/dataframes/parameters/PI_parameters_plateGPV1.Rda")
+
+df_PI_clean_parameters_sample %>%
+  saveRDS("Genetic_pairs_analysis_Oct_2020/processed_data/PI/dataframes/parameters/PI_sample_parameters_plateGPV1.Rda")
+```
+
+
+## Save plots for all experiments
+```{r}
+# 
+# for (exp in unique(clean_PI.df$experiment_id)){
+#   PI.df <- clean_PI.df %>% filter(sample_id != "Complete lysis")
+#   p <- plot_cell_death(PI.df %>% filter(experiment_id == exp), 
+#                        fitted = T,
+#                        #combine_experiments = c("all"),
+#                        all_replicates = T, 
+#                        return_plots = T)
+#   p <- p[[1]] + ylim(min(PI.df$f_signal.fitted), max(PI.df$f_signal.fitted))
+#   ggsave(filename = exp, 
+#          plot = p, 
+#          device = "jpeg", 
+#          path = "Genetic_pairs_analysis_Oct_2020/processed_data/PI/QC_plots/experiment/",
+#         width = 29.7, height = 21, units = "cm")
+#   p
+# }
+```
+
+# OLD ---------------------------------------------------------------
+
+## Save imported genetic pairs metadata
+```{r}
+gen_pairs_all.df <- read_csv("Ideas_Grant_2020_analysis/Genetic_pairs_analysis_completed/Raw_data/genetic_pairs_pheno_changes_mortality_persist_switches.csv") %>%
+  mutate(pair_id = paste0(pmin(iso1,iso2),"-",pmax(iso1,iso2))) %>%
+  select(pair_id, everything()) %>%
+  arrange(iso2_mortality) %>%
+  select(-ends_with(match = c("_death", "_OD")))
+
+gen_pairs.df <- gen_pairs_all.df %>%
+  distinct(pair_id, .keep_all = T)
+
+dir.create(path = "Genetic_pairs_analysis_Oct_2020/metadata")
+
+write.csv(x = gen_pairs_all.df, file = "Genetic_pairs_analysis_Oct_2020/metadata/genetic_pairs_id_metadata.csv", row.names = F)
+saveRDS(gen_pairs_all.df, file = "Genetic_pairs_analysis_Oct_2020/metadata/genetic_pairs_id_metadata.Rda")
+
+write.csv(x = gen_pairs.df %>% distinct(pair_id, .keep_all = T), file = "Genetic_pairs_analysis_Oct_2020/metadata/distinct_genetic_pairs_id_metadata.csv", row.names = F)
+saveRDS(gen_pairs.df %>% distinct(pair_id, .keep_all = T), file = "Genetic_pairs_analysis_Oct_2020/metadata/distinct_genetic_pairs_id_metadata.Rda")
+```
+
+# QC PI data
+
+## Re-check JE2 standardized curves after removing JE2 outliers
+```{r}
+clean_PI.df %>%
+  filter(sample_id == "JE2") %>%
+  plot_cell_death(fitted = T, 
+                  return_plots = F,
+                  all_replicates = T, 
+                  combine_experiments = c("experiment"), 
+                  ylim = c(min(.$f_signal.fitted), max(.$f_signal.fitted))) 
+
+clean_PI.df %>%
+  filter(sample_id == "JE2") %>%
+  plot_cell_death(fitted = T, 
+                  return_plots = F,
+                  all_replicates = T, 
+                  combine_experiments = c("plate"), 
+                  ylim = c(min(.$f_signal.fitted), max(.$f_signal.fitted))) 
+
+clean_PI.df %>%
+  filter(sample_id == "JE2") %>%
+  plot_cell_death(fitted = T, 
+                  return_plots = T,
+                  all_replicates = T, 
+                  combine_experiments = c("all"), 
+                  ylim = c(min(.$f_signal.fitted), max(.$f_signal.fitted))) %>%
+  .[[1]] +
+  facet_wrap(~experiment_id)
+
+
+```
+
+Note: Seems that there are still JE2 variations/outliers. eg. plate4  
+! Shape of curves varies => max min normalisation might not be sufficient in some cases
+! Might need to detect outliers using curves parameters, AUC, death rate??
+
+## Check AUC variation across plates replicates
+```{r fig.height=6, fig.width=6}
+df <- clean_parameters_PI.df %>% 
+         group_by(plate) %>%
+         filter(max(as.integer(plate_replicate)) != 1)
+for (pl in unique(df$plate)){ 
+  p <- ggplot(df %>% filter(plate == pl), aes(x = sample_id, y = AUC_death, colour = experiment)) +
+    geom_boxplot() +
+    coord_flip() +
+    ggtitle(paste("Plate", pl, "replicates")) +
+    ylim(min(df$AUC_death), max(df$AUC_death)) 
+  print(p)
+  ggsave(filename = pl, 
+       plot = p, 
+       device = "jpeg", 
+       path = "Genetic_pairs_analysis_Oct_2020/processed_data/PI/QC_plots/plate_replicates")
+}
+```
+Variation across plate replicates usually very good 
+No systematic bias such all strain with increase or decrease AUC across plate replicates
+=> Abdou is doing a great job
+=> Normalistion is working and unlikely to further reduce variation
+May be systematic biases in GP3 and GP6:
+AUCs exp200805 > exp200802
+AUCs exp200902 > exp200903
+possibly repeating? 
+
+but few strains have major discrepencies.
+Would be good to repeat those
+e.g. BPH3361 on M1
+BPH2754, BPH2743 on plate 2
+
+
+## Check example of high tox and fluctuating strain across plate replicate
+```{r}
+
+plot_cell_death(clean_PI.df %>% filter(sample_id %in% c("BPH3294", "JE2")), standardized = T, fitted = T, comparator = "JE2", all_replicates = F)
+
+plot_cell_death(clean_PI.df %>% filter(sample_id %in% c("BPH3361", "JE2")), standardized = T, fitted = T)
+        
+```
+
+
+## Plot PI distribution
+```{r}
+ggplot(clean_sample_parameters_PI.df %>%
+         filter(grepl("BPH", sample_id)) , aes(x = AUC_death_mean)) +
+  geom_histogram(binwidth = 2)+
+  geom_density(aes(y=2 * ..count..))
+```
+
+
+## Select PI kinetics and parameter corresponding to paired isolates
+```{r}
+paired_strains <- unique(c(gen_pairs.df$iso1, gen_pairs.df$iso2))
+
+pairs_clean_PI.df <- clean_PI.df %>%
+  filter(sample_id %in% paired_strains)
+```
+
+## Check genetic pairs lacking in the dataset and number of replicates per strain
+```{r}
+length(paired_strains)
+length(unique(pairs_clean_PI.df$sample_id))
+
+paired_strains_not_in_clean <-setdiff(paired_strains, pairs_clean_PI.df$sample_id)
+print(paste0(c("Pairs lacking: ", paired_strains_not_in_clean)))
+
+paired_strains_not_in_clean.df <- data_frame(sample_id = paired_strains_not_in_clean) %>%
+  mutate(number_of_replicates = 0)
+
+pairs_clean_PI_nb_rep.df <- pairs_clean_PI.df %>%
+  distinct(sample_id, well_id) %>%
+  count(sample_id) %>%
+  rename(number_of_replicates = n) %>%
+  rbind(paired_strains_not_in_clean.df, .) %>%
+  arrange(number_of_replicates) %>%
+  write.csv(x = ., file = "Genetic_pairs_analysis_Oct_2020/processed_data/PI/dataframes/genetic_pairs_PI_replicate_per_strain.csv", row.names = F)
+
+pairs_clean_PI_nb_rep.df %>% count(number_of_replicates)
+  
+```
+
+## Print all strains with 0 to 4 replicates only
+```{r}
+pairs_clean_PI_nb_rep.df %>% filter(number_of_replicates <= 4)
+```
+
+## Plot comparison of PI kinetics for all pairs
+```{r}
+
+# filter pairs with members non screened yet
+gen_pairs_done.df <- gen_pairs.df %>%
+  filter(!iso1 %in% paired_strains_not_in_clean) %>%
+  filter(!iso2 %in% paired_strains_not_in_clean) 
+
+# set min max cell death to scale plots
+max_cd <- max(pairs_clean_PI.df$f_signal.fitted)
+min_cd <- min(pairs_clean_PI.df$f_signal.fitted)
+
+
+# create output dir
+dir.create("Genetic_pairs_analysis_Oct_2020/processed_data/PI/QC_plots/genetic_pairs_comparison")
+
+plot_list <- list()
+for(i in 1:nrow(gen_pairs_done.df)) {
+  iso1 <- gen_pairs_done.df$iso1[i]
+  iso2 <- gen_pairs_done.df$iso2[i]
+  iso1_mortality <- gen_pairs_done.df$iso1_mortality[i]
+  iso2_mortality <- gen_pairs_done.df$iso2_mortality[i]
+  pair_id <- gen_pairs_done.df$pair_id[i]
+  dist <- gen_pairs_done.df$dist[i]
+  
+  plot_list[[pair_id]] <- pairs_clean_PI.df %>%
+    filter(sample_id %in% c(iso1, iso2)) %>%
+    ggplot(aes(x = timepoint/60, y = f_signal.fitted, colour = sample_id, group = sample_id, fill = sample_id)) +
+    geom_point(size = .2) +
+    stat_summary(geom = 'ribbon', fun.data = 'mean_sdl', fun.args = list(mult = 1), alpha = 0.2) +
+    stat_summary(geom = "point", fun = "mean", size = 1.5) +
+    labs(title = paste(iso1, iso2, "|", iso1_mortality, iso2_mortality, "|", dist),
+         x = "Time (hour)",
+         y = "Cell death index") +
+    theme_bw() +
+    ylim(min_cd,max_cd)
+
+  ggsave(plot = plot_list[[pair_id]], filename = paste0(dist, "_", pair_id, "_", iso1_mortality, "-", iso2_mortality,".jpeg"), device = "jpeg",  path = "Genetic_pairs_analysis_Oct_2020/processed_data/PI/QC_plots/genetic_pairs_comparison")
+}
+
+#cowplot::plot_grid(plotlist = plot_list)
+```
+
+
+
+
+
+
+
+
+
+

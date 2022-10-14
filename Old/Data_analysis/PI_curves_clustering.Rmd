@@ -1,0 +1,80 @@
+---
+title: "PI_curves_clustering"
+author: "R Guerillot"
+date: "18/03/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Test to extract pairwise distance of curves
+```{r}
+
+all_PI_wide.df <- all_PI.df %>%
+  select(timepoint, well_id, f_signal) %>%
+  pivot_wider(names_from = well_id, values_from = f_signal) %>%
+  select(-timepoint)
+
+all_PI_wide.diss <- diss(all_PI_wide.df, METHOD="EUCL")
+
+# other distance metrics to try
+DissimDistance(x, y, tx, ty)
+
+mds1 <- cmdscale(all_PI_wide.diss) %>% as_tibble()
+
+colnames(mds1) <- c("Dim.1", "Dim.2")
+# Plot MDS
+library(ggpubr)
+ggscatter(mds1, x = "Dim.1", y = "Dim.2", 
+          #label = rownames(all_PI_wide.diss),
+          size = 1)
+          #repel = TRUE)
+
+# Hierarchical lustering
+hc <- hclust(all_PI_wide.diss, method = 'complete')
+plot(hc)
+
+cluster.df <- as.data.frame(cutree(hc, k = 15)) %>%
+  mutate(well_id = rownames(.)) %>%
+  mutate(cluster = .[[1]]) %>%
+  .[,2:3]
+
+all_PI_cluster.df <- merge(all_PI.df, cluster.df, by = "well_id")
+
+plot_cell_death(all_PI_cluster.df, standardized = T, fitted = T, all_replicates = T, combine_experiments = "cluster", comparator = "JE2", save_plot = T)
+```
+
+```{r}
+library(TSclust)
+data(electricity)
+electricity
+t <- as.data.frame(electricity)
+d <- diss(t, METHOD="INT.PER", normalize=FALSE)
+m <- as.matrix(d)
+m
+mds1 <- cmdscale(m)
+
+library(adegenet)
+library(factoextra)
+pco1 <- dudi.pco(all_PI_wide.diss, scannf = FALSE, nf = 2)#, scannf = F, nf = 5,
+pco1
+
+
+
+fviz_pca_biplot(pca1,
+             #select.ind = list(contrib = 10),
+             axes = c(1,2),
+             geom = c("point"),
+             alpha.ind = .5,
+             addEllipses = T,
+             ellipse.level = .75,
+             #col.ind = all_PI_parameters.df$mortality,
+             #col.circle = all_PI_parameters.df$mortality,
+             title = paste("PCA with variable loading" ),
+             #repel = T,
+             pointshape = 16,
+             )
+
+```

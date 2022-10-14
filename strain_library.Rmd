@@ -1,0 +1,271 @@
+---
+title: "VANANZ library"
+author: "Stefano Giulieri"
+date: "08/07/2019"
+output:
+  html_document: default
+  pdf_document: default
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Here, we establish a 96-well plate library of all VANANZ isolates in triplicates. The replicates will be distrubuted randomly on the plate to avoid position bias. However, the sequence of the plates will follow the order of episodes included in VANANZ to allow inclusion of same-patient isolates on the same plate.
+
+```{r message=FALSE}
+# Library
+library(tidyverse)
+library(magrittr)
+rm(list = ls())
+
+# Load list of isolates and episodes
+data <- read_csv("~/Dropbox/VANESSA_ANZCOSS_R/dataframes/VAN_VSS_n843.csv")
+```
+
+Number of isolates included
+
+```{r}
+nrow(data)
+```
+
+Number of episodes
+
+```{r}
+length(unique(data$studyid))
+```
+
+We will only keep variables of interest: isolate and episode ID
+
+```{r}
+sample_list <- data %>%
+  select(mdu_id, studyid)
+```
+
+We will add a maximum of 28 isolates per plate (84 replicates). The remaining 12 wells will be used for non infected cells (3 wells), low toxic control (tox 4 = BPH3757, 3 wells), high toxic control (tox 5 = BPH2705, 3 wells), and for total LDH determination (using Triton, 3 wells).
+This means that we will need:
+
+```{r}
+n_isolates_plate <- 28
+nrow(sample_list) / n_isolates_plate
+```
+
+A total of 31 plates. Therefore we partition the list of samples as follows. 
+
+```{r}
+df <- sample_list %>%
+  arrange(studyid, mdu_id)
+plates_vector <- c() # empty vector with plate numbers. 
+# The for loop will generate three variables
+# x (plate number), j (number of strains on the plate including the current one), 
+# k (number of strains on the plate if all samples from the same patient are added)
+x <- 1
+j <- 1
+for (i in 1:nrow(df)){
+  if (i > 1){ # need to start from the second row to avoid NA
+    episode <- df$studyid[i]
+    previous <- df$studyid[i -1]
+   
+    if (episode != previous ){ # compute k only for the first strain if multiple strains per episode
+      n_isolates_episode <- length(which(df$studyid == df$studyid[i]))
+      k <- j + n_isolates_episode - 1 # substract 1 because first isolates already included in j
+      # if the number of strains (including expected multiple same-patient isolates) exceeds the maximum number, start a new plate
+      if (j > n_isolates_plate | k > n_isolates_plate){
+        j <- 1
+        x <- x + 1
+      }
+    } else {
+    if (j > n_isolates_plate){
+      j <- 1
+      x <- x + 1
+    }
+  }
+  }
+  plates_vector[i] <- x
+  j <- j + 1
+}
+sample_list_plate <- df %>%
+  mutate(plate = plates_vector) 
+```
+
+We now check that the partition worked as expected
+
+```{r}
+tab <- sample_list_plate %>%
+  count(plate)
+sample_list_plate %>%
+  count(studyid, plate) %>%
+  ggplot(aes(x = studyid, y = plate, fill = n)) +
+  geom_raster() +
+  scale_fill_continuous(low = "blue", high = "red") +
+  theme(axis.text.x = element_blank())
+
+```
+
+```{r}
+sample_list_check <- sample_list_plate %>%
+  group_by(studyid) %>%
+  mutate(same_plate = n_distinct(plate) == 1 )
+length(sample_list_check$same_plate)
+```
+
+Save the plate partition
+
+```{r}
+write_csv(
+  sample_list_plate,
+  "plate_info/sample_list_plate.csv"
+)
+```
+
+
+Now that the samples have been assigned to their plate, we can assemble the plates
+
+```{r}
+plate_planner <- function(df, n_replicates = 3, controls, randomise = TRUE,
+                         fixed = NULL){
+  # A vector with the samples and replicates
+  isolates <- df %>%
+    .$mdu_id
+  # Add controls
+  samples <- c(isolates, controls)
+  # A vector with the replicates
+  replicates <- 1:n_replicates
+  # Write vector with samples, repeated three times
+  sample_id <- sort( rep( samples, length( replicates ) ) )
+  # Set vector length to 96 (if there are less samples/ replicates, it will generate NA values,
+  # if there are more than  n_samples, the exceeding samples will be excluded)
+  length( sample_id ) <- 96
+  # Write vector with replicate number, repeated for each sample, set length to 96
+  replicate <- rep( replicates, length( sample_id ) )
+  length( replicate ) <- 96
+  # Generate dataframe 
+  replicates_df <- dplyr::tibble( sample_id, replicate ) %>%
+    replace_na(list(sample_id = "Blank", replicate = "Blank"))
+   # Optional randomisation
+  if (!is.null(fixed)){
+    fixed_df <- replicates_df %>%
+      filter(sample_id == fixed)
+    replicates_df <- replicates_df %>%
+      filter(sample_id != fixed)
+  }
+  if (randomise) {
+    set.seed(1)
+    replicates_df <- sample_frac(replicates_df)
+    replicates_df <- replicates_df %>%
+      full_join(fixed_df)
+  }
+  
+  ### Add well in format "A01, A02, ..."
+  well <- paste0( sort( rep( LETTERS[1:8], 12 ) ), rep( 1:12, 8) )
+  well <- gsub( "^([A-Z])([0-9]){1}$", "\\10\\2", well)
+  
+  # Final dataframe in long format ----
+  well_info <- tibble( well ) %>%
+    dplyr::bind_cols( replicates_df )
+
+    return(well_info)
+}
+```
+
+We now apply the functions
+
+```{r message=FALSE}
+controls <- c(
+  "Non infected",
+  "TOX-4",
+  "TOX-5",
+  "Total LDH"
+)
+fixed <- "Total LDH"
+df_1 <- sample_list_plate %>%
+  filter(plate == 1)
+well_info_1 <- plate_planner(
+  df = df_1,
+  controls = controls,
+  randomise = TRUE,
+  fixed = "Total LDH"
+)
+well_info_1
+```
+
+We need a second function to map the wells
+
+```{r}
+plate_mapper <- function(well_info){
+  plate_info <- well_info %>%
+    tidyr::replace_na( replace = list( sample_id = "" ) ) %>%
+    tidyr::separate( col = well, into = c( "row", "column" ), sep = 1 ) %>%
+    dplyr::select( row, column, sample_id ) %>%
+    tidyr::spread( key = column, value = sample_id )
+  return(plate_info)
+}
+```
+
+We can now inspect the output
+
+
+```{r message=FALSE, warning=FALSE}
+plate_info_1 <- plate_mapper(well_info_1)
+plate_info_1
+write_csv(plate_info_1, "plate_info/plate_info_1.csv")
+```
+
+Next, we generate a dataframe of plates / wells for the whole set of strains, and a list with the 31 plates maps
+
+```{r message=FALSE}
+plates <- unique(sample_list_plate$plate)
+well_info_n843 <- bind_rows(lapply(plates, function(x){
+  df <- sample_list_plate %>%
+    filter(plate == x)
+  well_info <- plate_planner(
+  df = df,
+  controls = controls,
+  randomise = TRUE,
+  fixed = "Total LDH"
+) %>%
+    mutate(plate_number = x)
+  return(well_info)
+}))
+well_info_n843
+write_csv(
+  well_info_n843,
+  "plate_info/well_info_n843.csv"
+)
+```
+
+Here is the list of plate maps
+
+```{r}
+plate_info_n843 <- lapply(plates, function(x){
+  df <- well_info_n843 %>%
+    filter(plate_number == x)
+  plate_info <- plate_mapper(df)
+  return(plate_info)
+})
+names(plate_info_n843) <- str_c(
+  "plate_", 
+  formatC(plates, width = 2, format = "d", flag = "0"))
+plate_info_n843
+```
+
+The plate maps can now be exported in csv format
+
+```{r warning=FALSE}
+dir.create("plate_info/plate_maps")
+# unlink("dataframes/plate_maps/*.csv", recursive = TRUE)
+purrr::walk(names(plate_info_n843), function(x){
+  df <- plate_info_n843[[x]]
+  file <- str_c(
+    "plate_info/plate_maps/",
+    x,
+    ".csv"
+  )
+  write_csv(df, file)
+})
+```
+
+
+

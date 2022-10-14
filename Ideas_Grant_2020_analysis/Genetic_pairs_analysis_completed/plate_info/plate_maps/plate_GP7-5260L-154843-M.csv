@@ -1,0 +1,9 @@
+row,01,02,03,04,05,06,07,08,09,10,11,12
+A,Non infected,BPH3710,BPH3672,BPH3704,Non infected,BPH3754,BPH3686,Non infected,Non infected,JE2,BPH3692,Non infected
+B,Non infected,BPH3682,NE1354,BPH3710,Non infected,Non infected,BPH3754,BPH3702,BPH3704,NE1354,BPH3753,BPH3710
+C,BPH3692,BPH3700,Non infected,Non infected,BPH3753,JE2,BPH3696,TOX-4,TOX-4,BPH3674,NE1354,NE1354
+D,Non infected,Non infected,NEB agrA,BPH3694,BPH3702,Non infected,BPH3672,BPH3754,BPH3688,BPH3694,Non infected,JE2
+E,NEB agrA,Non infected,Non infected,BPH3694,Non infected,NEB agrA,Non infected,BPH3684,BPH3688,BPH3704,BPH3686,Non infected
+F,Non infected,Non infected,BPH3755,Non infected,Non infected,JE2,BPH3755,BPH3684,BPH3688,JE2,Non infected,Non infected
+G,BPH3753,Non infected,BPH3682,BPH3700,NEB agrA,BPH3755,BPH3702,BPH3684,JE2,BPH3696,BPH3672,JE2
+H,Non infected,BPH3700,BPH3682,BPH3686,BPH3696,BPH3692,BPH3674,JE2,BPH3674,Complete lysis,Complete lysis,Complete lysis

@@ -1,0 +1,71 @@
+---
+title: "Convergence analysis of genetic pairs"
+author: "Stefano Giulieri"
+date: "05/03/2020"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+Here, we analyse the concatenated snippy output for the genetic pairs from different patients.
+In summary, we mapped reads from 843 VANANZ isolates to reference genome BPH2947 (ST239) using snippy v4.5 with default settings. We then concatenated the `snsp.tab` files of each genetic pairs and masked mutations that were present in both isolates. We used the shell script `concatenate-snippy.sh` with the option `-f` (see `Scripts_for_server/`).
+
+
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = here::here())
+msg <- stringr::str_c("My directory is ", here::here())
+print(msg)
+```
+
+```{r}
+library(tidyverse)
+library(magrittr)
+rm(list = ls())
+source("Functions/all_functions.R")
+```
+
+# Upload concatenated snippy output 
+
+```{r}
+snippy_data <- read_tsv("Genetic_pairs_analysis/all_snps_filtered.tab")
+unique(snippy_data$PAIR_ID)
+```
+
+# Number of unique mutations per pair
+
+```{r fig.height=20, fig.width=10}
+unique_mutations <- snippy_data %>%
+  count(PAIR_ID, sort = T) 
+ggplot(unique_mutations, aes(x = n)) +
+  geom_histogram(binwidth = 50) +
+  scale_x_continuous(breaks = seq(0,1200, 100)) +
+  theme_bw()
+ggplot(unique_mutations, aes(x = fct_reorder(PAIR_ID, n), y = n)) +
+  geom_bar(stat = "identity") +
+  scale_y_continuous(breaks = seq(0,1200, 100)) +
+  coord_flip() +
+  theme_bw()
+```
+
+There are many more mutations than expected based on the core genome. This might be due to calling mutations outside the core genome or mapping issues. In both cases, we will need to improve the `concatenate-snippy.sh` script to import coverage data.
+
+# Try a preliminary convergence analysis
+
+```{r}
+snippy_mutated <- snippy_data %>%
+  drop_na(LOCUS_TAG) %>%
+  filter(!str_detect(EFFECT, "synonymous_variant")) 
+snippy_convergence <- snippy_mutated %>%
+  group_by(CHROM,POS, LOCUS_TAG, PRODUCT, EFFECT) %>%
+  summarise(n_pairs = n_distinct(PAIR_ID)) %>%
+  arrange(desc(n_pairs))
+write_csv(snippy_convergence, "Genetic_pairs_analysis/dataframes/genetic_pairs_convergence.csv")
+```
+
+# Get pairs with contrasting mortality 
+
+```{r}
+
+```
+

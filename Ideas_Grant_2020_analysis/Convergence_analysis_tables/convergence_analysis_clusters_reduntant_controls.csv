@@ -1,0 +1,757 @@
+clstr_prot,n_clusters_SAB mortality,n_clusters_Growth rate (AUC),n_clusters_Cell death (AUC),nebraska_locus_tag,neb_mutant_id,neb_gene,neb_product,GENE,PRODUCT,MUTATION_SHORT
+0,11,3,2,SAUSA300_1327,NE1,NA,cell surface protein,ebh|ebh_1|ebh_1|ebh,Extracellular matrix-binding protein ebh,V8219A|V7253fs|I8556T|E10092Q|L323S|E2602A|Y7469*|L9603P|V4503G|Ter7469Yext*?|A2602E|L323S|E10092Q|Ter7469Yext*?|A2602E
+1,1,0,0,NA,NA,NA,NA,ebh,Extracellular matrix-binding protein ebh,Y7343*
+3,2,0,0,NA,NA,NA,NA,NA,hypothetical protein,N431I
+5,4,0,0,SAUSA300_2109,NE472,fmtB,truncated FmtB protein,NA,hypothetical protein,I355T
+7,13,3,1,SAUSA300_0181,NE119,NA,non-ribosomal peptide synthetase,tycC|srfAB|dltA_2|dltA_1|tycC|dltA_1,Tyrocidine synthase 3|Surfactin synthase subunit 2|D-alanine--D-alanyl carrier protein ligase|Tyrocidine synthase 3|D-alanine--D-alanyl carrier protein ligase,Y1024fs|R2308fs|K1333E|L894P|R1256fs|G102S|P699Q|Y1024fs|S102G
+9,1,3,2,SAUSA300_1702,NE56,NA,cell wall surface anchor family protein,NA,hypothetical protein,A1394V|E1533K|V1394A|A1394V|V1394A|E1533K
+13,7,1,1,SAUSA300_1930,NE46,NA,"phi77 ORF001-like protein, phage tail tape measure protein",NA,hypothetical protein,Ter1370fs|I1229M|Q1451*
+14,1,1,1,SAUSA300_0445,NE390,gltB,"glutamate synthase, large subunit",gltA,Glutamate synthase [NADPH] large chain,E595A|A595E
+15,1,0,0,NA,NA,NA,NA,essC,Type VII secretion system protein EssC,D1038G
+18,1,0,0,SAUSA300_1157,NA,NA,NA,polC,DNA polymerase III PolC-type,H647R
+19,3,0,0,SAUSA300_0547,NE1289,sdrD,sdrD protein,sdrD,Serine-aspartate repeat-containing protein D,E1141D|ET1137DS|S1174_Ter1180delins???
+20,1,0,0,NA,NA,NA,NA,NA,hypothetical protein,Y1088fs
+22,1,0,0,SAUSA300_1687,NE1481,-,FtsK/SpoIIIE family protein,NA,hypothetical protein,T455A
+25,2,0,0,SAUSA300_0955,NE460,atl,autolysin,atl_2|atl_3|atl_1,Bifunctional autolysin,A560S|D144N
+27,0,1,1,SAUSA300_0528,NA,NA,NA,rpoC,DNA-directed RNA polymerase subunit beta',P1094R
+29,1,0,0,SAUSA300_1127,NE1342,smc,chromosome segregation protein SMC,smc,Chromosome partition protein Smc,L449F
+30,2,1,1,SAUSA300_0527,NA,NA,NA,rpoB,DNA-directed RNA polymerase subunit beta,L309V|R503H
+31,2,0,0,SAUSA300_0481,NE188,mfd,transcription-repair coupling factor,mfd|mfd_1|mfd_2,Transcription-repair-coupling factor,P675S|Ter568Wext*?
+32,7,0,0,SAUSA300_0869,NE1012,rexB,exonuclease RexB,addB,ATP-dependent helicase/deoxyribonuclease subunit B,T979K
+33,1,0,0,NA,NA,NA,NA,NA,hypothetical protein,A177T
+34,1,1,1,SAUSA300_1014,NE754,pyc,pyruvate carboxylase,pycA,Pyruvate carboxylase,C283G|D329N
+35,6,0,0,SAUSA300_1333,NE582,NA,conserved hypothetical protein,der_2,GTPase Der,A106V
+36,2,0,1,SAUSA300_0548,NE98,NA,sdrE protein,sdrE,Serine-aspartate repeat-containing protein E,T392fs|E951D|T392fs
+37,2,0,0,SAUSA300_1750,NE703,NA,conserved hypothetical protein,NA,hypothetical protein,Ter204Yext*?|A346D
+38,5,0,1,NA,NA,NA,NA,pls,Surface protein,Ter193Eext*?|SFTer119TDKext*?|Ter193Eext*?
+39,8,1,0,SAUSA300_1649,NA,NA,NA,dnaE|dnaE_1|dnaE,DNA polymerase III subunit alpha,D194G|I32V|R1049M|D194G
+42,2,0,0,SAUSA300_0097,NE150,NA,conserved hypothetical protein,NA,hypothetical protein,M699_K703del
+44,3,0,0,SAUSA300_2441,NE186,fnbA,fibronectin binding protein A,fnbA,Fibronectin-binding protein A,L513P|Ter976Qext*?
+45,8,0,0,SAUSA300_1243,NE1451,sbcC,exonuclease SbcC,sbcC_2|sbcC,Nuclease SbcCD subunit C,E792fs|M1?|I25N|M178I
+46,2,0,0,SAUSA300_0279,NE383,NA,putative membrane protein,esaA|esaA_2|esaA_1,Type VII secretion system accessory factor EsaA,Q792*|Ter40Qext*?
+48,6,0,0,NA,NA,NA,NA,clfA,Clumping factor A,E714_E718delinsDSD|D700E
+50,7,2,2,NA,NA,NA,NA,NA,hypothetical protein,D306E|L270fs|T158I|T51R|E306D|R51T|D306E|V622A|D306E
+52,6,2,1,SAUSA300_1792,NE1173,-,hypothetical protein,NA,hypothetical protein,K913R|R913K|K913R
+53,5,1,0,NA,NA,NA,NA,NA,hypothetical protein,D540G|G540D|I12fs|D540G
+55,5,0,0,NA,NA,NA,NA,pls,Surface protein,Q133E|QKT135DKA|ST153TK|AS136VE|T134N
+56,3,1,0,SAUSA300_1750,NE703,NA,conserved hypothetical protein,NA,hypothetical protein,I798L|Q318K|Q318K
+57,6,0,0,SAUSA300_2431,NE513,NA,putative helicase,uvrB_1|uvrB_2,UvrABC system protein B,I664F|K848E
+58,2,1,1,SAUSA300_2440,NE728,fnbB,fibronectin binding protein B,fnbB,Fibronectin-binding protein B,D703G|N775S|N116S|N106S|S775N
+61,0,1,1,SAUSA300_0196,NE667,hsdR,"type I restriction-modification enzyme, R   subunit",hsdR,Type-1 restriction enzyme R protein,E870G
+62,5,1,0,NA,NA,NA,NA,sdrC|sdrC_1|sdrC,Serine-aspartate repeat-containing protein C,R742S|G681V|E749D|S760N|E733D
+63,6,1,1,NA,NA,NA,NA,NA,Clumping factor B|hypothetical protein|Clumping factor B,E681D|D653E|ESD683DSN|RA652SE|K685N|E683D|E681D|E681D
+65,10,1,1,NA,NA,NA,NA,NA,hypothetical protein,E688D|E696A|E744D|D594A|E742D|D700E|DR678AS|E604D|D606A
+67,8,0,0,SAUSA300_1246,NE861,acnA,aconitate hydratase,acnA,Aconitate hydratase A,D631E
+68,1,0,0,SAUSA300_2565,NE391,clfB,clumping factor B,NA,hypothetical protein,D807_S808del
+70,1,0,0,NA,NA,NA,NA,NA,hypothetical protein,I890fs
+74,0,1,1,NA,NA,NA,NA,NA,hypothetical protein,D681E
+81,0,1,0,NA,NA,NA,NA,sasG,Surface protein G,T686fs
+83,2,1,0,SAUSA300_1483,NE698,NA,conserved hypothetical protein,NA,hypothetical protein,G809E
+85,6,0,0,NA,NA,NA,NA,NA,hypothetical protein|Clumping factor B,E697D|E647D|E621D|VSD599DSG|D595G
+86,1,0,0,SAUSA300_0510,NE699,clpC,endopeptidase,clpC,ATP-dependent Clp protease ATP-binding subunit ClpC,T244M
+87,8,0,0,NA,NA,NA,NA,NA,hypothetical protein,A663V|A411V
+89,1,0,0,NA,NA,NA,NA,cadA_2,Cadmium-transporting ATPase,Q131*
+90,1,0,0,SAUSA300_2494,NE561,NA,copper-translocating P-type ATPase,copA,Copper-exporting P-type ATPase,T562A
+91,1,1,0,SAUSA300_1105,NA,NA,NA,priA,primosomal protein N',V762L|L762V
+93,1,0,0,SAUSA300_2346,NE857,nirB,"nitrite reductase [NAD(P)H], large subunit",nasD,Nitrite reductase [NAD(P)H],I115V
+94,4,1,1,SAUSA300_1038,NA,NA,NA,pheT,Phenylalanine--tRNA ligase beta subunit,V549A|A549V|A549V|V549A
+96,9,2,1,SAUSA300_2584,NE66,NA,"preprotein translocase, secA protein",secA1_1|secA1_2,Protein translocase subunit SecA 1,E773fs|E753fs|A676V|R773fs|E773fs|R773fs|E773fs
+97,2,0,0,SAUSA300_0764,NE501,rnr,ribonuclease R,rnr,Ribonuclease R,S322P
+98,2,0,0,NA,NA,NA,NA,NA,hypothetical protein,R595S
+99,1,0,0,NA,NA,NA,NA,NA,hypothetical protein,V311A
+100,4,0,0,NA,NA,NA,NA,sasG_1,Surface protein G,E270V
+102,4,1,0,SAUSA300_0025,NE295,NA,5'-nucleotidase family protein,NA,hypothetical protein,G160R|R160G|G160R
+103,7,1,1,SAUSA300_0923,NE881,htrA,serine protease,NA,Serine protease HtrA-like protein,Y171H|H171Y|Y171H
+104,0,0,1,NA,NA,NA,NA,NA,hypothetical protein,N639T|L204I
+106,2,0,0,SAUSA300_1592,NE11,recJ,single-stranded-DNA-specific exonuclease RecJ,NA,hypothetical protein,N58D|P550L
+109,6,0,0,NA,NA,NA,NA,NA,hypothetical protein,E613D|R601S|E615D
+111,9,2,1,SAUSA300_1075,NA,NA,NA,pbpB,Penicillin-binding protein 2B,P595S|A109T|N561K|S595P|P595S
+112,7,0,0,SAUSA300_0357,NE944,metE,5-methyltetrahydropteroyltriglutamate-- homocysteine S-methyltransferase,metE,5-methyltetrahydropteroyltriglutamate-- homocysteine methyltransferase,K211E
+113,1,0,0,SAUSA300_1590,NE1714,-,GTP pyrophosphokinase,relA,GTP pyrophosphokinase,L76P
+114,6,2,1,SAUSA300_1547,NE129,NA,DNA internalization-related competence proteinComEC/Rec2,NA,hypothetical protein|ComE operon protein 3|ComE operon protein 3|hypothetical protein|ComE operon protein 3,Q214H|H214Q|IY623KK|R553H|Q214H|R553H
+116,5,1,0,SAUSA300_0653,NE872,-,AraC family transcriptional regulator,rhaR,HTH-type transcriptional activator RhaR,S380T|I434L
+118,1,1,1,SAUSA300_0971,NE1464,purL,phosphoribosylformylglycinamidine synthase II,purL,Phosphoribosylformylglycinamidine synthase subunit PurL,Q272R|A720fs
+119,1,0,0,SAUSA300_1341,NA,NA,NA,ponA,Penicillin-binding protein 1A/1B,F233V
+120,1,1,1,SAUSA300_1380,NA,NA,NA,NA,hypothetical protein,R364Q|Q364R
+121,0,1,1,NA,NA,NA,NA,NA,hypothetical protein,N32K|Ter40Yext*?
+122,4,1,1,SAUSA300_0035,NE1824,-,hypothetical protein,NA,hypothetical protein,H262R|R262H|R262H|H262R
+127,7,2,1,SAUSA300_0716,NA,NA,NA,nrdE_2|nrdE|nrdE,Ribonucleoside-diphosphate reductase subunit alpha,H545R|N71D|D71N|N71D|N71D
+128,1,1,1,SAUSA300_2326,NE1304,-,transcription regulatory protein,NA,hypothetical protein,N52H|R60H|W281fs|L281fs
+131,1,1,0,SAUSA300_0238,NE20,NA,"transcriptional antiterminator, BglG family",NA,hypothetical protein,Q415K|K415Q
+132,1,0,0,SAUSA300_0489,NE1313,-,putative cell division protein FtsH,ftsH,ATP-dependent zinc metalloprotease FtsH,T516M
+135,1,0,0,NA,NA,NA,NA,clfB,Clumping factor B,D595G
+137,7,1,1,SAUSA300_0320,NE1775,-,triacylglycerol lipase,lip2,Lipase 2,H129Y|Y129H|H129Y
+139,2,0,0,SAUSA300_1120,NE1344,recG,ATP-dependent DNA helicase RecG,recG,ATP-dependent DNA helicase RecG,A320V
+140,11,2,1,NA,NA,NA,NA,NA,65 kDa membrane protein|Protein map|65 kDa membrane protein,S178N|I583fs|I527fs|I462fs|I242fs|I176L|N583fs|N472fs|N67S|I583fs|N583fs|I583fs
+141,1,1,1,SAUSA300_0191,NE172,ptsG,"PTS system, glucose-specific IIBC component domain protein",ptsG_1,PTS system glucose-specific EIICBA component,Q356H|G306fs
+144,1,1,1,NA,NA,NA,NA,NA,hypothetical protein,S430N|N430S
+147,2,0,0,SAUSA300_1189,NE80,mutL,DNA mismatch repair protein mutL,mutL,DNA mismatch repair protein MutL,I354V|G270A
+149,8,2,1,SAUSA300_0032,NE1868,mecA,penicillin-binding protein 2',mecA_1|mecA_2,PBP2a family beta-lactam-resistant peptidoglycan transpeptidase MecA,K239E|I11L|E239K|K239E|E239K|K239E
+150,2,0,0,SAUSA300_2556,NE1105,-,ABC transporter protein,NA,hypothetical protein,L271fs
+151,7,0,0,SAUSA300_1250,NA,NA,NA,parE,DNA topoisomerase 4 subunit B,S451P|S585P
+152,2,1,0,SAUSA300_1113,NE217,pknB,protein kinase,prkC_1,Serine/threonine-protein kinase PrkC,R296fs
+159,7,1,1,SAUSA300_0934,NE345,NA,"membrane protein""",NA,hypothetical protein,I233L|N223I|C231W|I116fs|M256T|R562I|Ter233Lext*?|R231W
+160,6,0,0,SAUSA300_0685,NE768,fruA,fructose specific permease,fruA,PTS system fructose-specific EIIABC component,G140E
+161,6,2,1,SAUSA300_0333,NE695,NA,"transcriptional antiterminator, BglG family",NA,hypothetical protein,L182S|S182L|L182S
+163,0,1,1,NA,NA,NA,NA,NA,hypothetical protein,R177K
+167,2,0,0,SAUSA300_1629,NA,NA,NA,thrS,Threonine--tRNA ligase,A77T
+168,0,1,1,NA,NA,NA,NA,NA,hypothetical protein,Ter316Eext*?|E316*
+169,1,0,0,SAUSA300_0005,NA,NA,NA,gyrB,DNA gyrase subunit B,I194T
+170,1,0,0,SAUSA300_2298,NE781,-,"multidrug resistance protein B, drug resistance transporter",mdtD,Putative multidrug resistance protein MdtD,Q627fs
+171,1,0,0,SAUSA300_2000,NE790,vga,ABC transporter ATP-binding protein,yheS,putative ABC transporter ATP-binding protein YheS,D247N
+174,5,0,1,NA,NA,NA,NA,NA,hypothetical protein,NPN544DPD|Y541F|NGKDGV527SGRYGA|V474I|NA434HT|A426S|K423R|N8T
+175,2,0,0,NA,NA,NA,NA,NA,hypothetical protein,R72C
+176,1,1,0,NA,NA,NA,NA,xerC_4,Tyrosine recombinase XerC,E122D|V232M|R244K|M254I|Q258H|L302H|I313L|S317P
+178,1,0,0,SAUSA300_1301,NE143,NA,conserved hypothetical protein,NA,hypothetical protein,Q618P
+179,1,0,0,SAUSA300_2581,NE800,-,putative surface anchored protein,NA,hypothetical protein,E408K
+182,7,0,0,SAUSA300_0704,NE770,-,ABC transporter ATP-binding protein,ettA,Energy-dependent translational throttle protein EttA,V267E
+183,8,1,0,NA,NA,NA,NA,NA,hypothetical protein,I404T|T8N|HT426NA|I466V|DG482NN|NN495HS|SGRYGA519NGKDGV|F533Y|DPD536NPN
+185,7,1,1,SAUSA300_2579,NE1353,NA,N-acetylmuramoyl-L-alanine amidase domainprotein,NA,N-acetylmuramoyl-L-alanine amidase domain-containing protein,V286G|V63G|G286V|V286G
+189,1,1,1,SAUSA300_0911,NE308,NA,"transporter, monovalent cation:proton antiporter-2 (CPA2) family protein",NA,Glutathione-regulated potassium-efflux system protein KefB|hypothetical protein|Na(+)/H(+)-K(+) antiporter GerN|Na(+)/H(+)-K(+) antiporter GerN,C572R|T390fs|K10fs|K10fs
+190,1,0,0,SAUSA300_1540,NA,NA,NA,dnaK,Chaperone protein DnaK,I5V
+192,1,0,0,SAUSA300_0613,NE1139,-,putative monovalent cation/H+ antiporter subunit D,mnhD1_2,Na(+)/H(+) antiporter subunit D1,L256*
+193,8,0,0,SAUSA300_0021,NA,NA,NA,walK,Sensor protein kinase WalK,S358G|K239E
+195,1,0,0,NA,NA,NA,NA,pglF,UDP-N-acetyl-alpha-D-glucosamine C6 dehydratase,V341A
+196,2,1,1,SAUSA300_1544,NE865,lepA,GTP-binding protein LepA,lepA,Elongation factor 4,G112D|T580A
+202,6,1,0,NA,NA,NA,NA,rep|rep_1|rep,ATP-dependent DNA helicase Rep,K402N|N402K|I174fs|G447V|R441S|F427L|D415E|I413K|K402N
+203,1,0,0,SAUSA300_0123,NE214,NA,"siderophore biosynthesis protein, IucC family""",sbnF,2-[(L-alanin-3-ylcarbamoyl)methyl]-3-(2- aminoethylcarbamoyl)-2-hydroxypropanoate synthase,L285I
+204,7,1,1,SAUSA300_0108,NE757,NA,"antigen, 67 kDa",NA,Oleate hydratase,S343fs|V343fs|S343fs
+206,2,0,0,SAUSA300_1047,NE626,sdhA,"succinate dehydrogenase, flavoprotein subunit",frdA,Fumarate reductase flavoprotein subunit,I416_R418del
+207,7,1,1,SAUSA300_2007,NE1166,ilvB,acetolactate synthase large subunit,ilvB,Acetolactate synthase large subunit,T574I|I574T|T574I
+208,1,1,0,SAUSA300_1586,NA,NA,NA,aspS,Aspartate--tRNA ligase,D495A
+209,6,1,0,SAUSA300_1182,NE885,-,"pyruvate ferredoxin oxidoreductase, alpha subunit",korA,2-oxoglutarate oxidoreductase subunit KorA,S10G
+211,11,1,1,NA,NA,NA,NA,blaR1|blaR1_2|blaR1,beta-lactam sensor/signal transducer BlaR1|Regulatory protein BlaR1|beta-lactam sensor/signal transducer BlaR1,K276N|I158fs|K23R|N184S|V1?|M11L|Ter231Eext*?|I272V|E352K|N355I|Q129K|E331G
+217,1,0,0,SAUSA300_1042,NE947,-,hypothetical protein,polX,DNA polymerase/3'-5' exonuclease PolX,D5fs
+219,2,0,0,NA,NA,NA,NA,NA,hypothetical protein,E276K|V224L
+220,2,1,2,SAUSA300_2477,NE564,cidC,pyruvate oxidase,ydaP,Putative thiamine pyrophosphate-containing protein YdaP,D125E|E125D|E125D|D125E
+221,1,1,1,SAUSA300_1847,NE370,NA,conserved hypothetical protein,NA,Putative multidrug export ATP-binding/permease protein,H552Y|Y552H
+223,7,3,2,SAUSA300_0630,NE1509,-,ABC transporter ATP-binding protein,bmrA,Multidrug resistance ABC transporter ATP-binding/permease protein BmrA,M456R|T70A|R456M|A70T|M456R|T70A|M456R|T70A
+228,1,0,1,SAUSA300_2240,NE410,ureC,"urease, alpha subunit",ureC,Urease subunit alpha,P448L
+230,1,1,0,SAUSA300_2617,NE1186,-,putative cobalt ABC transporter ATP-binding protein,ykoD_1|ecfA3,Putative HMP/thiamine import ATP-binding protein YkoD|Energy-coupling factor transporter ATP-binding protein EcfA3,V311fs|S311fs
+232,9,0,0,SAUSA300_2545,NE368,NA,choline dehydrogenase,betA,Oxygen-dependent choline dehydrogenase,T566fs|T490A
+233,1,0,0,SAUSA300_1679,NE385,acsA,acetyl-coenzyme A synthetase,acsA_2,Acetyl-coenzyme A synthetase,S525W|G378S
+236,8,2,2,NA,NA,NA,NA,NA,hypothetical protein,Ter541Lext*?|NT538IP|Q536E|S107A|S107A|Ter113Kext*?|Ter113Kext*?|S107A
+238,7,0,0,SAUSA300_0247,NE362,NA,putative teichoic acid biosynthesis protein B,NA,hypothetical protein,F8fs
+239,6,0,0,SAUSA300_1664,NA,NA,NA,ezrA,Septation ring formation regulator EzrA,S230G
+240,1,1,0,SAUSA300_2006,NE718,ilvD,dihydroxy-acid dehydratase,ilvD,Dihydroxy-acid dehydratase,D289N
+245,7,0,0,SAUSA300_2034,NE91,kdpA,"K+-transporting ATPase, A subunit",kdpA,Potassium-transporting ATPase potassium-binding subunit,S318P|V430F
+246,2,0,0,SAUSA300_0946,NE1345,menD,"inyl-6-hydroxy-2, 4-cyclohexadiene-1-carboxylic acid synthase/2-oxoglutarate decarbo",menD,2-succinyl-5-enolpyruvyl-6-hydroxy-3- cyclohexene-1-carboxylate synthase,C69G
+247,0,1,0,SAUSA300_0671,NE364,NA,"ABC transporter, ATP-binding protein, MsbA family",NA,Putative multidrug export ATP-binding/permease protein,Q206R
+251,8,0,0,SAUSA300_1638,NE618,phoR,sensory box histidine kinase PhoR,sasA,Adaptive-response sensory-kinase SasA,V429I
+252,3,0,0,SAUSA300_1941,NE708,NA,"phi77 ORF003-like protein, phage terminase,large subunit",NA,hypothetical protein,H47Q
+253,1,0,0,SAUSA300_1700,NA,NA,NA,murJ,Lipid II flippase MurJ,P518T
+254,1,0,0,SAUSA300_2278,NE435,hutU,urocanate hydratase,hutU,Urocanate hydratase,V499I
+255,3,0,1,SAUSA300_0891,NE440,oppA,"oligopeptide ABC transporter, substrate-binding protein",dppE|oppA|dppE,Dipeptide-binding protein DppE|Oligopeptide-binding protein OppA|Dipeptide-binding protein DppE,A493fs|T137fs|K89I|A493fs
+257,1,0,0,NA,NA,NA,NA,NA,hypothetical protein,L4Q
+259,1,0,0,SAUSA300_0190,NE1149,ipdC,indole-3-pyruvate decarboxylase,ipdC,Indole-3-pyruvate decarboxylase,L450P
+260,4,0,0,SAUSA300_0449,NE856,treC,"alpha,alpha-phosphotrehalase",treA,Trehalose-6-phosphate hydrolase,W304C|K543E
+261,1,1,1,SAUSA300_0537,NE704,NA,L-ribulokinase,araB|araB_2,Ribulokinase,E497G|I259fs
+262,0,1,1,SAUSA300_2395,NE1131,-,amino acid permease,yveA,Aspartate-proton symporter,A536S|S536A
+263,0,1,1,SAUSA300_0670,NE844,-,ABC transporter ATP-binding protein,cydD,ATP-binding/permease protein CydD,R225L|L225R
+264,1,0,0,NA,NA,NA,NA,NA,hypothetical protein,D74G
+266,1,0,0,SAUSA300_2542,NE1036,-,putative AMP-binding enzyme,acsA_1,Acetyl-coenzyme A synthetase,A407fs
+268,4,1,0,SAUSA300_1071,NE230,NA,conserved hypothetical protein,bshC,Putative cysteine ligase BshC,Y186H
+269,7,1,1,SAUSA300_2001,NE93,NA,similar to DNA mismatch repair protein,mutS_2|mutS_1,DNA mismatch repair protein MutS,N131fs|K131fs|N131fs
+270,7,2,1,SAUSA300_2270,NE648,glvC,"PTS system, arbutin-like IIBC component",malP,PTS system maltose-specific EIICB component,L265P|P265L|L265P
+273,4,2,1,SAUSA300_0200,NE392,NA,"peptide ABC transporter, ATP-binding protein",gsiA|oppD_1|gsiA,Glutathione import ATP-binding protein GsiA|Oligopeptide transport ATP-binding protein OppD|Glutathione import ATP-binding protein GsiA,R89L|V158fs|L89R|R89L|L89R
+275,1,0,0,SAUSA300_2030,NE1520,-,hypothetical protein,NA,hypothetical protein,K194Q
+278,0,1,1,SAUSA300_2586,NE975,NA,accessory secretory protein Asp2,NA,hypothetical protein,K4fs
+286,1,0,0,SAUSA300_2443,NE1124,gntK,gluconate kinase,xylB,Xylulose kinase,R107K
+287,6,0,0,SAUSA300_2351,NE568,NA,Zn-binding lipoprotein adcA-like protein,NA,hypothetical protein,H147dup
+288,1,0,0,NA,NA,NA,NA,qacA,Antiseptic resistance protein,T486A
+291,1,1,1,SAUSA300_2105,NE929,mtlF,"PTS system, mannitol specific IIBC component",mtlA,PTS system mannitol-specific EIICB component,A57T|T57A
+293,1,0,0,NA,NA,NA,NA,NA,hypothetical protein,C113Y|I42V|R17I|E15G|A4V
+295,1,0,0,SAUSA300_0314,NE969,NA,sodium:solute symporter family protein,sglT,Sodium/glucose cotransporter,W11*
+297,1,0,0,SAUSA300_0236,NE450,NA,"PTS system, IIBC components",ptsG_1,PTS system glucose-specific EIICBA component,S290G
+298,7,0,0,SAUSA300_0773,NE1181,-,putative staphylocoagulase,NA,hypothetical protein,G14D|Y34D
+301,2,0,0,SAUSA300_1852,NE977,NA,"putative ABC transporter, ATP-binding protein",tagH_1,Teichoic acids export ATP-binding protein TagH,E419Q
+305,4,0,0,NA,NA,NA,NA,gtfA_4,UDP-N-acetylglucosamine--peptide N-acetylglucosaminyltransferase GtfA subunit,I445L|Y328S
+306,2,0,0,SAUSA300_0408,NE985,-,hypothetical protein,NA,hypothetical protein,D84Y
+307,1,1,0,SAUSA300_0228,NE539,fadE,acyl-CoA synthetase FadE,lcfB,Long-chain-fatty-acid--CoA ligase,K166I
+308,2,1,0,SAUSA300_1716,NE583,NA,conserved hypothetical protein,NA,hypothetical protein,E471K
+313,4,1,0,SAUSA300_2501,NE468,NA,phytoene dehydrogenase,crtP|crtP_2|crtP,"4,4'-diaponeurosporene oxygenase",Y140fs|I140fs|Y140fs
+314,2,2,1,SAUSA300_0550,NE105,NA,"glycosyl transferase, group 1 family protein",gtfA_2|gtfA_3|gtfA_1|gtfA_1|gtfA_2|gtfA_1,UDP-N-acetylglucosamine--peptide N-acetylglucosaminyltransferase GtfA subunit,A477V|N3Y|V477A|A477V|V477A
+316,3,0,0,SAUSA300_1313,NE847,ctpA,carboxyl-terminal protease,NA,putative CtpA-like serine protease,N494I
+317,1,1,1,SAUSA300_1637,NE716,NA,putative membrane protein,NA,hypothetical protein,Y442H|H442Y
+319,7,2,2,SAUSA300_0972,NE581,purF,amidophosphoribosyltransferase,purF|purF_1|purF_2|purF|purF_2|purF,Amidophosphoribosyltransferase,S32N|N32S|Ter279Qext*?|S32N
+323,2,0,0,SAUSA300_0939,NE611,NA,"glycosyl transferase, group 1 family protein",tarM,Poly(ribitol-phosphate) alpha-N-acetylglucosaminyltransferase,C165Y
+325,8,1,1,SAUSA300_0560,NE1227,vraB,acetyl-CoA c-acetyltransferase,fadA_1|yhfS|fadA_2,3-ketoacyl-CoA thiolase|Putative acetyl-CoA C-acetyltransferase YhfS|3-ketoacyl-CoA thiolase,M372fs|Ter154Qext*?|M1fs|N372fs|M372fs
+327,1,0,0,SAUSA300_1496,NE485,NA,"glycine dehydrogenase, subunit 2",gcvPB,putative glycine dehydrogenase (decarboxylating) subunit 2,S34P
+328,6,0,0,SAUSA300_1894,NA,NA,NA,pncB2,Nicotinate phosphoribosyltransferase pncB2,V281G
+329,2,0,0,NA,NA,NA,NA,NA,hypothetical protein,V58L
+335,6,0,0,SAUSA300_1370,NE1561,ebpS,cell surface elastin binding protein,ebpS,Elastin-binding protein EbpS,D434G|I340M
+341,3,0,0,SAUSA300_2324,NE767,NA,"PTS system, sucrose-specific IIBC component",treP_1|treP_2,PTS system trehalose-specific EIIBC component,K84E|R54T
+343,1,0,0,SAUSA300_2360,NE179,NA,multidrug resistance protein,emrB,Multidrug export protein EmrB,F291L
+344,4,1,1,NA,NA,NA,NA,aacA-aphD,Bifunctional AAC/APH,P361T|Q438K|E104G|G104E
+346,1,0,0,SAUSA300_0201,NE541,NA,"peptide ABC transporter, permease protein",NA,hypothetical protein,L22P
+350,2,0,0,SAUSA300_2561,NE1081,phoB,alkaline phosphatase,phoB,Alkaline phosphatase 3,R403fs|S417A
+351,7,0,0,SAUSA300_1467,NE1896,lpdA,dihydrolipoamide dehydrogenase,NA,Dihydrolipoyl dehydrogenase,K228L
+353,6,0,0,SAUSA300_2058,NE1049,atpD,F0F1 ATP synthase subunit beta,atpD,ATP synthase subunit beta,H5R
+354,2,0,0,SAUSA300_1079,NA,NA,NA,ftsA,Cell division protein FtsA,N317T|T317N
+356,2,1,0,SAUSA300_1697,NE1898,-,dipeptidase PepV,NA,Putative dipeptidase,N293D
+357,8,2,1,SAUSA300_0579,NE219,NA,conserved hypothetical protein,NA,hypothetical protein,F264I|I264F|F264I
+358,13,1,0,SAUSA300_2167,NE1088,NA,conserved hypothetical protein,NA,hypothetical protein,F3I|V47D|N25K|Ter85Eext*?|K181N|N67fs|T240fs|I18L|L160I|V213E|I158N|N142fs|N190fs|T240fs
+359,2,0,0,SAUSA300_1459,NA,NA,NA,gnd,"6-phosphogluconate dehydrogenase, decarboxylating",G92D
+361,6,0,0,SAUSA300_1147,NE1708,hslU,ATP-dependent protease ATP-binding subunit HslU,hslU,ATP-dependent protease ATPase subunit HslU,G410D
+362,1,0,0,SAUSA300_1328,NE1184,-,putative drug transporter,norB_4,Quinolone resistance protein NorB,A341V
+363,7,0,0,SAUSA300_0978,NE1380,NA,"ABC transporter, ATP-binding protein",ykoD_2,Putative HMP/thiamine import ATP-binding protein YkoD,K30E
+369,1,0,0,SAUSA300_1525,NA,NA,NA,glyQS,Glycine--tRNA ligase,I294V
+370,1,0,1,SAUSA300_0106,NE1804,-,putative drug transporter,norB_3|norB_4|norB_4|norB_2,Quinolone resistance protein NorB,L53I
+373,1,0,0,SAUSA300_2302,NE285,tcaA,teicoplanin resistance associated membrane protein TcaA protein,tcaA_1,Membrane-associated protein TcaA,G390fs
+374,1,0,0,NA,NA,NA,NA,NA,hypothetical protein,P328L
+375,1,0,0,SAUSA300_2265,NE1435,NA,putative amino acid permease,yifK,putative transport protein YifK,A419V
+380,1,0,1,SAUSA300_2094,NE1458,NA,conserved hypothetical protein,NA,hypothetical protein,P209T
+382,2,0,0,SAUSA300_1763,NE1019,epiP,lantibiotic epidermin leader peptide processing serine protease EpiP,NA,hypothetical protein,Ter164Lext*?
+384,7,0,0,NA,NA,NA,NA,NA,hypothetical protein,V368D|H95Q
+385,6,0,0,SAUSA300_2133,NE1478,-,transporter gate domain-containing protein,NA,hypothetical protein,I222T
+387,7,1,1,SAUSA300_0986,NE117,NA,"cytochrome D ubiquinol oxidase, subunit I",ythA,Putative cytochrome bd menaquinol oxidase subunit I,R390C|G33A|C390R|T193A|R390C
+390,7,2,1,SAUSA300_0139,NE144,NA,putative tetracycline resistance protein,tet(38),tetracycline efflux MFS transporter Tet(38),D37A|A37D|D37A
+392,6,2,1,SAUSA300_0337,NE1388,NA,glycerol-3-phosphate transporter,glpT_1|glpT|glpT_1,Glycerol-3-phosphate transporter,Ter131Wext*?|W131*|Ter131Wext*?
+393,7,0,0,SAUSA300_2038,NA,NA,NA,murF_1,UDP-N-acetylmuramoyl-tripeptide--D-alanyl-D- alanine ligase,H69Y
+397,7,0,0,SAUSA300_1307,NE1183,arlS,sensor histidine kinase protein,arlS,Signal transduction histidine-protein kinase ArlS,K70N|E262G|Y142H
+398,7,0,0,SAUSA300_0188,NE945,brnQ,branched-chain amino acid transport system II carrier protein,brnQ_1,Branched-chain amino acid transport system 2 carrier protein,Q396fs
+399,1,0,0,SAUSA300_1475,NA,NA,NA,cfiB,2-oxoglutarate carboxylase small subunit,Q148R
+405,1,0,0,NA,NA,NA,NA,garB,Glutathione amide reductase,G24V|H157S|I160V
+406,6,0,0,SAUSA300_2128,NE531,NA,putative drug transporter,sdrM,Multidrug efflux pump SdrM,S136G
+409,1,0,0,SAUSA300_1201,NA,NA,NA,glnA,Glutamine synthetase,P293S
+412,1,1,0,SAUSA300_0022,NE1693,-,hypothetical protein,NA,hypothetical protein,N270del
+414,1,1,0,SAUSA300_0282,NE878,NA,conserved hypothetical protein,essB,Type VII secretion system protein EssB,Q429*|Ter429Qext*?
+416,4,1,1,SAUSA300_0420,NE1106,-,hypothetical protein,NA,hypothetical protein,K346M|E31G|G31E|E31G
+418,6,0,0,SAUSA300_1078,NA,NA,NA,divIB,Cell division protein DivIB,L211S
+419,6,0,0,SAUSA300_0846,NE967,-,Na+/H+ antiporter family protein,NA,hypothetical protein,T142K
+421,1,1,0,SAUSA300_2273,NE1214,-,Na+/H+ antiporter family protein,mleN_2,Malate-2H(+)/Na(+)-lactate antiporter,V373I
+423,4,1,0,SAUSA300_0819,NA,NA,NA,NA,hypothetical protein,A343V|V343A|A343V
+424,1,0,0,SAUSA300_1979,NE41,NA,cation transport family protein,ktrB_2,Ktr system potassium uptake protein B,F405C
+425,1,0,0,SAUSA300_1110,NE924,sun,ribosomal RNA small subunit methyltransferase B,rsmB,Ribosomal RNA small subunit methyltransferase B,G203E
+427,1,0,0,SAUSA300_0306,NE605,brnQ,branched-chain amino acid transport system II  carrier protein,brnQ_2,Branched-chain amino acid transport system 2 carrier protein,S231A
+430,1,0,0,SAUSA300_1622,NE914,tig,trigger factor,tig,Trigger factor,K6E
+432,1,1,0,SAUSA300_0980,NE1044,-,hypothetical protein,NA,hypothetical protein,R217C|C217R
+433,1,0,0,SAUSA300_1889,NE522,purB,adenylosuccinate lyase,purB,Adenylosuccinate lyase,M1fs
+435,10,2,1,SAUSA300_1991,NE873,agrC,accessory gene regulator protein C,NA,hypothetical protein,C91R|L165F|I139fs|I45fs|R7fs|N139fs|I68dup|S6Y|N15S|L20F|I22S|I69del|C91R
+439,2,0,0,SAUSA300_1172,NE1517,-,M16 family peptidase,NA,hypothetical protein,D228N
+440,8,0,0,SAUSA300_0009,NA,NA,NA,serS,Serine--tRNA ligase,L426P|V139A
+445,0,1,0,SAUSA300_2321,NE899,-,hypothetical protein,NA,hypothetical protein,L14I
+450,2,0,0,SAUSA300_1584,NE341,NA,"ATPase, AAA family",NA,putative AAA domain-containing protein,T334A
+452,6,0,0,SAUSA300_1569,NE1874,-,U32 family peptidase,NA,hypothetical protein,L298P
+455,1,0,0,SAUSA300_2014,NE340,ilvA,threonine dehydratase,ilvA_2,L-threonine dehydratase biosynthetic IlvA,K260fs
+456,4,0,0,SAUSA300_2214,NA,NA,NA,femX,Lipid II:glycine glycyltransferase,S63P
+459,1,0,0,SAUSA300_1587,NA,NA,NA,hisS,Histidine--tRNA ligase,E23K
+461,3,0,0,SAUSA300_1985,NE1840,NA,serine-aspartate repeat-containing protein SdrH,NA,hypothetical protein,A159D|T151_P163del
+463,5,1,1,SAUSA300_1198,NE1325,-,putative GTP-binding protein,hflX,GTPase HflX,A99S|S99A|G252R|S99A|A99S
+466,2,0,0,SAUSA300_0180,NE743,NA,integral membrane protein LmrP,mdrP,"Na(+), Li(+), K(+)/H(+) antiporter",G334E
+467,1,2,1,SAUSA300_1860,NE444,pepS,aminopeptidase PepS,pepS,Aminopeptidase PepS,E177D|V371I|D177E|D177E
+468,7,0,0,SAUSA300_1354,NE842,-,hypothetical protein,bepA,Beta-barrel assembly-enhancing protease,V307I
+469,11,0,0,SAUSA300_1141,NE1446,NA,endopeptidase resistance gene,femA_2|femA_1|femB_1,Aminoacyltransferase FemA|Aminoacyltransferase FemB,A390E|D37H|E247Q
+470,7,1,1,SAUSA300_1765,NE1856,epiC,lantibiotic epidermin biosynthesis protein EpiC,NA,Nisin biosynthesis protein NisC|hypothetical protein|Nisin biosynthesis protein NisC,Q99*|Ter99Qext*?|Q99*
+471,0,1,1,SAUSA300_0886,NA,NA,NA,fabF,3-oxoacyl-[acyl-carrier-protein] synthase 2,S352I
+473,2,1,1,NA,NA,NA,NA,NA,Plasmid recombination enzyme|hypothetical protein|hypothetical protein,N200fs|M134I|I134M
+475,7,0,0,SAUSA300_2277,NE586,hutI,imidazolonepropionase,hutI,Imidazolonepropionase,Y51H
+476,8,0,0,SAUSA300_1199,NE1294,NA,hypothetical protein,NA,hypothetical protein,R410G
+477,7,0,0,SAUSA300_2067,NE213,glyA,serine hydroxymethyltransferase,glyA,Serine hydroxymethyltransferase,G110D
+479,1,0,0,SAUSA300_0065,NE1594,arcA,arginine deiminase,arcA_2,Arginine deiminase,T159S
+481,6,1,1,NA,NA,NA,NA,NA,hypothetical protein,H93Y|I85K
+484,1,0,0,SAUSA300_0230,NE166,NA,putative membrane protein,NA,hypothetical protein,K134E
+486,0,1,1,SAUSA300_0727,NE483,pepT,peptidase T,pepT_2,Peptidase T,G198D|D198G
+489,4,1,0,SAUSA300_1661,NE538,thiI,thiamine biosynthesis protein ThiI,thiI,putative tRNA sulfurtransferase,H135R|R135H|H135R
+490,7,1,0,SAUSA300_1560,NE130,NA,conserved hypothetical protein,NA,hypothetical protein,I359L|N77D|Y69F
+491,1,0,0,SAUSA300_1938,NE918,-,phi77 ORF006-like protein capsid protein,NA,hypothetical protein,E43K
+492,1,0,0,SAUSA300_0313,NE622,NA,putative nucleoside permease NupC,nupC_2,Nucleoside permease NupC,I81T
+494,4,0,0,SAUSA300_0836,NA,NA,NA,patA,Peptidoglycan O-acetyltransferase,Y394F
+497,1,0,0,SAUSA300_2217,NE1041,-,putative drug transporter,yfcJ,putative MFS-type transporter YfcJ,I203T
+498,0,1,0,SAUSA300_2379,NE771,-,putative transporter protein,bcr_2,Bicyclomycin resistance protein,R204S
+506,2,0,0,SAUSA300_1751,NE982,hsdS,"type I restriction-modification enzyme, S subunit",NA,hypothetical protein,I376M|VI392GL|K395Q
+507,9,1,0,SAUSA300_1657,NA,NA,NA,ackA,Acetate kinase,T71A|V119A|H151Y|Y151H
+511,1,0,0,SAUSA300_1884,NE1087,-,CamS sex pheromone cAM373,NA,hypothetical protein,C380R
+512,9,0,0,SAUSA300_1104,NA,NA,NA,coaBC,Coenzyme A biosynthesis bifunctional protein CoaBC,V82I|M36T
+513,1,0,0,SAUSA300_1684,NE1783,-,hypothetical protein,NA,hypothetical protein,I179V|K6E|S8P
+515,7,0,0,SAUSA300_2086,NE688,NA,conserved hypothetical protein,NA,hypothetical protein,G204E
+516,7,0,0,SAUSA300_2434,NE1115,-,transporter protein,NA,hypothetical protein,H238R
+518,7,1,1,SAUSA300_2406,NE14,NA,putative transporter,cntE,Staphylopine export protein,A50V|V50A|A50V
+519,7,0,0,SAUSA300_0959,NE1022,fmt,fmt protein,fmtA,Teichoic acid D-alanine hydrolase,F373V
+521,1,0,0,SAUSA300_2139,NE548,NA,putative transporter,NA,hypothetical protein,A167T
+522,0,1,1,SAUSA300_0860,NE930,rocD,ornithine--oxo-acid transaminase,rocD2_2,Ornithine aminotransferase 2,R337C
+523,0,1,1,SAUSA300_2397,NE996,-,putative transport protein,pbuE,Purine efflux pump PbuE,A106dup|A107del
+525,0,1,1,SAUSA300_2087,NE600,NA,putative peptidase,abgB,p-aminobenzoyl-glutamate hydrolase subunit B,A81V
+526,1,0,0,NA,NA,NA,NA,NA,hypothetical protein,S77G
+527,4,1,1,SAUSA300_1705,NE17,NA,putative drug transporter,mdtH,Multidrug resistance protein MdtH,V345A|A345V|A345V|V345A
+528,1,0,0,SAUSA300_1713,NE573,ribBA,riboflavin biosynthesis protein,ribBA,Riboflavin biosynthesis protein RibBA,K324E
+529,1,0,0,SAUSA300_0355,NE1901,-,acetyl-CoA acetyltransferase,NA,putative acetyl-CoA acyltransferase,E369K
+531,0,1,1,NA,NA,NA,NA,NA,hypothetical protein,N138K
+532,1,0,0,SAUSA300_0179,NE497,NA,putative D-isomer specific 2-hydroxyacid dehydrogenase,NA,Formate dehydrogenase,F25fs
+534,1,0,0,NA,NA,NA,NA,xerC_4,Tyrosine recombinase XerC,S158P
+535,3,0,0,NA,NA,NA,NA,NA,hypothetical protein,I21V
+537,0,1,1,SAUSA300_0273,NA,NA,NA,NA,hypothetical protein,Ter277Wext*?
+538,2,1,0,SAUSA300_1662,NE222,NA,"aminotransferase, class V",iscS_2,Cysteine desulfurase IscS,E123G
+540,7,0,0,SAUSA300_1138,NE569,sucC,"succinyl-CoA synthetase, beta subunit",sucC,Succinate--CoA ligase [ADP-forming] subunit beta,E237dup
+542,5,0,0,SAUSA300_1890,NE1278,-,staphopain A,sspP,Staphopain A,G45D|D45G|TY4NF
+544,1,0,0,SAUSA300_1669,NE1652,-,"aminotransferase, class V",NA,Soluble hydrogenase 42 kDa subunit,R114fs
+546,2,0,0,NA,NA,NA,NA,xerC_9,Tyrosine recombinase XerC,M68T
+547,2,1,0,SAUSA300_0699,NE1063,-,chorismate-binding domain-containing protein,menF,Isochorismate synthase MenF,G92E
+552,7,0,0,SAUSA300_1336,NE1691,-,hypothetical protein,rlmL,Ribosomal RNA large subunit methyltransferase L,E39D
+553,6,0,0,SAUSA300_0879,NE178,NA,isopropylmalate synthase-related protein,leuA_2|leuA_1,2-isopropylmalate synthase,D358E|R325S
+555,4,1,1,SAUSA300_0434,NE60,metB,cystathionine gamma-synthase,mccB,Cystathionine gamma-lyase,F167I|I167F|I167F|F167I
+557,1,0,0,SAUSA300_1579,NA,NA,NA,iscS_1,Cysteine desulfurase IscS,N258D
+558,1,0,1,SAUSA300_1539,NA,NA,NA,dnaJ,Chaperone protein DnaJ,G156S
+559,6,0,0,SAUSA300_1595,NE1885,tgt,queuine tRNA-ribosyltransferase,tgt,Queuine tRNA-ribosyltransferase,E79G
+561,5,0,0,NA,NA,NA,NA,NA,hypothetical protein,R308S|S312A
+563,3,0,0,SAUSA300_2168,NE1220,-,hypothetical protein,NA,hypothetical protein,NLY316KLN|F362I
+564,8,0,0,SAUSA300_2101,NE372,NA,SAP domain protein,NA,hypothetical protein,I97N|LS88RI|Y93F|Ter99Lext*?|V207G
+565,2,0,0,SAUSA300_1487,NE1440,NA,replication initiation factor family protein,NA,hypothetical protein,Y114H|H114Y
+566,1,0,0,SAUSA300_0859,NE1665,-,NADH-dependent flavin oxidoreductase,NA,putative oxidoreductase,K44E
+567,4,1,0,SAUSA300_0158,NE580,cap5G,capsular polysaccharide biosynthesis protein cap5G,wbpI,"UDP-2,3-diacetamido-2,3-dideoxy-D-glucuronate 2-epimerase",M334V|V334M|M334V
+569,11,1,0,SAUSA300_1242,NE959,NA,exonuclease SbcD,sbcD|sbcD_2|sbcD_1|sbcD,Nuclease SbcCD subunit D,M134T|Ter279Kext*?|L4I|I9M|T134M|M134T
+570,7,1,0,SAUSA300_0881,NE317,NA,putative membrane protein,NA,hypothetical protein,V331I|N250K|V143I|F228L|F228L
+571,1,1,0,SAUSA300_1641,NE594,gltA,citrate synthase II,citZ,Citrate synthase 2,N349Y|Y349N
+576,1,0,0,SAUSA300_1799,NE1053,-,putative sensor histidine kinase,NA,hypothetical protein,K239Q
+577,7,0,0,NA,NA,NA,NA,nagC,N-acetylglucosamine repressor,A350T
+578,2,0,0,SAUSA300_2521,NE1057,-,hypothetical protein,NA,Putative flavoprotein monooxygenase,E101G|H228R
+585,7,0,0,SAUSA300_1898,NE261,NA,conserved hypothetical protein,pfbA,Plasmin and fibronectin-binding protein A,I346L
+587,5,1,1,NA,NA,NA,NA,NA,hypothetical protein,F153L|A154D
+590,7,2,1,SAUSA300_2100,NE721,NA,lytic regulatory protein,NA,hypothetical protein,T28A|A340S|A28T|T28A|S340A|A340S|A28T|T28A|S340A
+591,7,1,1,SAUSA300_1683,NE1276,-,bifunctional 3-deoxy-7-phosphoheptulonate synthase/chorismate mutase,aroA_1|aroA_2|aroA_2,Protein AroA(G),F99L|L99F|F99L
+592,7,0,0,SAUSA300_1219,NE116,NA,putative sensor histidine kinase,NA,hypothetical protein,D128N|N42I|Y44F|T47S|I62M
+593,7,0,0,SAUSA300_1292,NE799,alr2,alanine racemase,alr1_2|alr1_1,Alanine racemase 1,S68A|A68S
+595,2,1,1,NA,NA,NA,NA,xerC_7|xerC_6|xerC_5|xerC_8|xerC_4|xerC_3|xerC_9|xerC_8,Tyrosine recombinase XerC,N227fs|K227fs|N227fs
+597,7,0,0,SAUSA300_2251,NE1151,-,dehydrogenase family protein,odh,Opine dehydrogenase,A163T
+601,0,1,1,SAUSA300_1809,NE634,NA,putative membrane protein,NA,hypothetical protein,S358*|S354*|V349E|Y343N|SI334CK
+603,2,0,0,SAUSA300_0212,NE312,NA,"oxidoreductase, Gfo/Idh/MocA family",gfo,Glucose--fructose oxidoreductase,Y207H
+604,2,0,0,SAUSA300_1895,NE27,NA,nitric oxide synthase oxygenase,nos,Nitric oxide synthase oxygenase,G127fs|E170K
+606,1,0,0,SAUSA300_1031,NE1020,NA,conserved hypothetical protein,NA,hypothetical protein,R251*
+608,1,0,0,SAUSA300_0512,NE29,NA,PIN domain protein,yacL,putative PIN and TRAM-domain containing protein YacL,P189fs
+609,1,1,1,SAUSA300_1503,NE250,NA,putative competence protein ComGB,NA,hypothetical protein,L6I|I200M
+610,1,0,0,SAUSA300_1015,NE769,ctaA,cytochrome oxidase assembly protein,ctaA,Heme A synthase,V189L
+611,1,0,0,SAUSA300_2039,NA,NA,NA,ddl,D-alanine--D-alanine ligase,A72V
+612,1,0,0,SAUSA300_0888,NE1436,oppC,"oligopeptide ABC transporter, permease protein",oppC,Oligopeptide transport system permease protein OppC,T280M
+613,7,0,0,SAUSA300_0825,NE1365,NA,"oxidoreductase, 2-nitropropane dioxygenase family",pnoA,Nitronate monooxygenase,Ter237Qext*?
+614,2,1,2,SAUSA300_0841,NE1801,-,hypothetical protein,yjlD,NADH dehydrogenase-like protein YjlD,L137R|R137L|R137L|L137R
+615,7,1,1,SAUSA300_2602,NE766,icaC,intercellular adhesion protein C,icaC_2|icaC_1|icaC|icaC_1|icaC_2,"putative poly-beta-1,6-N-acetyl-D-glucosamine export protein",Y290fs|L290fs|Y290fs
+624,0,1,1,SAUSA300_2507,NE1834,-,hypothetical protein,NA,hypothetical protein,D106G
+625,8,0,0,SAUSA300_2307,NE521,NA,"ABC transporter, permease protein",NA,hypothetical protein,S308P
+626,7,0,0,SAUSA300_0690,NE1296,saeS,sensor histidine kinase SaeS,saeS,Histidine protein kinase SaeS,Q209P
+628,2,0,0,SAUSA300_0192,NE224,NA,conserved hypothetical protein,NA,hypothetical protein,Y274C|C274Y
+630,1,0,0,SAUSA300_2292,NA,NA,NA,fni,Isopentenyl-diphosphate delta-isomerase,D88G
+632,6,0,0,SAUSA300_1480,NE1763,-,putative traG membrane protein,NA,hypothetical protein,R613H
+633,0,1,1,SAUSA300_2070,NA,NA,NA,ywlC,Threonylcarbamoyl-AMP synthase,A60D
+634,1,1,1,SAUSA300_2472,NE82,NA,putative membrane protein,yicL,putative inner membrane transporter YicL,Y4fs
+635,1,0,0,SAUSA300_0641,NE104,NA,putative lipase/esterase,aes,Acetyl esterase,G91S
+636,8,2,1,SAUSA300_0244,NE1702,-,zinc-binding dehydrogenase family oxidoreductase,gatD_1|gatD_2|gatD_1,Galactitol 1-phosphate 5-dehydrogenase,V147A|R252fs|G252fs|R252fs|G252fs|R252fs
+637,5,1,1,NA,NA,NA,NA,mcrC,Protein McrC,N9Y|Y343F|Ter326Cext*?
+640,7,1,1,SAUSA300_1972,NE327,int,integrase,xerC_5|xerC_8|xerC_7|xerC_6|xerC_4|xerC_10|xerC_3|xerC_6|xerC_7|xerC_5,Tyrosine recombinase XerC,E14K|K14E|E14K
+642,1,0,0,SAUSA300_1849,NE1040,mutY,A/G-specific adenine glycosylase,mutY,Adenine DNA glycosylase,Y255H
+643,2,2,1,SAUSA300_2338,NE1157,NA,sensor histidine kinase,nreB,Oxygen sensor histidine kinase NreB,G324fs|R140H|R49H|I324fs|G324fs|I324fs
+647,1,0,0,SAUSA300_2135,NE869,-,iron compound ABC transporter permease,yfiZ_2,putative siderophore transport system permease protein YfiZ,D13fs
+651,3,0,0,SAUSA300_1902,NE202,NA,conserved hypothetical protein,NA,hypothetical protein,L173F
+652,1,0,0,SAUSA300_0973,NE1101,purM,phosphoribosylaminoimidazole synthetase,purM,Phosphoribosylformylglycinamidine cyclo-ligase,K17E
+663,8,2,1,SAUSA300_1003,NE1420,NA,conserved hypothetical protein,NA,hypothetical protein,E285G|G285E|G84V|E285G|V84G|E285G
+664,1,0,0,SAUSA300_1580,NE455,NA,bacterial luciferase family protein,NA,hypothetical protein,G108E
+668,2,1,1,SAUSA300_0953,NE488,NA,putative membrane protein,NA,hypothetical protein,N298Y|N325I|C92Y
+671,1,0,0,SAUSA300_0756,NA,NA,NA,gapA1,Glyceraldehyde-3-phosphate dehydrogenase 1,A149V
+672,1,0,0,NA,NA,NA,NA,bcgIB,Restriction enzyme BgcI subunit beta,Q266H
+673,1,0,0,SAUSA300_0650,NE187,NA,phosphate transporter family protein,NA,hypothetical protein,I7V
+675,1,2,1,SAUSA300_2147,NE1416,NA,"alcohol dehydrogenase, zinc-containing",yfmJ,Putative NADP-dependent oxidoreductase YfmJ,S247L|L247S|S247L|L247S
+679,1,0,0,SAUSA300_0951,NE1506,sspA,V8 protease,sspA,Glutamyl endopeptidase,L41Q
+680,2,0,0,SAUSA300_2025,NE1607,rsbU,sigma-B regulation protein,rsbU,Phosphoserine phosphatase RsbU,F313L|D310E|N307I
+681,1,1,0,SAUSA300_1264,NE35,trpD,anthranilate phosphoribosyltransferase,trpD2,Anthranilate phosphoribosyltransferase 2,A98S
+682,7,2,2,SAUSA300_1363,NE965,gpsA,NAD(P)H-dependent glycerol-3-phosphate dehydrogenase,gpsA,Glycerol-3-phosphate dehydrogenase [NAD(P)+],I235M|M235I|I235M|A141T|I235M
+683,1,2,1,SAUSA300_0116,NE675,sirB,"iron compound ABC transporter, permease protein  SirB",yfiZ_1,putative siderophore transport system permease protein YfiZ,V36M|M36V|V36M|M36V
+684,3,0,0,NA,NA,NA,NA,NA,hypothetical protein,N160D|A124V|S80N|S173N|A217V|N253D|D160N|N80S
+685,4,0,0,SAUSA300_0749,NA,NA,NA,NA,Gluconeogenesis factor,L26P|S96G
+688,0,1,0,NA,NA,NA,NA,prfB_1,Peptide chain release factor 2,S25F
+690,1,0,0,SAUSA300_0117,NE1767,sirA,iron compound ABC transporter iron compound-binding protein SirA,yfiY,putative siderophore-binding lipoprotein YfiY,G215E
+691,2,0,0,SAUSA300_1287,NE1144,asd,aspartate semialdehyde dehydrogenase,asd,Aspartate-semialdehyde dehydrogenase,A303T
+693,0,1,1,SAUSA300_0901,NE780,-,putative competence protein,NA,hypothetical protein,L125M
+694,1,1,1,SAUSA300_0089,NA,NA,NA,dus,putative tRNA-dihydrouridine synthase,R297C|C297R
+697,1,0,0,SAUSA300_0599,NE578,NA,"iron compound ABC transporter, permease protein",NA,putative ABC transporter permease protein,V309A
+700,2,0,0,SAUSA300_1257,NA,NA,NA,msrR_2,Regulatory protein MsrR,K241fs
+702,2,1,1,SAUSA300_1462,NA,NA,NA,NA,hypothetical protein,D2fs|Ter145Lext*?
+703,7,0,1,SAUSA300_1235,NE369,guaC,guanosine monophosphate reductase,guaC,GMP reductase,K34fs|A111P|A315V|K34fs
+704,6,0,0,SAUSA300_2344,NE991,-,uroporphyrin-III C-methyl transferase,nasF,Uroporphyrinogen-III C-methyltransferase,M23T
+705,1,0,0,SAUSA300_0130,NE585,NA,NAD-dependent epimerase/dehydratase family  protein,wbgU,UDP-N-acetylglucosamine 4-epimerase,P15S
+709,1,1,0,SAUSA300_1546,NA,NA,NA,yqeN,putative protein YqeN,I311M|T172I
+710,1,1,2,SAUSA300_2621,NE443,NA,conserved hypothetical protein,NA,Lactonase drp35,E128K|K128E|K128E|E128K
+713,4,0,0,SAUSA300_1165,NA,NA,NA,ribF,Bifunctional riboflavin kinase/FMN adenylyltransferase,K200R|C48R|R48C
+716,0,1,1,NA,NA,NA,NA,NA,hypothetical protein,P58L
+717,7,0,0,SAUSA300_0219,NE1522,-,"putative iron compound A C transporter, iron compound-binding protein",NA,hypothetical protein,N48D
+718,3,0,1,SAUSA300_0814,NE305,NA,conserved hypothetical protein,NA,hypothetical protein,A133V|E5K|K5E|V133A|E5K
+720,1,1,0,SAUSA300_2473,NE532,NA,conserved hypothetical protein,lipR,Putative acetyl-hydrolase LipR,L137V|H213R
+724,6,0,0,SAUSA300_2304,NE299,NA,putative membrane protein,NA,hypothetical protein,H79R
+729,0,1,1,SAUSA300_1843,NE1460,NA,D-isomer specific 2-hydroxyacid dehydrogenase family protein,ghrB_1,Glyoxylate/hydroxypyruvate reductase B,G318fs
+730,2,1,0,SAUSA300_0895,NE683,oppB,"oligopeptide ABC transporter, permease protein",gsiC,Glutathione transport system permease protein GsiC,V251A
+732,7,0,0,NA,NA,NA,NA,NA,hypothetical protein,F109L
+736,6,0,0,SAUSA300_1320,NA,NA,NA,thyA_1,Thymidylate synthase,S317A
+737,7,2,1,NA,NA,NA,NA,thyA_2,Thymidylate synthase,I51T|T51I|I51T
+741,0,1,1,SAUSA300_1372,NE1349,NA,conserved hypothetical protein,NA,hypothetical protein,T208S
+742,4,0,0,SAUSA300_0270,NE641,lytM,peptidoglycan hydrolase,lytM,Glycyl-glycine endopeptidase LytM,A107T|V112A
+744,1,0,1,SAUSA300_1658,NE807,-,hypothetical protein,NA,hypothetical protein,W307R
+754,1,0,0,SAUSA300_0890,NE482,oppF,"oligopeptide ABC transporter, ATP-binding protein",oppF_1|oppF_2,Oligopeptide transport ATP-binding protein OppF,A225T
+756,1,0,0,NA,NA,NA,NA,NA,hypothetical protein,T298N
+757,0,1,1,SAUSA300_1039,NA,NA,NA,rnhC,Ribonuclease HIII,A60V
+759,3,0,0,NA,NA,NA,NA,gloB,Hydroxyacylglutathione hydrolase,M1fs
+761,8,0,0,SAUSA300_0237,NE1637,-,inosine-uridine preferring nucleoside hydrolase,rihA,Pyrimidine-specific ribonucleoside hydrolase RihA,T214A
+762,7,0,0,SAUSA300_2281,NE1553,hutG,formimidoylglutamase,hutG,Formimidoylglutamase,I301L
+763,1,0,0,SAUSA300_1063,NE1719,arcC,carbamate kinase,arcC1,Carbamate kinase 1,G190dup
+764,1,0,0,SAUSA300_1195,NE897,miaA,tRNA delta(2)-isopentenylpyrophosphate transferase,miaA,tRNA dimethylallyltransferase,T197A
+767,1,0,0,SAUSA300_0061,NE511,arcC,carbamate kinase,arcC1_2,Carbamate kinase 1,P160T
+768,3,0,0,SAUSA300_1440,NE140,NA,conserved hypothetical protein,NA,hypothetical protein,K268N
+773,1,0,0,SAUSA300_1123,NA,NA,NA,fabD,Malonyl CoA-acyl carrier protein transacylase,V16fs
+774,1,0,0,SAUSA300_0338,NE1236,-,glyoxalase family protein,mhqA_1|mhqA_2|mhqA_3,Putative ring-cleaving dioxygenase MhqA,A67V
+781,5,0,0,SAUSA300_1379,NE707,NA,putative lipoprotein,NA,hypothetical protein,Ter297Eext*?
+782,0,1,1,SAUSA300_1376,NE717,NA,putative lipoprotein,NA,hypothetical protein,N251D
+783,1,0,0,NA,NA,NA,NA,NA,hypothetical protein,I123L
+787,1,0,0,SAUSA300_1139,NE1770,sucD,succinyl-CoA synthetase subunit alpha,sucD,Succinate--CoA ligase [ADP-forming] subunit alpha,N187S
+790,2,0,0,SAUSA300_2235,NE933,-,iron compound ABC transporter iron compound-binding protein,fhuD_1,Iron(3+)-hydroxamate-binding protein FhuD,Ter201Gext*?
+791,3,0,0,SAUSA300_1676,NE267,sgtA,probable transglycosylase,mrcA,Penicillin-binding protein 1A,I46M
+793,1,0,1,SAUSA300_1284,NE1182,-,hypothetical protein,cvfB,Conserved virulence factor B,V258A
+794,7,2,1,SAUSA300_0871,NE1493,-,hypothetical protein,NA,hypothetical protein,I28T|I65V|V65I|I65V|I65V
+795,1,0,0,NA,NA,NA,NA,NA,hypothetical protein,G34W|R37L
+796,1,0,0,SAUSA300_1217,NE1790,-,ABC transporter ATP-binding protein,lnrL_3,Linearmycin resistance ATP-binding protein LnrL,V229L
+799,1,1,0,SAUSA300_2469,NA,NA,NA,sdhA,"L-serine dehydratase, alpha chain",G290D|D290G
+806,4,1,0,SAUSA300_0307,NE619,NA,"5'-nucleotidase, lipoprotein e(P4) family",hel,Lipoprotein E,K248E|E248K|K248E
+811,7,1,1,NA,NA,NA,NA,NA,hypothetical protein,N250Y|G123fs|I25fs
+812,6,0,0,SAUSA300_1136,NA,NA,NA,rbgA,Ribosome biogenesis GTPase A,T152P
+814,8,0,0,SAUSA300_1150,NA,NA,NA,tsf,Elongation factor Ts,I204N
+815,1,0,0,SAUSA300_0315,NE1835,NA,N-acetylneuraminate lyase,nanA,N-acetylneuraminate lyase,Q196H
+819,7,0,0,SAUSA300_0195,NE1659,-,transcriptional regulator,ybbH_2|ybbH_1,putative HTH-type transcriptional regulator YbbH,C229Y
+821,1,1,0,SAUSA300_0536,NE1221,-,chaperone protein HchA,hchA|hchA_2,Protein/nucleic acid deglycase HchA,W53*|Ter53Wext*?
+823,3,0,0,SAUSA300_1588,NE1369,NA,N-acetylmuramoyl-L-alanine amidase,NA,hypothetical protein,H55R
+825,1,0,1,SAUSA300_2601,NE1167,icaB,intercellular adhesion protein B,icaB,"Poly-beta-1,6-N-acetyl-D-glucosamine N-deacetylase",M197I
+826,4,0,0,SAUSA300_1142,NE242,dprA,DNA protecting protein DprA,NA,hypothetical protein,I4L
+827,1,0,0,SAUSA300_1911,NE1908,-,ABC transporter ATP-binding protein,bcrA_2|bcrA_3|bcrA_1,Bacitracin transport ATP-binding protein BcrA,G196E
+829,1,0,0,SAUSA300_2264,NE1142,-,RpiR family phosphosugar-binding transcriptional regulator,ybbH_1|ybbH_3,putative HTH-type transcriptional regulator YbbH,D116N
+830,3,1,0,SAUSA300_0878,NA,NA,NA,ampR|hdfR_2|ampR,HTH-type transcriptional activator AmpR|HTH-type transcriptional regulator HdfR|HTH-type transcriptional activator AmpR,P236S|S236P|P236S
+832,1,1,1,NA,NA,NA,NA,NA,hypothetical protein,G259S|S259G
+833,1,1,0,SAUSA300_1455,NE1903,-,AraC family transcriptional regulator,NA,hypothetical protein,D87G
+834,6,0,0,SAUSA300_0658,NE1560,-,LysR family transcriptional regulator,hdfR_3,HTH-type transcriptional regulator HdfR,I57T
+835,1,0,1,NA,NA,NA,NA,NA,hypothetical protein,A253D
+837,1,0,0,SAUSA300_1236,NE318,NA,conserved hypothetical protein,NA,hypothetical protein,I14fs
+838,7,2,1,SAUSA300_2083,NE1485,-,acetyltransferase,NA,hypothetical protein,L192M|M192L|L192M
+841,1,1,1,SAUSA300_1689,NA,NA,NA,NA,hypothetical protein,N269Y|Y269N
+846,1,0,0,NA,NA,NA,NA,NA,hypothetical protein,Y202D
+847,7,0,0,SAUSA300_2387,NE1138,-,NAD dependent epimerase/dehydratase family protein,hldD,ADP-L-glycero-D-manno-heptose-6-epimerase,E151dup
+848,1,1,0,SAUSA300_1280,NA,NA,NA,pstB3,Phosphate import ATP-binding protein PstB 3,K3Q
+854,0,0,1,SAUSA300_0826,NE1013,-,hypothetical protein,NA,hypothetical protein,L105fs
+856,7,0,0,NA,NA,NA,NA,NA,hypothetical protein,I156F|N14Y|S224L|I135S|ALI130SML
+859,1,0,0,SAUSA300_0472,NE597,ispE,4-diphosphocytidyl-2C-methyl-D-erythritol  kinase,ispE,4-diphosphocytidyl-2-C-methyl-D-erythritol kinase,A199V
+862,3,1,0,SAUSA300_1977,NE502,NA,conserved hypothetical protein,NA,hypothetical protein,Ter194Eext*?|I115K|Q223K
+863,2,0,1,NA,NA,NA,NA,blaZ,Beta-lactamase,V59F|M49K|E91D|V42A
+865,3,0,0,NA,NA,NA,NA,NA,hypothetical protein,A54S
+866,4,0,0,SAUSA300_1605,NE1404,mreC,rod shape-determining protein MreC,mreC,Cell shape-determining protein MreC,I7N
+867,7,0,0,SAUSA300_0739,NE1640,-,LysM domain-containing protein,NA,putative autolysin LDP,E216G
+871,0,1,1,SAUSA300_2071,NE997,-,HemK family modification methylase,prmC,Release factor glutamine methyltransferase,N135I
+874,1,1,0,SAUSA300_2244,NE1308,ureD,urease accessory protein UreD,ureD1,Urease accessory protein UreD,G81D|D81G
+878,2,1,0,SAUSA300_0874,NE670,NA,conserved hypothetical protein,yitU,5-amino-6-(5-phospho-D-ribitylamino)uracil phosphatase YitU,D198G
+881,2,0,0,SAUSA300_0473,NE1237,purR,pur operon repressor,purR,Pur operon repressor,K8R
+882,0,1,1,NA,NA,NA,NA,NA,putative lipoprotein,S191P
+888,1,0,0,SAUSA300_1523,NE87,NA,conserved hypothetical protein,yqfL_2,"Putative pyruvate, phosphate dikinase regulatory protein",H93fs
+890,2,0,0,SAUSA300_0410,NE1062,-,tandem lipoprotein,lpl2_3|lpl2_1,putative lipoprotein,K268fs
+896,2,1,1,SAUSA300_0419,NE1899,-,tandem lipoprotein,lpl2_1|lpl2_6|lpl2_2|lpl2_6,putative lipoprotein,I8fs|Ter227Yext*?|I167F
+897,1,1,0,SAUSA300_0007,NE1533,-,hypothetical protein,nnrD,ADP-dependent (S)-NAD(P)H-hydrate dehydratase,V251T
+898,8,0,0,SAUSA300_1085,NE874,-,hypothetical protein,NA,hypothetical protein,N215fs
+899,2,1,1,SAUSA300_0381,NE662,NA,putative NAD(P)H-flavin oxidoreductase,nfrA,NADPH-dependent oxidoreductase,D123G|Ter260Lext*?|L260*
+904,0,1,1,SAUSA300_0462,NE396,NA,conserved hypothetical protein,NA,hypothetical protein,L155F
+905,6,0,0,SAUSA300_0947,NE28,NA,"hydrolase, alpha/beta hydrolase fold family",menH,"2-succinyl-6-hydroxy-2, 4-cyclohexadiene-1-carboxylate synthase",Y149D
+907,1,0,0,NA,NA,NA,NA,NA,hypothetical protein,Y18S
+909,3,0,0,NA,NA,NA,NA,NA,hypothetical protein,P56S
+910,1,0,0,SAUSA300_2631,NE598,NA,putative N-acetyltransferase,nhoA,Arylamine N-acetyltransferase / N-hydroxyarylamine O-acetyltransferase,G124D
+913,7,0,0,SAUSA300_0418,NA,NA,NA,NA,putative lipoprotein|hypothetical protein,N56D|D264E
+917,0,1,1,NA,NA,NA,NA,NA,hypothetical protein,V52G
+918,0,1,1,NA,NA,NA,NA,ptsG_1|ptsG_3|ptsG_3,PTS system glucose-specific EIICBA component,I12T
+919,2,1,0,SAUSA300_1081,NE684,NA,conserved hypothetical protein,NA,Polyphenol oxidase,R135H
+921,7,0,0,SAUSA300_2048,NE1473,thiM,hydroxyethylthiazole kinase,thiM,Hydroxyethylthiazole kinase,G32S
+922,1,0,0,NA,NA,NA,NA,NA,hypothetical protein,D232G
+926,5,0,0,SAUSA300_1771,NE69,NA,conserved hypothetical protein,NA,hypothetical protein,T103H
+928,1,1,0,NA,NA,NA,NA,ant1,Streptomycin 3''-adenylyltransferase,T132A
+930,7,0,0,SAUSA300_0442,NE1328,-,hypothetical protein,NA,hypothetical protein,V239A
+931,1,0,0,NA,NA,NA,NA,NA,hypothetical protein,S15fs
+932,9,1,2,SAUSA300_1992,NE1532,agrA,accessory gene regulator protein A,agrA|agrA_1|agrA,Accessory gene regulator protein A,K7E|Y238fs|M88T|Ter132Qext*?|I26T|D109fs|F197fs|T88M
+933,1,0,0,NA,NA,NA,NA,NA,hypothetical protein,Y108H|E214D|P219T|D228G
+939,4,0,0,SAUSA300_2454,NE854,-,membrane spanning protein,NA,hypothetical protein,Y257*|N252K
+940,6,2,1,NA,NA,NA,NA,NA,putative lipoprotein,I14L|L14I|I14L
+942,1,0,0,NA,NA,NA,NA,entC3,Enterotoxin type C-3,K83N
+943,2,0,0,SAUSA300_2596,NE774,cap1C,capsular polysaccharide biosynthesis protein Cap1C,ywqE_2,Tyrosine-protein phosphatase YwqE,K18T
+945,0,2,1,NA,NA,NA,NA,entD,Enterotoxin type D,F234I|A250V|H233Q|A250V|H233Q
+948,8,0,0,SAUSA300_2271,NE434,NA,phosphosugar-binding transcriptional regulator,glvR,HTH-type transcriptional regulator GlvR,P214S
+949,1,0,0,SAUSA300_0568,NE1780,-,hypothetical protein,NA,hypothetical protein,K45fs
+953,1,1,1,SAUSA300_0261,NE553,NA,conserved hypothetical protein,COQ5_1,"2-methoxy-6-polyprenyl-1,4-benzoquinol methylase, mitochondrial",M1?
+954,1,0,0,SAUSA300_1761,NE245,epiE,lantibiotic epidermin immunity protein F,NA,hypothetical protein,L104F|L113H
+955,1,0,0,SAUSA300_1869,NA,NA,NA,map_3,Methionine aminopeptidase,G242C
+956,8,1,0,SAUSA300_1451,NE903,-,short chain dehydrogenase/reductase family oxidoreductase,NA,putative oxidoreductase,G129_Q130insISS|P244L|P244L
+960,0,1,0,NA,NA,NA,NA,NA,hypothetical protein,I152T
+963,6,2,1,SAUSA300_1526,NA,NA,NA,recO,DNA repair protein RecO,L181V|V181L|L181V
+964,7,1,1,SAUSA300_2438,NE96,sarU,staphylococcal accessory regulator U,sarU,HTH-type transcriptional regulator SarU,G78fs|D78fs|G78fs
+965,1,1,1,SAUSA300_1112,NE1919,NA,protein phosphatase 2C domain-containing protein,stp,Serine/threonine phosphatase stp,G40_A41insGHK|N137D|N93_K111del
+967,7,0,0,NA,NA,NA,NA,knt,Kanamycin nucleotidyltransferase,F195L
+970,7,2,1,SAUSA300_0174,NE1311,-,hypothetical protein,nrtD,Nitrate import ATP-binding protein NrtD,I30V|V30I|I30V
+971,6,0,0,SAUSA300_1036,NE507,NA,"RNA methyltransferase, TrmH family",rlmB,23S rRNA (guanosine-2'-O-)-methyltransferase RlmB,E57A
+974,1,1,0,SAUSA300_2262,NE762,NA,putative membrane protein,NA,hypothetical protein,A84S
+977,1,0,0,NA,NA,NA,NA,rbn,Ribonuclease BN,Y130N
+984,1,1,0,SAUSA300_0450,NE1687,treR,trehalose operon repressor,treR_2,HTH-type transcriptional regulator TreR,E192A
+986,1,0,0,SAUSA300_0801,NE1605,seq,enterotoxin Q,NA,hypothetical protein,Y181F
+987,3,0,0,SAUSA300_0800,NE1255,sek,enterotoxin K,NA,hypothetical protein,V17I|D40fs|C16G
+989,2,0,0,SAUSA300_2358,NE1774,-,ABC transporter permease,tcyB,L-cystine transport system permease protein TcyB,C157R|R157C
+990,0,1,1,SAUSA300_1061,NE1194,-,superantigen-like protein,NA,Superantigen-like protein 13,S209T|T209S
+991,0,0,1,SAUSA300_1060,NE475,NA,putative exotoxin 4,NA,Superantigen-like protein 13,V189L
+992,2,0,0,NA,NA,NA,NA,apaH,"Bis(5'-nucleosyl)-tetraphosphatase, symmetrical",N161fs
+995,0,1,0,SAUSA300_2466,NE1033,NA,putative membrane protein,yydJ,putative peptide export permease protein YydJ,R49S
+998,1,1,0,SAUSA300_1756,NE1098,splC,serine protease SplC,splC,Serine protease SplC,G221D
+1000,6,0,0,NA,NA,NA,NA,NA,hypothetical protein,H6D|D117N|N184K|N174K
+1001,1,0,0,SAUSA300_2644,NE249,NA,glucose-inhibited division protein B,rsmG,Ribosomal RNA small subunit methyltransferase G,N234T
+1002,2,0,0,SAUSA300_0899,NE1315,-,adaptor protein,mecA_1,Adapter protein MecA,C23R
+1003,6,1,1,NA,NA,NA,NA,lexA_3,LexA repressor,E113G
+1004,0,1,1,SAUSA300_0603,NE1358,NA,conserved hypothetical protein,NA,hypothetical protein,V8L
+1009,1,0,1,SAUSA300_0351,NE156,NA,putative membrane protein,NA,hypothetical protein,S102R
+1014,3,0,0,SAUSA300_1760,NE617,epiG,lantibiotic epidermin immunity protein F,NA,hypothetical protein,P26_V29del|Ter118Sext*?
+1016,3,0,0,SAUSA300_0968,NE950,NA,phosphoribosylaminoimidazole-succinocarboxamide synthase,purC,Phosphoribosylaminoimidazole-succinocarboxamide synthase,I180T
+1017,8,3,2,NA,NA,NA,NA,NA,hypothetical protein,K57fs|K117E|N57fs|E117K|K57fs|K117E|K57fs|K117E
+1018,1,0,0,SAUSA300_2516,NE1527,-,short chain dehydrogenase/reductase family oxidoreductase,cpnA,Cyclopentanol dehydrogenase,W234*
+1020,7,0,0,SAUSA300_1273,NE1609,opp-2F,"oligopeptide permease, ATP-binding protein",nikE,Nickel import system ATP-binding protein NikE,V172A
+1021,7,0,0,SAUSA300_2506,NA,NA,NA,isaA,putative transglycosylase IsaA,S89G
+1026,2,0,0,SAUSA300_0400,NE651,NA,exotoxin,ssl4_3,Staphylococcal superantigen-like 4,S209P
+1027,1,0,0,SAUSA300_2453,NE1858,-,ABC transporter ATP-binding protein,bcrA_1,Bacitracin transport ATP-binding protein BcrA,A157T
+1028,6,0,0,SAUSA300_1220,NE262,NA,"DNA-binding response regulator, LuxR family",desR,Transcriptional regulatory protein DesR,T130M|S59G
+1033,2,0,0,SAUSA300_0661,NE203,NA,conserved hypothetical protein,NA,hypothetical protein,N212I
+1035,1,0,0,SAUSA300_1069,NE1715,-,hypothetical protein,yfnB,Putative HAD-hydrolase YfnB,L1?
+1038,1,0,0,SAUSA300_2373,NE777,bioD,dethiobiotin synthase,bioD,ATP-dependent dethiobiotin synthetase BioD,Q186*
+1042,1,1,0,SAUSA300_1030,NE557,NA,iron transport associated domain protein,isdC,Iron-regulated surface determinant protein C,V149A|A149V
+1043,4,0,0,SAUSA300_1789,NE1897,-,hypothetical protein,NA,hypothetical protein,L179fs
+1047,1,1,1,NA,NA,NA,NA,NA,hypothetical protein,V209G
+1048,6,0,0,SAUSA300_1520,NA,NA,NA,trmK,tRNA (adenine(22)-N(1))-methyltransferase,Y67D
+1052,1,0,0,SAUSA300_0407,NE1409,NA,exotoxin,ssl5_2,Staphylococcal superantigen-like 5,G19E
+1054,2,1,0,SAUSA300_0028,NE1283,NA,putative transposase,NA,IS6 family transposase IS431L,H74R|V131I|V148A|V131I|H74R|YQ66HK
+1055,2,1,0,SAUSA300_2308,NE1089,-,response regulator protein,hssR,Heme response regulator HssR,N69fs
+1056,6,0,0,SAUSA300_0253,NE1857,scdA,cell wall biosynthesis protein ScdA,scdA,Iron-sulfur cluster repair protein ScdA,L65P
+1058,1,0,0,SAUSA300_0735,NE1849,-,hypothetical protein,NA,hypothetical protein,A140S
+1061,7,0,0,SAUSA300_0697,NA,NA,NA,queC,7-cyano-7-deazaguanine synthase,K29fs|R81Q
+1062,1,0,0,SAUSA300_0152,NE302,Cap5A,capsular polysaccharide biosynthesis protein Cap5A,cap8A_2,Capsular polysaccharide type 8 biosynthesis protein cap8A,G12E
+1065,1,0,0,NA,NA,NA,NA,COQ5_1|COQ5_2,"2-methoxy-6-polyprenyl-1,4-benzoquinol methylase, mitochondrial",P142S
+1067,1,1,1,SAUSA300_2378,NE1010,-,hypothetical protein,NA,hypothetical protein,K69fs
+1069,1,0,0,NA,NA,NA,NA,NA,hypothetical protein,L121V
+1073,1,1,0,SAUSA300_1909,NE1749,-,hypothetical protein,NA,hypothetical protein,A124T|T124A
+1074,3,0,0,NA,NA,NA,NA,NA,hypothetical protein,V2A
+1075,1,0,0,NA,NA,NA,NA,NA,hypothetical protein,S126A|E129D
+1078,4,1,1,SAUSA300_2045,NE253,NA,HD domain protein,yedJ,putative protein YedJ,I62V|V62I|V62I|I62V
+1081,7,1,0,SAUSA300_0652,NE1797,-,hypothetical protein,NA,hypothetical protein,L212F|Q14R|T211M|E189G|T211M
+1082,1,0,0,SAUSA300_0182,NE964,-,4'-phosphopantetheinyl transferase superfamily protein,NA,hypothetical protein,K31T
+1085,8,0,0,SAUSA300_0586,NE1093,-,hypothetical protein,NA,hypothetical protein,M8fs|L203V|I174N
+1087,8,0,0,SAUSA300_1745,NE1525,-,hypothetical protein,NA,hypothetical protein,F56L|Ter84Eext*?
+1089,5,0,0,NA,NA,NA,NA,NA,hypothetical protein,E7A|I10V|K12I
+1091,2,1,1,SAUSA300_0732,NE205,NA,conserved hypothetical protein,NA,hypothetical protein,K45N|N45K|K45N
+1092,9,0,0,SAUSA300_0581,NE621,NA,conserved hypothetical protein,NA,hypothetical protein,Ter137Gext*?|I122N|Ter99Eext*?|L105I
+1093,8,0,0,SAUSA300_2297,NE419,NA,conserved hypothetical protein,NA,hypothetical protein,Q25del
+1096,6,1,1,SAUSA300_2465,NA,NA,NA,yydI,putative peptide export ATP-binding protein YydI,I111V|S171I|H49N|I25L
+1097,7,2,1,SAUSA300_0587,NE1906,-,hypothetical protein,NA,hypothetical protein,S2I|A162V|V162A|A162V|V162A
+1098,1,0,0,NA,NA,NA,NA,NA,hypothetical protein,L87V
+1102,1,0,0,SAUSA300_0992,NE1886,-,hypothetical protein,NA,hypothetical protein,Y209*
+1105,11,1,1,SAUSA300_0754,NE616,NA,conserved hypothetical protein,NA,hypothetical protein,N127D|D127N|A116P|D127N|N127D
+1106,1,1,0,SAUSA300_1865,NE554,vraR,DNA-binding response regulator,vraR,Response regulator protein VraR,T40A
+1109,5,0,0,NA,NA,NA,NA,NA,hypothetical protein,S120T|Ter117Yext*?|K138I|KR140IP
+1110,2,0,0,NA,NA,NA,NA,NA,hypothetical protein,S208F
+1111,3,1,1,SAUSA300_0580,NE1431,NA,conserved hypothetical protein,NA,hypothetical protein,Ter153Yext*?|L106I|N94Q|F183I|P152T
+1112,6,0,0,SAUSA300_1742,NE1873,-,hypothetical protein,NA,hypothetical protein,D72N
+1115,1,0,0,SAUSA300_0588,NE1595,-,hypothetical protein,NA,hypothetical protein,A180V
+1116,1,3,2,SAUSA300_2203,NA,NA,NA,rplD,50S ribosomal protein L4,G15S|K68_G69del|S15G|G15S|S15G|K68_G69del
+1117,0,1,1,SAUSA300_1568,NE1414,udk,uridine kinase,udk,Uridine kinase,I138M
+1118,1,0,0,SAUSA300_1237,NA,NA,NA,lexA_1,LexA repressor,D120N
+1119,4,0,0,NA,NA,NA,NA,NA,hypothetical protein,N156D|K153T|C149G
+1120,4,0,0,SAUSA300_0583,NE1720,-,hypothetical protein,NA,hypothetical protein,L116V|S151R
+1122,1,0,0,SAUSA300_2467,NE1787,srtA,sortase,srtA,Sortase A,I155M
+1123,2,0,0,SAUSA300_0649,NE1915,NA,hypothetical protein,NA,hypothetical protein,L197F
+1125,1,0,0,SAUSA300_0582,NE1843,-,hypothetical protein,NA,hypothetical protein,H94Q
+1126,2,2,1,SAUSA300_1310,NE577,NA,PAP2 family protein,NA,hypothetical protein,G156R|S125N|G156R|N125S|R156G
+1127,0,1,1,SAUSA300_1739,NE1811,-,hypothetical protein,NA,hypothetical protein,F31S
+1129,1,1,0,SAUSA300_2612,NE103,NA,ATP phosphoribosyltransferase hisG,hisG,ATP phosphoribosyltransferase,T181A
+1132,1,0,0,SAUSA300_2243,NE1113,ureG,urease accessory protein UreG,ureG,Urease accessory protein UreG,A153V
+1133,7,1,1,NA,NA,NA,NA,NA,hypothetical protein,P99fs|E38K|G25D|P99fs
+1134,0,1,1,SAUSA300_2593,NE1618,-,hypothetical protein,NA,hypothetical protein,L47fs
+1137,4,1,0,SAUSA300_0526,NE1671,-,methyltransferase small subunit,rsmC,Ribosomal RNA small subunit methyltransferase C,M27I|T103fs|M27I
+1138,8,1,1,SAUSA300_2158,NA,NA,NA,NA,hypothetical protein,E107D|E116S|Y88F|G101E|Ter102Yext*?
+1141,4,1,0,SAUSA300_0347,NE426,tatC,Sec-independent protein translocase TatC,tatC2,Sec-independent protein translocase protein TatCy,F175L|K101N|F175L
+1142,8,2,1,SAUSA300_1666,NA,NA,NA,rpsD,30S ribosomal protein S4,S115N|A96T|N115S|S115N|N115S|S115N
+1149,8,0,0,SAUSA300_1688,NA,NA,NA,NA,hypothetical protein,V182G
+1150,1,0,0,NA,NA,NA,NA,NA,hypothetical protein,IGL191*|V188L|K142Q
+1151,3,0,0,NA,NA,NA,NA,hin,DNA-invertase hin,E97D
+1154,4,0,0,SAUSA300_1981,NE687,NA,phage terminase family protein,NA,hypothetical protein,I187L|A174T|T167A|D147N|H135Y|E3D
+1155,2,0,0,SAUSA300_1620,NA,NA,NA,engB,putative GTP-binding protein EngB,KTer182NKext*?
+1156,2,1,0,SAUSA300_1050,NA,NA,NA,NA,dITP/XTP pyrophosphatase,R173G
+1157,6,0,0,SAUSA300_2530,NE1216,-,TetR family transcriptional regulator,NA,hypothetical protein,D117N
+1158,1,0,0,SAUSA300_1353,NE840,-,hypothetical protein,NA,hypothetical protein,Y151D
+1160,1,0,0,NA,NA,NA,NA,NA,hypothetical protein,R166fs
+1161,0,1,0,NA,NA,NA,NA,NA,hypothetical protein,K37E
+1162,2,1,1,SAUSA300_1209,NA,NA,NA,NA,hypothetical protein,M1?|S4*|V7T|KEES9NAEA|G152E|M1?|S4*|V7T|KEES9NAEA
+1163,1,0,0,SAUSA300_0637,NA,NA,NA,dhaL,"PTS-dependent dihydroxyacetone kinase, ADP-binding subunit DhaL",G73D
+1164,6,0,0,SAUSA300_0694,NE526,NA,putative membrane protein,NA,hypothetical protein,D41A
+1172,5,0,0,SAUSA300_1912,NE1188,NA,putative membrane protein,NA,hypothetical protein,Ter193Lext*?
+1178,1,0,1,NA,NA,NA,NA,NA,hypothetical protein,L65P
+1184,1,0,0,SAUSA300_0928,NA,NA,NA,NA,hypothetical protein,F94S
+1187,6,0,0,SAUSA300_0508,NA,NA,NA,mcsA,Protein-arginine kinase activator protein,I55F
+1188,6,2,1,SAUSA300_1759,NE1277,-,hypothetical protein,NA,hypothetical protein,F141L|L141F|F141L
+1189,1,0,0,SAUSA300_0666,NE1268,-,hypothetical protein,yvdD,LOG family protein YvdD,L16P
+1191,1,0,0,SAUSA300_0609,NA,NA,NA,xerD_2|xerD_1,Tyrosine recombinase XerD,P162S
+1192,7,0,0,NA,NA,NA,NA,qacR_2|qacR,HTH-type transcriptional regulator QacR,F91Y|Ter112Eext*?|N113K|I71K|Ter76Kext*?|K67Q|C59W
+1193,1,0,0,SAUSA300_2599,NE1132,tetR,intercellular adhesion operon transcription regulator,icaR,Biofilm operon icaADBC HTH-type negative transcriptional regulator IcaR,E75D
+1195,1,0,0,SAUSA300_1121,NA,NA,NA,fapR,Transcription factor FapR,Q150R
+1198,1,0,0,SAUSA300_0164,NE803,cap5M,capsular polysaccharide biosynthesis protein Cap5M,epsL,putative sugar transferase EpsL,I82V
+1199,2,0,0,NA,NA,NA,NA,NA,hypothetical protein,I93L|L93I
+1200,8,0,0,SAUSA300_0991,NA,NA,NA,def,Peptide deformylase,L17Q
+1201,1,0,0,SAUSA300_0943,NE730,NA,"acetyltransferase, GNAT family family",NA,hypothetical protein,A48G
+1204,1,0,0,SAUSA300_1374,NE412,NA,conserved hypothetical protein,ribU,Riboflavin transporter RibU,N159K
+1205,0,1,1,SAUSA300_0982,NE1788,-,hypothetical protein,NA,hypothetical protein,T8_N9insSNLT
+1206,3,1,0,SAUSA300_0665,NE630,NA,"acetyltransferase, GNAT family",NA,Acetyltransferase,S150G|D150G|S150G
+1210,7,0,0,NA,NA,NA,NA,NA,hypothetical protein,R129G|G129R
+1212,1,1,1,SAUSA300_0788,NE1550,-,nitroreductase family protein,NA,hypothetical protein,T168A|A168T
+1213,2,1,0,SAUSA300_0590,NE1402,-,hypothetical protein,ywqN,Putative NAD(P)H-dependent FMN-containing oxidoreductase YwqN,V74A
+1214,1,1,0,SAUSA300_2550,NE1205,nrdG,"anaerobic ribonucleotide reductase, small subunit",NA,hypothetical protein,S4L
+1217,6,2,1,SAUSA300_1190,NE307,glpP,glycerol uptake operon antiterminator regulatory protein,glpP,Glycerol uptake operon antiterminator regulatory protein,M52I|I52M|M52I
+1220,2,0,0,SAUSA300_1604,NE858,mreD,rod shape-determining protein MreD,NA,hypothetical protein,N165fs|F22L
+1221,2,0,0,NA,NA,NA,NA,NA,hypothetical protein,K21T
+1223,7,1,1,SAUSA300_1557,NA,NA,NA,NA,hypothetical protein,M138I|I138M|M138I
+1225,0,1,1,SAUSA300_2068,NE361,NA,conserved hypothetical protein,NA,hypothetical protein,H139_C141delinsR
+1226,1,1,1,SAUSA300_1908,NE1894,-,hypothetical protein,NA,hypothetical protein,T12I|I12T
+1229,6,0,0,SAUSA300_2080,NE1870,NA,conserved hypothetical protein,NA,hypothetical protein,S61R
+1230,4,0,0,NA,NA,NA,NA,NA,hypothetical protein,S138I|V108M|I35K
+1233,7,0,0,SAUSA300_1856,NA,NA,NA,NA,hypothetical protein,S120R
+1234,1,0,0,NA,NA,NA,NA,NA,hypothetical protein,E18K
+1237,8,0,0,SAUSA300_2632,NE1542,-,hypothetical protein,NA,hypothetical protein,T83I
+1242,1,0,0,NA,NA,NA,NA,NA,hypothetical protein,T52I
+1247,4,0,0,SAUSA300_1486,NE1059,-,hypothetical protein,NA,hypothetical protein,F153I|Ter168Yext*?
+1248,3,0,0,NA,NA,NA,NA,NA,hypothetical protein|Thiol-disulfide oxidoreductase ResA,I18M|R9fs
+1249,1,0,0,NA,NA,NA,NA,essG_1|essG_5,Type VII secretion system protein EsaG,N106K
+1250,2,1,1,SAUSA300_1315,NA,NA,NA,crr,PTS system glucose-specific EIIA component,A77T|T77A|A77T
+1251,1,0,0,SAUSA300_1321,NE1739,-,hypothetical protein,NA,hypothetical protein,I161K
+1253,1,1,0,SAUSA300_0639,NA,NA,NA,NA,hypothetical protein,H160Q|Q160H
+1254,1,0,0,SAUSA300_2637,NE1164,-,hypothetical protein,NA,hypothetical protein,S100I
+1262,1,0,0,NA,NA,NA,NA,essG_2|essG_4,Type VII secretion system protein EsaG,G93E
+1268,5,0,0,NA,NA,NA,NA,NA,hypothetical protein,Q15L
+1269,1,0,0,NA,NA,NA,NA,NA,hypothetical protein,G51V
+1274,4,1,1,SAUSA300_0494,NA,NA,NA,folK,2-amino-4-hydroxy-6- hydroxymethyldihydropteridine pyrophosphokinase,V32I|I32V|I32V|V32I
+1275,7,1,1,SAUSA300_0591,NE1058,-,acetyltransferase,NA,hypothetical protein,V42A|A42V|V42A
+1276,1,0,0,SAUSA300_1197,NE1730,-,glutathione peroxidase,bsaA_2|bsaA_1,Glutathione peroxidase BsaA,P147T
+1277,7,0,0,SAUSA300_1272,NA,NA,NA,NA,hypothetical protein,I93M
+1278,0,1,0,NA,NA,NA,NA,NA,hypothetical protein,C14F
+1281,0,1,0,SAUSA300_1971,NE1248,-,phi77 ORF017-like protein,NA,hypothetical protein,Ter157Eext*?
+1283,0,1,1,SAUSA300_1247,NE1121,NA,conserved hypothetical protein,NA,"1,4-dihydroxy-2-naphthoyl-CoA hydrolase",I110T|T110I
+1284,0,1,1,SAUSA300_1476,NA,NA,NA,accB_1|accB_2,Biotin carboxyl carrier protein of acetyl-CoA carboxylase,V134I|I134V
+1285,5,0,0,SAUSA300_2452,NE281,NA,"transcriptional regulator, MarR family",NA,hypothetical protein,K149fs
+1286,1,0,0,SAUSA300_1665,NE1359,NA,conserved hypothetical protein,msrC,Free methionine-R-sulfoxide reductase,K87T
+1287,1,0,0,SAUSA300_2626,NE248,NA,conserved hypothetical protein,NA,hypothetical protein,K61N
+1288,1,0,0,SAUSA300_1017,NE1084,-,hypothetical protein,NA,hypothetical protein,V22A
+1289,1,1,1,SAUSA300_0280,NA,NA,NA,NA,hypothetical protein,T98I|I98T
+1291,1,1,0,SAUSA300_2020,NA,NA,NA,NA,Protein SprT-like protein,R24H
+1294,3,0,0,SAUSA300_1770,NA,NA,NA,NA,hypothetical protein,L137V
+1297,1,0,0,SAUSA300_1448,NE99,NA,"transcriptional regulator, Fur family",fur,Ferric uptake regulation protein,V8I
+1299,8,1,0,SAUSA300_1668,NE109,NA,OsmC/Ohr family protein,NA,hypothetical protein,M97V|I141T|M97V
+1306,7,0,0,SAUSA300_2092,NA,NA,NA,dps,General stress protein 20U,R29H
+1308,3,2,1,SAUSA300_2543,NE1005,-,hypothetical protein,isdG_2|isdG_1|isdG_1|isdG_2,Heme oxygenase (staphylobilin-producing),NA
+1311,1,0,0,SAUSA300_0672,NA,NA,NA,mgrA,HTH-type transcriptional regulator MgrA,A59V
+1313,0,1,1,SAUSA300_0577,NE713,NA,putative transcriptional regulator,NA,hypothetical protein,I2N|N2I
+1315,6,1,1,NA,NA,NA,NA,NA,hypothetical protein,N84S
+1319,2,0,0,SAUSA300_0956,NA,NA,NA,NA,Acetyltransferase,S139fs
+1322,1,0,0,SAUSA300_1501,NE1453,NA,putative competence protein ComG,NA,hypothetical protein,D125N
+1326,2,0,0,NA,NA,NA,NA,NA,hypothetical protein,I5fs|I54M
+1329,1,0,0,NA,NA,NA,NA,NA,hypothetical protein,S115L
+1333,3,0,0,SAUSA300_1583,NE1293,-,hypothetical protein,cymR,HTH-type transcriptional regulator CymR,I103L|P98L
+1337,1,0,0,SAUSA300_0334,NE1781,-,MarR family transcriptional regulator,slyA_2,Transcriptional regulator SlyA,A83V
+1339,4,1,0,SAUSA300_1944,NA,NA,NA,NA,hypothetical protein,N84S
+1340,0,1,0,NA,NA,NA,NA,prfB_2,Peptide chain release factor 2,V120fs
+1341,8,0,0,SAUSA300_2447,NA,NA,NA,NA,hypothetical protein,Ter139Ter
+1343,0,1,0,SAUSA300_1871,NE463,NA,conserved hypothetical protein,NA,hypothetical protein,A107S
+1346,1,0,0,NA,NA,NA,NA,NA,hypothetical protein,N44K
+1347,1,0,0,NA,NA,NA,NA,NA,hypothetical protein,N136fs
+1348,7,0,0,NA,NA,NA,NA,NA,hypothetical protein,K112E
+1349,1,0,0,NA,NA,NA,NA,NA,hypothetical protein,F5del
+1350,1,0,0,NA,NA,NA,NA,merR1,Mercuric resistance operon regulatory protein,G2E|G99D|M120I
+1354,7,1,1,NA,NA,NA,NA,NA,hypothetical protein,H40Q|Q40H|H40Q
+1360,7,0,0,NA,NA,NA,NA,NA,hypothetical protein,F40V
+1361,7,1,1,SAUSA300_1708,NE386,rot,staphylococcal accessory regulator Rot,rot,HTH-type transcriptional regulator rot,I29M|M29I|I29M
+1362,1,0,0,NA,NA,NA,NA,NA,hypothetical protein,K5E
+1370,1,0,1,NA,NA,NA,NA,NA,hypothetical protein,A104P
+1375,1,0,0,SAUSA300_2641,NE1755,-,hypothetical protein,NA,hypothetical protein,T14A
+1376,2,0,0,SAUSA300_1958,NE824,-,single-strand binding protein,ssbA_3,Single-stranded DNA-binding protein A,S2fs
+1380,2,0,0,NA,NA,NA,NA,NA,hypothetical protein,M1?
+1392,1,1,1,NA,NA,NA,NA,NA,hypothetical protein,L11fs
+1395,1,0,0,NA,NA,NA,NA,NA,hypothetical protein,Y58D
+1396,2,0,0,NA,NA,NA,NA,blaI,Penicillinase repressor,S126fs
+1398,0,1,1,SAUSA300_0564,NE546,NA,conserved hypothetical protein,NA,hypothetical protein,T38K|K38T
+1400,4,1,0,SAUSA300_1749,NE1639,-,hypothetical protein,NA,hypothetical protein,F5Y|I4K|F5Y
+1401,1,1,0,SAUSA300_2512,NA,NA,NA,NA,hypothetical protein,V93A
+1405,5,1,1,SAUSA300_1500,NE322,NA,putative competence protein ComYC,NA,hypothetical protein,A96T|I106K|K110T|A96T
+1408,8,0,0,NA,NA,NA,NA,NA,hypothetical protein,R19G
+1409,6,0,0,SAUSA300_1932,NE244,NA,conserved hypothetical phage protein,NA,hypothetical protein,Y37_I43dup
+1411,3,0,0,SAUSA300_2194,NA,NA,NA,rplN,50S ribosomal protein L14,D37N|A38V|V38A
+1417,7,0,0,SAUSA300_1474,NE1841,-,hypothetical protein,NA,hypothetical protein,K20E
+1418,7,0,0,SAUSA300_2355,NE1213,-,putative lipoprotein,NA,hypothetical protein,S75P
+1420,2,1,1,NA,NA,NA,NA,NA,hypothetical protein,C27R|R27C
+1424,5,0,0,NA,NA,NA,NA,NA,hypothetical protein,FY106VN|LH109MP|C112S|LI114QN|F117Y|Ter120Kext*?
+1426,1,0,0,SAUSA300_2437,NE514,sarT,staphylococcal accessory regulator T,sarT,HTH-type transcriptional regulator SarT,L23R
+1429,1,0,0,NA,NA,NA,NA,essG_3,Type VII secretion system protein EsaG,C30Y
+1431,0,1,1,SAUSA300_2199,NA,NA,NA,rplV,50S ribosomal protein L22,A95_N97delinsGR
+1432,7,2,1,SAUSA300_1551,NE712,NA,conserved hypothetical protein,rsfS,Ribosomal silencing factor RsfS,Ter117Yext*?|Y117*|Ter117Yext*?
+1435,5,0,0,NA,NA,NA,NA,NA,hypothetical protein,L113*
+1436,5,0,0,NA,NA,NA,NA,NA,hypothetical protein,D5E|D79N|I10M
+1437,0,1,0,NA,NA,NA,NA,NA,hypothetical protein,I105fs
+1438,2,0,0,SAUSA300_1212,NA,NA,NA,NA,hypothetical protein,N20K|F25C
+1445,1,1,0,SAUSA300_1337,NE1357,-,hypothetical protein,gpsB,Cell cycle protein GpsB,D36Y|Y36D
+1447,4,0,0,NA,NA,NA,NA,NA,hypothetical protein,A103T|S88N|Y83F|Q64R|A45T
+1449,2,0,0,NA,NA,NA,NA,NA,hypothetical protein,Y96D
+1458,2,0,0,NA,NA,NA,NA,NA,hypothetical protein,K28M
+1460,1,0,1,NA,NA,NA,NA,NA,hypothetical protein,K103fs
+1463,2,0,0,SAUSA300_0767,NE1574,-,hypothetical protein,NA,hypothetical protein,I57N|P106L
+1465,6,0,0,NA,NA,NA,NA,NA,hypothetical protein,N2S
+1469,2,0,0,SAUSA300_0453,NA,NA,NA,NA,Nucleoid-associated protein,I7M
+1470,0,1,0,SAUSA300_1692,NE1340,-,hypothetical protein,NA,hypothetical protein,D42E
+1471,1,0,0,NA,NA,NA,NA,NA,hypothetical protein,K11E
+1474,2,0,0,NA,NA,NA,NA,NA,IS1182 family transposase ISSau3,Y86H
+1475,1,0,0,SAUSA300_1502,NE1854,-,putative competence protein ComGC,comGC,ComG operon protein 3,K51Q
+1479,2,1,0,NA,NA,NA,NA,NA,hypothetical protein,P62S|F81I|P62S
+1480,2,0,0,NA,NA,NA,NA,NA,hypothetical protein,P76L
+1481,1,0,0,NA,NA,NA,NA,icaD,"Poly-beta-1,6-N-acetyl-D-glucosamine synthesis protein IcaD",L86fs
+1487,1,0,0,SAUSA300_1943,NE1792,-,phi77 ORF040-like protein,NA,hypothetical protein,S38G
+1488,7,0,0,SAUSA300_2514,NA,NA,NA,NA,hypothetical protein,Ter38Eext*?
+1492,4,0,0,SAUSA300_1976,NE1222,-,succinyl-diaminopimelate desuccinylase,dapE_1,putative succinyl-diaminopimelate desuccinylase,Q93E
+1493,0,1,0,NA,NA,NA,NA,NA,hypothetical protein,Ter98Eext*?
+1494,7,0,0,SAUSA300_2043,NE1750,-,hypothetical protein,NA,hypothetical protein,A2T
+1499,7,2,1,SAUSA300_1210,NE608,NA,conserved hypothetical protein,NA,hypothetical protein,Y68H|H68Y|Y68H
+1500,1,1,1,NA,NA,NA,NA,NA,hypothetical protein,K6T|T6K
+1501,0,1,0,SAUSA300_0675,NE1497,-,hypothetical protein,NA,hypothetical protein,L61F|N63K|I66K|V69L
+1504,9,0,0,SAUSA300_0938,NE1556,-,hypothetical protein,NA,hypothetical protein,Y19N|Y84N|F88V|K82T|V76E
+1505,4,1,0,SAUSA300_1937,NE1667,-,phi77 ORF045-like protein,NA,hypothetical protein,N57K|F75S|S75F|N57K
+1506,0,1,0,SAUSA300_0779,NE155,NA,conserved hypothetical protein,NA,hypothetical protein,D24N
+1510,3,0,0,NA,NA,NA,NA,NA,hypothetical protein,N21I
+1514,1,0,0,SAUSA300_1362,NA,NA,NA,hup,DNA-binding protein HU,Q72P
+1524,7,1,1,NA,NA,NA,NA,NA,hypothetical protein,N65D|D65N|N65D
+1526,3,1,0,NA,NA,NA,NA,NA,hypothetical protein,N16T|I69N|F80I
+1529,2,0,0,NA,NA,NA,NA,NA,hypothetical protein,R74fs
+1534,0,0,1,SAUSA300_1208,NE1852,-,hypothetical protein,NA,hypothetical protein,T17K
+1535,0,1,1,NA,NA,NA,NA,NA,hypothetical protein,N45fs
+1536,0,1,1,NA,NA,NA,NA,NA,hypothetical protein,Ter81Yext*?
+1537,1,0,0,NA,NA,NA,NA,spoVG,Putative septation protein SpoVG,R67fs
+1540,6,0,0,SAUSA300_2085,NE86,NA,conserved hypothetical protein,NA,hypothetical protein,V70A
+1545,6,0,0,NA,NA,NA,NA,NA,hypothetical protein,N69fs
+1550,1,0,0,NA,NA,NA,NA,NA,hypothetical protein,I66fs
+1553,2,1,0,NA,NA,NA,NA,NA,hypothetical protein,I58T
+1555,7,0,0,NA,NA,NA,NA,NA,hypothetical protein,S55fs
+1557,7,1,1,SAUSA300_0929,NA,NA,NA,NA,hypothetical protein,A47T|T47A|A47T
+1562,3,0,0,SAUSA300_1180,NE1413,NA,conserved hypothetical protein,NA,hypothetical protein,I15V
+1567,2,0,0,SAUSA300_1202,NA,NA,NA,NA,hypothetical protein,Y22N
+1572,1,1,0,NA,NA,NA,NA,NA,hypothetical protein,N33fs
+1574,3,0,0,SAUSA300_0782,NA,NA,NA,NA,hypothetical protein,E42A
+1575,0,1,1,SAUSA300_1303,NA,NA,NA,NA,hypothetical protein,N60Y
+1576,2,0,0,SAUSA300_0350,NA,NA,NA,NA,hypothetical protein,V67A
+1579,3,0,0,SAUSA300_1295,NA,NA,NA,cspA_1,Cold shock protein CspA,D43E
+1580,3,0,0,NA,NA,NA,NA,NA,hypothetical protein,I52K|F46I|K32N|R59K|F44I
+1581,6,0,0,NA,NA,NA,NA,NA,hypothetical protein,N50K|D13fs
+1583,1,0,0,SAUSA300_1215,NA,NA,NA,NA,hypothetical protein,VN12ET|I6L|S11A
+1585,4,1,1,SAUSA300_2635,NE1082,-,hypothetical protein,NA,hypothetical protein,I31V|V31I|V31I|I31V
+1586,1,0,0,NA,NA,NA,NA,NA,hypothetical protein,C4Y
+1587,2,0,0,NA,NA,NA,NA,NA,hypothetical protein,L59*
+1589,1,0,0,NA,NA,NA,NA,NA,hypothetical protein,P7L
+1591,1,0,0,NA,NA,NA,NA,NA,hypothetical protein,E55fs
+1592,4,1,0,NA,NA,NA,NA,NA,hypothetical protein,Q42H|H42Q|Q42H
+1598,2,0,0,SAUSA300_2186,NA,NA,NA,rpmD,50S ribosomal protein L30,I31T
+1599,1,0,0,NA,NA,NA,NA,NA,hypothetical protein,S49C|T57S
+1608,1,0,0,NA,NA,NA,NA,NA,hypothetical protein,F25L
+1613,3,0,0,NA,NA,NA,NA,NA,hypothetical protein,I15N
+1618,1,0,0,NA,NA,NA,NA,NA,hypothetical protein,H21R
+1627,3,0,1,NA,NA,NA,NA,NA,hypothetical protein,I33fs
+1629,1,1,0,NA,NA,NA,NA,NA,hypothetical protein,Y18fs
+NA,6,1,1,NA,NA,NA,NA,NA,"tRNA-Gly|tRNA-Asp|transfer-messenger RNA, SsrA|5S ribosomal RNA (partial)|tRNA-Gly",NA

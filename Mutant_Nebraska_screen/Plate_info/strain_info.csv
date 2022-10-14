@@ -1,0 +1,144 @@
+sample_id,plate384,well384,row384,column384,gene_name,strain_description,strain_group
+∆rbf ST5,NA,NA,NA,NA,NA,∆rbf ST5,SSR-ST5
+∆rbf ST8,NA,NA,NA,NA,NA,∆rbf ST8,SSR-ST8
+2014-21162,NA,NA,NA,NA,NA,2014-21162,BOR-02
+2014-21163,NA,NA,NA,NA,NA,2014-21163,BOR-02
+2014-21165,NA,NA,NA,NA,NA,2014-21165,BOR-02
+2014-21166,NA,NA,NA,NA,NA,2014-21166,BOR-02
+AUS0325,NA,NA,NA,NA,NA,AUS0325,BOR-01
+AUS0328,NA,NA,NA,NA,NA,AUS0328,BOR-01
+BPH3835,NA,NA,NA,NA,NA,BPH3835,BOR-02
+hsdR SSR ST8,NA,NA,NA,NA,NA,hsdR SSR ST8,SSR-ST8
+JE2,NA,NA,NA,NA,NA,JE2,CONTROL
+LAD-42,NA,NA,NA,NA,NA,ribA SSR ST5,SSR-ST5
+LAD-44,NA,NA,NA,NA,NA,ribA SSR ST8,SSR-ST8
+LAD-47,NA,NA,NA,NA,NA,∆ribA ST5,SSR-ST5
+LAD-48,NA,NA,NA,NA,NA,∆ribA ST8,SSR-ST8
+LAD-61,NA,NA,NA,NA,NA,agrA SSR ST8,SSR-ST8
+LAD-62,NA,NA,NA,NA,NA,cidA SSR ST8,SSR-ST8
+LAD-63,NA,NA,NA,NA,NA,lrgA SSR ST8,SSR-ST8
+LAD-64,NA,NA,NA,NA,NA,amaP SSR ST8,SSR-ST8
+LAD-65,NA,NA,NA,NA,NA,atl SSR ST5,SSR-ST5
+LAD-66,NA,NA,NA,NA,NA,rsgA SSR ST5,SSR-ST5
+LAD-67,NA,NA,NA,NA,NA,WT ST8,SSR-ST8
+LAD-68,NA,NA,NA,NA,NA,WT ST5,SSR-ST5
+mutL SSR ST8,NA,NA,NA,NA,NA,mutL SSR ST8,SSR-ST8
+NE1,1,A1,A,1,ebh,giant surface protein,NEBRASKA
+NE1183,4,E13,E,13,arlS,sensor histidine kinase protein,NEBRASKA
+NE1189,4,G1,G,1,-,MarR family transcriptional regulator,NEBRASKA
+NE1246,4,O19,O,19,-,hypothetical protein 12,NEBRASKA
+NE1253,4,B9,B,9,murQ,N-acetylmuramic acid-6-phosphate etherase,NEBRASKA
+NE1261,4,D1,D,1,-,truncated beta-hemolysin,NEBRASKA
+NE130,1,F19,F,19,-,hypothetical protein 2,NEBRASKA
+NE1300,4,J7,J,7,-,Aerolysin/leukocidin family protein,NEBRASKA
+NE1335,4,P5,P,5,-,acetyltransferase,NEBRASKA
+NE1446,4,B12,B,12,-,endopeptidase resistance gene,NEBRASKA
+NE1483,4,H14,H,14,-,"phi77 ORF020-like protein, phage major tail protein",NEBRASKA
+NE150,1,J11,J,11,-,hypothetical protein 4,NEBRASKA
+NE1511,4,L22,L,22,-,LysR family regulatory protein,NEBRASKA
+NE1531,4,P14,P,14,-,glutamine amidotransferase subunit PdxT,NEBRASKA
+NE154,1,J19,J,19,-,putative membrane protein 1,NEBRASKA
+NE1558,5,C19,C,19,empbp,secretory extracellular matrix and plasma binding protein,NEBRASKA
+NE1686,5,J11,J,11,hyp1686,hypothetical protein 14,NEBRASKA
+NE1687,5,J13,J,13,treR,trehalose operon repressor,NEBRASKA
+NE17,1,C9,C,9,-,putative drug transporter,NEBRASKA
+NE1702,5,L19,L,19,-,zinc-binding dehydrogenase family oxidoreductase,NEBRASKA
+NE1729,5,A2,A,2,-,superantigen-like protein 5,NEBRASKA
+NE1743,5,C6,C,6,hyp1743,hypothetical protein 13,NEBRASKA
+NE178,1,N19,N,19,-,isopropylmalate synthase-related protein,NEBRASKA
+NE1801,5,M2,M,2,hyp1801,hypothetical protein 15,NEBRASKA
+NE1811,5,M22,M,22,hyp1811,hypothetical protein 16,NEBRASKA
+NE1820,5,O16,O,16,hyp1820,hypothetical protein 18,NEBRASKA
+NE1848,5,D24,D,24,lukS-PV,"Panton-Valentine leukocidin, LukS-PV",NEBRASKA
+NE185,1,P9,P,9,-,"siderophore biosynthesis protein, IucA/IucC family",NEBRASKA
+NE186,1,P11,P,11,fnbA,fibronectin binding protein A,NEBRASKA
+NE1887,5,L6,L,6,nusB,transcription antitermination protein NusB,NEBRASKA
+NE1897,5,N2,N,2,hyp1897,hypothetical protein 17,NEBRASKA
+NE228,1,E24,E,24,-,"ABC transporter, permease protein",NEBRASKA
+NE242,1,I4,I,4,dprA,DNA protecting protein DprA,NEBRASKA
+NE247,1,I14,I,14,-,bacterioferritin comigratory protein,NEBRASKA
+NE282,1,O12,O,12,-,5' nucleotidase family protein,NEBRASKA
+NE286,1,O20,O,20,spa,immunoglobulin G binding protein A precursor,NEBRASKA
+NE29,1,E9,E,9,-,PIN domain protein,NEBRASKA
+NE300,1,B24,B,24,-,hypothetical protein 8,NEBRASKA
+NE302,1,D4,D,4,Cap5A,capsular polysaccharide biosynthesis protein Cap5A,NEBRASKA
+NE319,1,F14,F,14,-,hypothetical protein 1,NEBRASKA
+NE338,1,J4,J,4,lip,triacylglycerol lipase precursor,NEBRASKA
+NE346,1,J20,J,20,-,putative DnaQ family exonuclease/DinG family helicase,NEBRASKA
+NE348,1,J24,J,24,ftsK,DNA translocase FtsK,NEBRASKA
+NE35,1,E21,E,21,trpD,anthranilate phosphoribosyltransferase,NEBRASKA
+NE354,1,L12,L,12,-,"transcriptional regulator, gntR family protein",NEBRASKA
+NE363,1,N6,N,6,-,staphylococcal tandem lipoprotein 1,NEBRASKA
+NE376,1,P8,P,8,-,putative membrane protein 2,NEBRASKA
+NE382,1,P20,P,20,crtN,squalene synthase,NEBRASKA
+NE385,2,A1,A,1,acsA,acetyl-coenzyme A synthetase,NEBRASKA
+NE390,2,A11,A,11,gltB,"glutamate synthase, large subunit",NEBRASKA
+NE391,2,A13,A,13,clfB,clumping factor B,NEBRASKA
+NE398,2,C3,C,3,-,hypothetical protein 6,NEBRASKA
+NE402,2,C11,C,11,lytN,cell wall hydrolase,NEBRASKA
+NE424,2,G7,G,7,pdp,pyrimidine nucleoside phosphorylase,NEBRASKA
+NE432,2,G23,G,23,sdrC,sdrC protein,NEBRASKA
+NE455,2,K21,K,21,-,bacterial luciferase family protein,NEBRASKA
+NE46,1,G19,G,19,-,"phi77 ORF001-like protein, phage tail tape measure protein",NEBRASKA
+NE472,2,O7,O,7,fmtB,truncated FmtB protein,NEBRASKA
+NE479,2,O21,O,21,-,putative competence protein ComGA,NEBRASKA
+NE488,2,B15,B,15,-,putative membrane protein 3,NEBRASKA
+NE509,2,F9,F,9,-,staphylococcal tandem lipoprotein 2,NEBRASKA
+NE515,2,F21,F,21,ilvA,threonine dehydratase,NEBRASKA
+NE52,1,I7,I,7,-,hypothetical protein 3,NEBRASKA
+NE558,2,N11,N,11,lukE,leukotoxin LukE,NEBRASKA
+NE564,2,N23,N,23,cidC,pyruvate oxidase,NEBRASKA
+NE567,2,P5,P,5,-,"transcriptional regulator, MarR family",NEBRASKA
+NE575,2,P21,P,21,-,"oxidoreductase, aldo/keto reductase family",NEBRASKA
+NE607,2,E14,E,14,phnE,"phosphonate ABC transporter, permease protein",NEBRASKA
+NE683,2,B22,B,22,oppB,"oligopeptide ABC transporter, permease protein",NEBRASKA
+NE712,2,H8,H,8,-,hypothetical protein 7,NEBRASKA
+NE728,2,J16,J,16,fnbB,fibronectin binding protein B,NEBRASKA
+NE741,2,L18,L,18,-,"oligopeptide ABC transporter, ATP-binding protein",NEBRASKA
+NE781,3,C1,C,1,-,"multidrug resistance protein B, drug resistance transporter",NEBRASKA
+NE81,1,M17,M,17,galM,aldose 1-epimerase,NEBRASKA
+NE822,3,I11,I,11,-,RluA family pseudouridine synthase,NEBRASKA
+NE823,3,I13,I,13,vraS,two-component sensor histidine kinase,NEBRASKA
+NE834,3,K11,K,11,cbiO,cobalt transporter ATP-binding subunit,NEBRASKA
+NE841,3,M1,M,1,-,hypothetical protein 10,NEBRASKA
+NE858,3,O11,O,11,mreD,rod shape-determining protein MreD,NEBRASKA
+NE866,3,B3,B,3,-,AcrB/AcrD/AcrF family protein,NEBRASKA
+NE872,3,B15,B,15,-,AraC family transcriptional regulator,NEBRASKA
+NE874,3,B19,B,19,-,hypothetical protein 9,NEBRASKA
+NE89,1,O9,O,9,-,hypothetical protein 5,NEBRASKA
+NE896,3,F15,F,15,dsbA,hypothetical protein 19,NEBRASKA
+NE954,3,P11,P,11,-,hypothetical protein 11,NEBRASKA
+NE97,1,B1,B,1,-,UTP-glucose-1-phosphate uridylyltransferase family protein,NEBRASKA
+NE982,3,C20,C,20,hsdS,"type I restriction-modification enzyme, S subunit",NEBRASKA
+NEB agrA,4,P16,P,16,agrA,accessory gene regulator protein A,CONTROL
+Non infected,NA,NA,NA,NA,NA,Non infected,CONTROL
+rbf SSR ST5,NA,NA,NA,NA,NA,rbf SSR ST5,SSR-ST5
+rbf SSR ST8,NA,NA,NA,NA,NA,rbf SSR ST8,SSR-ST8
+Maximum cell death,NA,NA,NA,NA,NA,Maximum cell death,CONTROL
+NE119,1,D21,D,21,-,non-ribosomal peptide synthetase,NEBRASKA
+NE172,1,N7,N,7,ptsG,"PTS system, glucose-specific IIBC component domain protein",NEBRASKA
+NE546,2,L11,L,11,-,conserved hypothetical protein,NEBRASKA
+NE713,2,H10,H,10,-,putative transcriptional regulator,NEBRASKA
+NE844,3,M7,M,7,-,ABC transporter ATP-binding protein,NEBRASKA
+NE483,2,B5,B,5,pepT,peptidase T,NEBRASKA
+NE1013,3,I10,I,10,-,hypothetical protein,NEBRASKA
+NE1194,4,G11,G,,-,superantigen-like protein,NEBRASKA
+NE1121,3,L10,L,,-,conserved hypothetical protein,NEBRASKA
+NE118,1,D19,D,,-,nitroreductase family protein,NEBRASKA
+NE361,1,N2,N,,-,conserved hypothetical protein,NEBRASKA
+NE1304,4,J15,J,,-,transcription regulatory protein,NEBRASKA
+NE1131,3,N6,N,,-,amino acid permease,NEBRASKA
+NE996,3,E24,E,,-,putative transport protein,NEBRASKA
+NE1360,4,C8,C,,fmtC,oxacillin resistance-related FmtC protein,NEBRASKA
+NE258,1,K12,K,,cls,cardiolipin synthetase,NEBRASKA
+NE873,3,B17,B,,agrC,accessory gene regulator protein C,NEBRASKA
+NE1919,5,P22,P,,-,protein phosphatase 2C domain-containing protein,NEBRASKA
+NE274,1,M20,M,,-,conserved hypothetical protein,NEBRASKA
+NE594,2,C12,C,,gltA,citrate synthase II,NEBRASKA
+NE1724,5,P15,P,,pdhA,"pyruvate dehydrogenase E1 component, alpha subunit",NEBRASKA
+NE215,1,C22,C,,-,putative lipoprotein,NEBRASKA
+NE1719,5,P5,P,,arcC,carbamate kinase,NEBRASKA
+NE577,2,A2,A,,-,PAP2 family protein,NEBRASKA
+NE370,1,N20,N,,-,conserved hypothetical protein,NEBRASKA
+NE1283,4,F21,F,,-,putative transposase,NEBRASKA
+NE1088,3,F16,F,,-,conserved hypothetical protein,NEBRASKA

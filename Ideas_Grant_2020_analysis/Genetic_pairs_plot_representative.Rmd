@@ -1,0 +1,1336 @@
+---
+title: "VANANZ closely related pairs: plot representative pairs"
+author: "Stefano Giulieri"
+date: "12/05/2020"
+output: html_document
+editor_options: 
+  chunk_output_type: inline
+---
+
+Here, we set up a workflow to plot representative genetic pairs: PI update, growth and mutations.
+
+# Set/check knitR option and working directory
+
+```{r}
+library(tidyverse)
+library(ggpubr)
+library(here)
+library(RColorBrewer)
+library(patchwork)
+
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = here())
+print(paste("My working directory is:" ,here()))
+rm(list = ls())
+source("Functions/all_functions.R")
+```
+
+# Import raw data
+
+## Table with all mutations and phenotypes
+
+```{r}
+# the files is not in raw data because it is too big for github
+df_mutations_mortality_phenotypes <- read.csv("~/OneDrive - The University of Melbourne/PhD_work/VANANZ_phenotypes/Ideas_Grant_2020/Shared_data/snippy_data_mortality_phenotypes_switches.csv",
+                                              stringsAsFactors = F) %>%
+  drop_na(LOCUS_TAG) %>%
+  filter(EFFTYPE != "synonymous_variant")
+```
+
+## Table with phenotypes only (for pairs with no mutations)
+
+```{r message=F}
+df_mortality_phenotypes_switches <- read_csv("Ideas_Grant_2020_analysis/Genetic_pairs_table/genetic_pairs_pheno_changes_mortality_persist_switches.csv")
+
+# Count strains
+n_distinct(df_mortality_phenotypes_switches$iso1)
+
+df_mortality_phenotypes_switches %>%
+  drop_na(delta_AUC_death) %>%
+  .$iso1 %>%
+  n_distinct()
+
+# How many genetically matched isolates and pairs 
+df_genetic_pairs <- read_tsv("Ideas_Grant_2020_analysis/Genetic_pairs_table/genetic_pairs.tab", col_names = c("PAIR_ID", "iso1", "iso2"))
+
+n_distinct(df_genetic_pairs$iso1)
+  
+```
+
+
+## Concatenated PI and growth dataframes
+
+```{r}
+c_data <- read.csv("Ideas_Grant_2020_analysis/Processed_data/PI_curves/processed_PI_kinetics.csv", stringsAsFactors = F)
+g_data <- read.csv("Ideas_Grant_2020_analysis/Processed_data/Growth_curves/processed_GC_kinetics.csv", stringsAsFactors = F)
+
+# Count strains
+c_data %>%
+  filter(strain_group != "CONTROL") %>%
+  .$sample_id %>%
+  n_distinct()
+
+g_data %>%
+  filter(strain_group != "CONTROL") %>%
+  .$sample_id %>%
+  n_distinct()
+```
+
+## PI and growth parameters
+
+```{r message=F}
+c_parameters <- read_csv("Ideas_Grant_2020_analysis/Processed_data/PI_curves/processed_parameters_PI.csv")
+
+g_parameters <- read_csv("Ideas_Grant_2020_analysis/Processed_data/Growth_curves/processed_parameters_GC.csv")
+```
+
+## Plot JE2 and TOX-4 examples
+
+### Search for good JE2 plot
+
+```{r message=F, warning=F}
+# df_plot <- c_neb %>%
+#   filter(sample_id == "JE2") %>%
+#   mutate(sample_id = str_c(sample_id, "- plate ", plate))
+# plot_cell_death(df = df_plot, standardized = T, fitted = T, combine_experiments = "experiment", all_replicates = F)
+# 
+# df_plot <- c_data %>%
+#   filter(sample_id == "JE2") %>%
+#   mutate(sample_id = str_c(sample_id, "- plate ", plate))
+# plot_cell_death(df = df_plot, standardized = T, fitted = T, combine_experiments = "experiment", all_replicates = F)
+
+```
+
+# Representative JE2 plot (plate M1)
+
+```{r message=F, warning=F}
+# c_data %>%
+#   filter(plate == "M1" & sample_id == "JE2") %>%
+#   plot_cell_death(standardized = T, fitted = T, all_replicates = F, title = "", save_plot = "Ideas_Grant_2020_analysis/figures/JE2_diagram.pdf")
+# 
+# p <- c_data %>%
+#   filter(plate == "M1" & sample_id == "JE2") %>%
+#   plot_cell_death(standardized = T, fitted = T, all_replicates = F, title = "", print_plot = F, return_plots = T)
+# p1 <- p[[2]] 
+```
+
+# Search for good TOX-4 plot
+
+```{r message=F, warning=F}
+# df_plot <- c_neb %>%
+#   filter(sample_id == "TOX-4") %>%
+#   mutate(sample_id = str_c(sample_id, "- plate ", plate))
+# plot_cell_death(df = df_plot, standardized = T, fitted = T, combine_experiments = "experiment", all_replicates = F)
+# 
+# df_plot <- c_data %>%
+#   filter(sample_id == "TOX-4") %>%
+#   mutate(sample_id = str_c(sample_id, "- plate ", plate))
+# plot_cell_death(df = df_plot, standardized = T, fitted = T, combine_experiments = "experiment", all_replicates = F)
+```
+
+## Save JE2 and TOX-4 plot from plate M1
+
+```{r}
+# c_data %>%
+#   filter(plate == "M1" & (sample_id == "JE2" | sample_id == "TOX-4")) %>%
+#   plot_cell_death(standardized = T, fitted = T, all_replicates = F, title = "", comparator = "JE2",
+#                   save_plot = "Ideas_Grant_2020_analysis/figures/JE2_diagram.pdf",
+#                   plot_size = c(4,2.5), return_plots = T)
+# 
+# p <- c_data %>%
+#   filter(plate == "M1" & (sample_id == "JE2")) %>%
+#   ggplot(aes(x = timepoint/60, y = f_signal.fitted)) +
+#   stat_summary(geom = 'ribbon', fun.data = 'mean_sdl', fun.args = list(mult = 1), fill = "#045a8d", alpha = 0.2) + 
+#       stat_summary(geom = "point", fun = "mean", size = 1, color = "#045a8d") +
+#   # scale_color_manual(values = c("#045a8d", "#b30000")) +
+#   theme_bw()
+# 
+# # Parameters for vline
+# c_parameters %>% filter(sample_id == "JE2" & plate == "M1") %>%
+#   select(max_rate_death) %>%
+#   summary()
+# 
+# 
+# p +
+#   stat_summary(data = c_data %>% filter(plate == "M1" & sample_id == "TOX-4"),
+#                geom = 'ribbon', fun.data = 'mean_sdl', fun.args = list(mult = 1), fill = "#b30000", alpha = 0.2) +
+#         stat_summary(data = c_data %>% filter(plate == "M1" & sample_id == "TOX-4"),
+#                      geom = "point", fun = "mean", color = "#b30000", alpha = 0.2, size = 1) +
+#   geom_vline(xintercept = 5, linetype = "dashed", alpha = .5) +
+#   geom_vline(xintercept = 20, linetype = "dashed", alpha = .5) +
+#   geom_abline(intercept = -.35, slope = .002424*60) +
+#   stat_summary(geom = "area", fun = "mean", size = 1, fill = "#969696", alpha = .1) +
+#   labs(x = "Time (hours)",
+#        y = "PI uptake") +
+#   theme(text = element_text(face = "bold"),
+#         panel.grid = element_blank())
+# 
+# ggsave("Ideas_Grant_2020_analysis/figures/JE2_diagram.pdf/PI_kinetics__with_40000_cells.pdf", width = 2.6, height = 2.4)
+
+
+
+
+
+```
+
+
+## CC metadata
+
+```{r}
+cc_data <- read_csv("Ideas_Grant_2020_analysis/Raw_data/Saureus_CC_to_ST.csv") %>%
+  mutate(ST = as.character(ST))
+
+c_parameters <- c_parameters %>%
+  select(-ends_with(".y")) %>%
+  rename_at(vars(ends_with(".x")),
+            funs(str_remove(., ".x"))) %>%
+  left_join(cc_data)
+
+
+cc_counts <- c_parameters %>%
+  distinct(sample_id, CC) %>%
+  count(CC)
+cc_counts
+top_cc <- cc_counts %>%
+  drop_na(CC) %>%
+  filter(n > 10) %>%
+  .$CC
+
+for (v in str_subset(colnames(c_parameters), "_death")){
+ p <-  ggviolin(data = c_parameters %>% filter(CC %in% top_cc),
+        x = "CC", 
+        y = v, 
+        fill = "CC") +
+  scale_fill_brewer(guide = F) +
+  theme_bw()
+ 
+ print(p)
+}
+
+p1 <- ggviolin(data = c_parameters %>% filter(CC %in% top_cc),
+        x = "CC", 
+        y = "AUC_death", 
+        fill = "CC") +
+  scale_fill_brewer(guide = F) +
+  labs(x = "", y = "PI uptake (AUC)") +
+  theme_bw() 
+
+ggsave("Ideas_Grant_2020_analysis/figures/AUC_death_by_CC.pdf", p, width = 4, height = 4)
+
+
+
+```
+
+## Plot growth rate
+
+```{r}
+g_parameters <- g_parameters %>%
+  left_join(cc_data)
+
+
+for (v in str_subset(colnames(g_parameters), "_OD")){
+ p <-  ggviolin(data = g_parameters %>% filter(CC %in% top_cc),
+        x = "CC", 
+        y = v, 
+        fill = "CC") +
+  scale_fill_brewer(guide = F, palette = 7) +
+  theme_bw()
+ 
+ print(p)
+}
+
+p2 <-  ggviolin(data = g_parameters %>% filter(CC %in% top_cc),
+        x = "CC", 
+        y = "max_rate_OD", 
+        fill = "CC") +
+  scale_fill_brewer(guide = F, palette = 7) +
+  labs(x = "", y = "Maximum growth rate") +
+  theme_bw()
+
+p1 | p2
+
+# ggsave("Ideas_Grant_2020_analysis/figures/AUC_death_growth_rate_by_CC.pdf", width = 6, height = 3)
+```
+
+
+## Concatenated PI and growth dataframes of Nebraska mutants
+
+```{r}
+c_neb <- read_csv("Mutant_Nebraska_screen/Analysis/Processed_data/PI/processed_PI_kinetics_Nebraska_mutants.csv")
+g_neb <- read_csv("Mutant_Nebraska_screen/Analysis/Processed_data/GC/processed_GC_kinetics_Nebraska_mutants.csv")
+
+# Number of Nebraska mutants screened
+c_neb %>%
+  filter(strain_group != "CONTROL") %>%
+  .$sample_id %>%
+  n_distinct()
+
+g_neb %>%
+  filter(strain_group != "CONTROL") %>%
+  .$sample_id %>%
+  n_distinct()
+
+# List of mutated genes that are present in the Nebraska library
+df_mutated_genes_neb <- df_mutations_mortality_phenotypes %>%
+  drop_na(neb_mutant_id) %>%
+  select(clstr_prot, contains("neb")) %>%
+  distinct()
+
+# List of screened Neb mutants carrying genes that were mutated in the genetic pairs
+neb_screened_mutated <- sort(intersect(c_neb$sample_id, 
+          df_mutated_genes_neb$neb_mutant_id))
+# sort(intersect(df_mutated_genes_neb$neb_mutant_id,
+#           c_neb$sample_id))
+
+c_neb <- c_neb %>%
+  filter(sample_id %in% c(neb_screened_mutated) | strain_group == "CONTROL")
+
+g_neb <- g_neb %>%
+  filter(sample_id %in% c(neb_screened_mutated) | strain_group == "CONTROL")
+```
+
+### Plot screened mutated NEB mutants
+
+```{r}
+
+# for (i in unique(c_neb$plate)){
+#   message(str_c("Plotting plate ", i))
+#   
+#   plot_cell_death(df = c_neb %>% filter(plate == i), 
+#                 fitted = T,
+#                 all_replicates = 24,
+#                 combine_experiments = "plate",
+#                 comparator = "JE2")
+# }
+# 
+# for (i in unique(g_neb$plate)){
+#   message(str_c("Plotting plate ", i))
+#   
+#   plot_cell_death(df = g_neb %>% filter(plate == i), 
+#                 fitted = T,
+#                 all_replicates = T,
+#                 combine_experiments = "plate",
+#                 comparator = "JE2")
+# }
+
+
+```
+
+# Plot N896
+
+```{r message=F}
+# plate <- unique(c_neb %>% filter(sample_id == "NE896") %>% .$plate)
+# for (i in plate){
+#   df_plot <- c_neb %>%
+#     filter(plate == i) %>%
+#   filter(sample_id == "NE896" | strain_group == "CONTROL")
+#   
+#   plot_cell_death(df = df_plot, standardized = T, fitted = T, combine_experiments = "plate", comparator = "JE2")
+#   
+# }
+# 
+# # save plate G plot
+# c_neb %>%
+#     filter(plate == "G") %>%
+#   filter(sample_id == "NE896" | strain_group == "CONTROL") %>%
+#   plot_cell_death(standardized = T, fitted = T, combine_experiments = "plate", comparator = "JE2")
+
+# ggsave("Within_host_analysis/figures/NE896_dsbA_cell_death.pdf", width = 8, height = 4)
+
+
+```
+
+
+## Import parameters
+
+```{r}
+c_parameters_neb <- read_csv("Mutant_Nebraska_screen/Analysis/Processed_data/PI/parameters_PI_kinetics_Nebraska_mutants.csv") %>%
+  filter(sample_id %in% c(neb_screened_mutated) | strain_group == "CONTROL")
+
+g_parameters_neb <- read_csv("Mutant_Nebraska_screen/Analysis/Processed_data/GC/parameters_GC_Nebraska_mutants.csv") %>%
+  filter(sample_id %in% c(neb_screened_mutated) | strain_group == "CONTROL")
+```
+
+
+## Identify Neb mutants with significant differences compared to JE2
+
+```{r}
+c_parameters_stat_neb <- read_csv("Mutant_Nebraska_screen/Analysis/Processed_data/PI/parameters_stats_PI_kinetics_Nebraska_mutants.csv") %>%
+  filter(sample_id %in% neb_screened_mutated)
+
+g_parameters_stat_neb <- read_csv("Mutant_Nebraska_screen/Analysis/Processed_data/GC/parameters_stats_GC_Nebraska_mutants.csv") %>%
+  filter(sample_id %in% neb_screened_mutated)
+```
+
+## Plot mutants with significant differences
+
+### Cell death
+
+```{r}
+df_signif_neb <- c_parameters_stat_neb %>%
+  filter(p < 0.05) %>%
+  group_by(sample_id) %>%
+  mutate(n_signif_parameters = n())
+
+unique(df_signif_neb$sample_id)
+
+c_parameters_neb_signif <- c_parameters_neb %>%
+  filter(sample_id %in% df_signif_neb$sample_id | sample_id %in% c("JE2", "Non infected"))
+
+```
+
+### Top hits
+
+```{r}
+df_signif_neb_top <- df_signif_neb %>%
+  filter(n_signif_parameters >= 4)
+
+c_parameters_neb_top_signif <- c_parameters_neb %>%
+  filter(sample_id %in% df_signif_neb_top$sample_id | strain_group == "CONTROL")
+
+library(ggpubr)
+ggboxplot(data = c_parameters_neb_top_signif, 
+          y = "max_rate_death", 
+          x = "sample_id", 
+          color = "strain_group",
+          add = "point") +
+          #geom_point(aes(colour = experiment)) +
+  coord_flip() +
+  stat_compare_means(ref.group = "JE2", 
+                     method = "wilcox.test",
+                     label = "p.signif")
+
+ggboxplot(data = c_parameters_neb_top_signif, 
+          y = "time_of_max_rate_death", 
+          x = "sample_id", 
+          color = "strain_group",
+          add = "point") +
+          #geom_point(aes(colour = experiment)) +
+  coord_flip() +
+  stat_compare_means(ref.group = "JE2", 
+                     method = "wilcox.test",
+                     label = "p.signif")
+
+ggboxplot(data = c_parameters_neb_top_signif, 
+          y = "max_death", 
+          x = "sample_id", 
+          color = "strain_group",
+          add = "point") +
+          #geom_point(aes(colour = experiment)) +
+  coord_flip() +
+  stat_compare_means(ref.group = "JE2", 
+                     method = "wilcox.test",
+                     label = "p.signif")
+
+ggboxplot(data = c_parameters_neb_top_signif, 
+          y = "time_of_max_death", 
+          x = "sample_id", 
+          color = "strain_group",
+          add = "point") +
+          #geom_point(aes(colour = experiment)) +
+  coord_flip() +
+  stat_compare_means(ref.group = "JE2", 
+                     method = "wilcox.test",
+                     label = "p.signif")
+
+ggboxplot(data = c_parameters_neb_top_signif, 
+          y = "AUC_death", 
+          x = "sample_id", 
+          color = "strain_group",
+          add = "point") +
+          #geom_point(aes(colour = experiment)) +
+  coord_flip() +
+  stat_compare_means(ref.group = "JE2", 
+                     method = "wilcox.test",
+                     label = "p.signif")
+```
+
+```{r}
+plot_cell_death(df = c_neb %>% filter(sample_id %in% df_signif_neb_top$sample_id | strain_group == "CONTROL"),
+                standardized = T, 
+                fitted = T,
+                all_replicates = 24,
+                combine_experiments = "all",
+                comparator = "JE2")
+```
+
+## Plot selected NEB mutants: NE119 (ausA) and NE594 (citZ) along with JE2 and agrA
+
+```{r}
+df_plot <- c_neb %>%
+  filter(sample_id %in% c("NE119", "NE594", "JE2", "NEB agrA"))
+
+for (i in unique(df_plot$plate)){
+  plot_cell_death(df = df_plot %>% filter(plate == i),
+                  standardized = T,
+                  fitted = T, combine_experiments = "plate", comparator = "JE2")
+}
+
+p1 <- df_plot %>%
+  filter(plate == "A") %>%
+  plot_cell_death(standardized = T,
+                  fitted = T, combine_experiments = "plate", comparator = "JE2", return_plots = T)
+p1 <- p1[[2]]
+p1 <- p1 + 
+  labs(title = "plate A")
+
+p2 <- df_plot %>%
+  filter(plate == "G") %>%
+  plot_cell_death(standardized = T,
+                  fitted = T, combine_experiments = "plate", comparator = "JE2", return_plots = T)
+p2 <- p2[[2]]
+p2 <- p2 +
+  labs(title = "plate G")
+
+p <- p1 + p2 + plot_layout(widths = c(2, 3))
+
+ggsave("figures/representative_pairs/NE119_NE594.pdf", p, width = 6, height = 3)
+```
+
+
+
+
+
+## A dataframe of screened Nebraska mutants with phenotypic change and significance of the phenotypic change
+
+We use median values for each parameter
+
+### Cell death
+
+```{r}
+c_neb_summary <- c_parameters_neb %>%
+  group_by(sample_id) %>%
+  summarise_at(vars(ends_with("_death")), median, na.rm = T) %>%
+  
+  mutate(delta_time_of_max_rate_death = time_of_max_rate_death - time_of_max_rate_death[which(sample_id == "JE2")]) %>%
+  mutate(delta_max_rate_death = max_rate_death - max_rate_death[which(sample_id == "JE2")]) %>%
+  mutate(delta_doubling_time_death = doubling_time_death - doubling_time_death[which(sample_id == "JE2")]) %>%
+  mutate(delta_time_of_max_death = time_of_max_death - time_of_max_death[which(sample_id == "JE2")]) %>%
+  mutate(delta_max_death = max_death - max_death[which(sample_id == "JE2")]) %>%
+  mutate(delta_AUC_death = AUC_death - AUC_death[which(sample_id == "JE2")]) %>%
+  
+  # tentatively assign phenotypic change based on AUC
+  
+  mutate(c_phenotype = if_else(delta_AUC_death > 0, "+", "-")) %>%
+  
+  # add simplified stats
+  
+  left_join(df_signif_neb %>% distinct(sample_id, n_signif_parameters)) %>%
+  replace_na(list(n_signif_parameters = 0))
+
+for (var in str_subset(colnames(c_neb_summary), "delta")){
+  p <- ggdensity(data = c_neb_summary, x = var, fill = "c_phenotype") +
+    theme_bw()
+  
+  print(p)
+}
+```
+
+#### Plot AUC death for the screened NEB mutants
+
+We need a dataframe of AUC death annoted with information about the direction of change and signficance
+
+```{r}
+df_auc_death <- c_parameters_neb %>%
+  left_join(c_neb_summary %>% select(sample_id, c_phenotype, n_signif_parameters)) %>%
+  left_join(c_parameters_stat_neb %>% filter(tested_parameter == "AUC_death"))
+
+# Count mutants
+df_auc_death %>%
+  filter(!sample_id %in% c("JE2", "Non infected", "NEB agrA")) %>%
+  .$sample_id %>%
+  n_distinct()
+
+df_auc_death %>%
+  mutate(c_phenotype = if_else(c_phenotype == "+", "Increased PI uptake", "Decreased PI uptake")) %>%
+  ggplot(aes(x = fct_reorder(sample_id, AUC_death), 
+             y = AUC_death,
+             fill = p.signif != "ns")) +
+  geom_boxplot() +
+  facet_wrap(~c_phenotype, scales = "free", ncol = 1) +
+  scale_fill_manual(values = c("blue", "red"), labels = c("ns", "p < 0.05"), name = "", na.translate = F) +
+  # scale_fill_viridis_c(direction = -1) +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(x = "", y = "PI uptake (AUC)")
+
+ggsave("Ideas_Grant_2020_analysis/figures/AUC_death_NEB.pdf")
+```
+
+
+### Growth rate
+
+```{r}
+g_neb_summary <- g_parameters_neb %>%
+  group_by(sample_id) %>%
+  summarise_at(vars(ends_with("_OD")), median, na.rm = T) %>%
+  
+  mutate(delta_time_of_max_rate_OD = time_of_max_rate_OD - time_of_max_rate_OD[which(sample_id == "JE2")]) %>%
+  mutate(delta_max_rate_OD = max_rate_OD - max_rate_OD[which(sample_id == "JE2")]) %>%
+  mutate(delta_doubling_time_OD = doubling_time_OD - doubling_time_OD[which(sample_id == "JE2")]) %>%
+  mutate(delta_time_of_max_OD = time_of_max_OD - time_of_max_OD[which(sample_id == "JE2")]) %>%
+  mutate(delta_max_OD = max_OD - max_OD[which(sample_id == "JE2")]) %>%
+  mutate(delta_AUC_OD = AUC_OD - AUC_OD[which(sample_id == "JE2")]) %>%
+  
+  # tentatively assign phenotypic change based on AUC
+  
+  mutate(g_phenotype = if_else(delta_AUC_OD > 0, "+", "-")) %>%
+  
+  # add simplified stats
+  
+  left_join(g_parameters_stat_neb %>% filter(p < 0.05) %>% group_by(sample_id) %>% mutate(n_signif_parameters = n()) %>% distinct(sample_id, n_signif_parameters)) %>%
+  replace_na(list(n_signif_parameters = 0))
+
+for (var in str_subset(colnames(g_neb_summary), "delta")){
+  p <- ggdensity(data = g_neb_summary, x = var, fill = "g_phenotype") +
+    theme_bw()
+  
+  print(p)
+}
+```
+
+
+# Select pairs of interest
+
+```{r}
+# p <- c(7, 435, 932)
+
+df_mutations_mortality_phenotypes_gene_label <- df_mutations_mortality_phenotypes %>%
+  # group_by(PAIR_ID) %>%
+  # filter(any(clstr_prot %in% p)) %>%
+  mutate(mortality_pair = switches == "Survived-Died",
+         persist_pair = persist_switch == "Non persistent-Persistent",
+         growth_pair = abs(delta_AUC_OD) > 20,
+         cell_death_pair = abs(delta_AUC_death) > 40) %>%
+  mutate(gene_length = if_else(!is.na(GENE),
+                              str_length(GENE), 
+                              NA_integer_)) %>%
+  group_by(clstr_prot) %>%
+  mutate(min_gene_length = if_else(!is.na(GENE),
+                              min(str_length(GENE)), 
+                              NA_integer_)) %>%
+  arrange(min_gene_length) %>%
+  mutate(gene_label = GENE[1]) %>%
+  ungroup() %>%
+  mutate(gene_label = if_else(is.na(gene_label),
+                              str_c("HP-", clstr_prot),
+                              gene_label)) %>%
+  group_by(gene_label, ISOLATE) %>%
+  mutate(allele = str_c(unique(MUTATION_SHORT), collapse = " ")) %>%
+  mutate(gene_mutation = str_c(gene_label, allele, sep = " ")) %>%
+  # filter(growth_pair | cell_death_pair) %>%
+  select(mortality_pair, persist_pair, growth_pair, cell_death_pair, iso1, iso2,PAIR_ID:SEQUENCE_prot, gene_mutation, switches, contains("AUC_OD"), contains("AUC_death")) %>%
+  select(-contains("384")) %>%
+  select(-starts_with("log2"))
+
+
+```
+
+### Annotate convergence dataframe with Nebraska data
+
+```{r}
+t_convergence <- read_csv("Ideas_Grant_2020_analysis/Convergence_analysis_tables/convergence_analysis_clusters_no_redundant_controls.csv") %>%
+  left_join(c_neb_summary %>% select(neb_mutant_id = sample_id, neb_c_phenotype = c_phenotype, neb_c_signif_parameters = n_signif_parameters))%>%
+  left_join(g_neb_summary %>% select(neb_mutant_id = sample_id, neb_g_phenotype = g_phenotype, neb_g_signif_parameters = n_signif_parameters))
+
+write_csv(t_convergence,
+          "Ideas_Grant_2020_analysis/Convergence_analysis_tables/convergence_analysis_clusters_no_redundant_controls_Nebraska_screen.csv")
+
+
+```
+
+
+## Dataframe of pairs with mortality switches and phenotypic switches
+## Annotate this dataframe with: 1) convergence data, 2) NEB screening results
+
+```{r}
+# neb_screened <- c("NE1", "NE1088", "NE1183", "NE119", "NE130", "NE1446", "NE17", "NE1702", "NE178", "NE1801", "NE564", "NE577", "NE712", "NE728", "NE858", "NE873", "NE1532")
+# 
+# neb_cell_death_change <- c("NE119", "NE728", "NE873", "NE1532", "NE1088", "NE577")
+
+# setdiff(neb_screened,g_neb$sample_id)
+# intersect(neb_screened,g_neb$sample_id)
+
+df_switches_intersections <- df_mutations_mortality_phenotypes_gene_label %>%
+  left_join(t_convergence) %>%
+  mutate(convergent = any(`n_clusters_SAB mortality` > 1,
+                          `n_clusters_SAB persistence` > 1,
+                          `n_clusters_Growth rate (AUC)` > 1,
+                          `n_clusters_Cell death (AUC)` > 1)) %>%
+  replace_na(list(convergent = F)) %>%
+  select(convergent, starts_with("neb_c"), starts_with("neb_g"), everything()) %>%
+  ungroup() %>%
+  mutate(gene_asterisk = if_else(convergent,
+                             strrep("*", `n_clusters_SAB mortality`),
+                              "")) %>%
+  mutate(gene_label = str_c(gene_label, gene_asterisk)) %>%
+  mutate(gene_label = case_when(
+    neb_c_signif_parameters >= 1 ~ str_c(gene_label, 
+                                        " (NEB PI", 
+                                        strrep(neb_c_phenotype, neb_c_signif_parameters), 
+                                        ")"),
+    neb_c_signif_parameters == 0 ~ str_c(gene_label, 
+                                        " (NEB PI=)"),
+    TRUE ~ gene_label)) %>%
+  mutate(gene_label = case_when(
+    neb_g_signif_parameters >= 1 ~ str_c(gene_label, 
+                                        " (NEB GC", 
+                                        strrep(neb_g_phenotype, neb_g_signif_parameters), 
+                                        ")"),
+    neb_g_signif_parameters == 0 ~ str_c(gene_label, 
+                                        " (NEB GC=)"),
+    TRUE ~ gene_label))
+```
+
+```{r}
+df_clinical_discordant <- df_switches_intersections %>%
+  filter(mortality_pair | persist_pair)
+
+df_phenotype_discordant <- df_switches_intersections %>%
+  filter(growth_pair | cell_death_pair)
+
+df_clinical_phenotype_discordant <- df_clinical_discordant %>%
+  filter(growth_pair | persist_pair)
+
+# check selection
+
+# How many pairs with mutations
+length(unique(df_switches_intersections$PAIR_ID))
+
+# How many pairs with mutations and contrasting clinical outcomes
+t_clinical_discordant <- df_clinical_discordant %>%
+  distinct(PAIR_ID, iso1, iso2, mortality_pair, persist_pair)
+
+t_clinical_phenotype_discordant <- df_clinical_phenotype_discordant %>%
+  distinct(PAIR_ID, iso1, iso2, mortality_pair, persist_pair)
+```
+
+
+# Plot potiential pairs
+
+## Function to plot pair data
+
+```{r}
+source("Functions/all_functions.R")
+plot_pair <- function(df_pair, 
+                      pair_type = c("mortality", "persistence"),
+                      df_c, 
+                      df_g,
+                      combine_plot = T,
+                      print_plot = T,
+                      return_plot = F){
+  # fix iso labels
+  
+  iso1 <- unique(df_pair$iso1)
+  iso2 <- unique(df_pair$iso2)
+  
+  if (pair_type == "mortality"){
+    iso1_lab <- str_c("iso1-", iso1, " (survived)")
+    iso2_lab <- str_c("iso2-", iso2, " (died)")
+  } else {
+    iso1_lab <- str_c("iso1-", iso1, " (non persistent)")
+    iso2_lab <- str_c("iso2-", iso2, " (persistent)")
+  }
+  
+  # plot cell death
+  
+  c_pair <- c_data %>%
+  filter(sample_id %in% c(iso1, iso2)) %>%
+    mutate(sample_id = if_else(sample_id == iso1, 
+                               iso1_lab,
+                               iso2_lab))
+  
+  p1 <- plot_cell_death(df = c_pair,
+                         fitted = T,
+                         combine_experiments = "all", 
+                         comparator = iso1_lab,
+                all_replicates = T,
+                         print_plot = F,
+                         return_plots = T,
+                title = "PI uptake kinetics")[[2]]
+  
+  # plot growth curves
+  
+  g_pair <- g_data %>%
+    filter(sample_id %in% c(iso1, iso2)) %>%
+     mutate(sample_id = if_else(sample_id == iso1, 
+                               iso1_lab,
+                               iso2_lab))
+  
+   p2 <- plot_cell_death(df = g_pair,
+                         fitted = T,
+                         combine_experiments = "all", 
+                         comparator = iso1_lab,
+                all_replicates = T,
+                         print_plot = F,
+                         return_plots = T,
+                title = "Growth kinetics")[[2]]
+   
+   # combine plots
+   
+   if (combine_plot){
+      p <- p1 / p2
+   } else {
+     p <- list(p1, p2)
+   }
+  
+ 
+  
+  
+  return(p)
+  
+}
+
+```
+
+## Example
+
+```{r}
+all_pairs_mortality <- df_clinical_phenotype_discordant %>%
+  filter(mortality_pair) %>%
+  .$PAIR_ID %>%
+  unique() %>%
+  sort()
+
+all_pairs_mortality
+
+pair <- df_switches_intersections %>%
+  filter(PAIR_ID == all_pairs_mortality[1]) 
+
+plot_pair(df_pair = pair,
+          pair_type = "mortality",
+          df_c = c_data,
+          df_g = g_data)
+
+```
+
+## Apply to all pairs with switches
+
+```{r fig.width=8.24, fig.height=6.76, message=F, warning=F}
+prepare_plot_pair <- function(my_pair_id, pair_type){
+  
+  pair <- df_switches_intersections %>%
+    filter(PAIR_ID == my_pair_id)
+  
+  p <- plot_pair(df_pair = pair,
+                 pair_type = pair_type,
+          df_c = c_data,
+          df_g = g_data)
+  
+  my_title <- str_c("Pair ", 
+                    unique(pair$PAIR_ID), ":", 
+                    unique(pair$iso1), "-",
+                    unique(pair$iso2))
+  my_subtitle <- str_wrap(str_c("Mutated genes:\n",str_c(unique(pair$gene_label), collapse = ", ")))
+  
+  p <- p +
+    plot_annotation(title = my_title,
+                       subtitle = my_subtitle)
+  
+  ggsave(str_c("Ideas_Grant_2020_analysis/figures/contrasting_", pair_type, "_pairs/",
+                  unique(pair$PAIR_ID), "_",
+                  unique(pair$iso1), "_",
+                  unique(pair$iso2),
+                  ".png"),
+         p)
+  
+  print(p)
+  return(p)
+  
+}
+
+l_plots_mortality <- purrr::map(all_pairs_mortality, prepare_plot_pair, pair_type = "mortality")
+
+```
+
+```{r message=F, warning=F}
+all_pairs_persist <-  df_clinical_phenotype_discordant %>%
+  filter(persist_pair) %>%
+  .$PAIR_ID %>%
+  unique()
+
+l_plots_persistence <- purrr::map(all_pairs_persist, prepare_plot_pair, pair_type = "persistence")
+```
+
+
+```{r}
+all_pairs_pheno <- df_phenotype_discordant %>%
+  .$PAIR_ID %>% 
+  unique()
+```
+
+## Plot mortality and persistence pairs (aggregate)
+
+### Mortality pairs
+
+```{r}
+df_plot <- df_mortality_phenotypes_switches %>%
+  drop_na(switches, delta_AUC_death, delta_AUC_OD) %>%
+  rowwise() %>%
+  mutate(key = str_c(sort(c(iso1, iso2, switches)), collapse = "")) %>%
+  distinct(key, .keep_all = T) %>%
+  filter(switches %in% c("Survived-Survived", "Survived-Died"))
+  
+
+ggboxplot(data = df_plot, 
+          x = "switches",
+          y = "delta_AUC_death",
+          add = "jitter") +
+  theme_bw() +
+  stat_compare_means(ref.group ="Survived-Survived",
+                     method = "wilcox.test",
+                     label = "p.signif")
+
+ggboxplot(data = df_plot, 
+          x = "switches",
+          y = "delta_AUC_OD",
+          add = "jitter") +
+  theme_bw() +
+  stat_compare_means(ref.group ="Survived-Survived",
+                     method = "wilcox.test",
+                     label = "p.signif")
+```
+
+#### Try different plots
+
+##### Cell death
+
+###### Plot delta
+
+```{r}
+for (v in str_subset(colnames(df_plot), "_death")){
+  p <- ggboxplot(data = df_plot, 
+          x = "switches",
+          y = v,
+          add = "jitter",
+          fill = "switches") +
+  theme_bw() +
+  stat_compare_means(ref.group ="Survived-Survived",
+                     method = "wilcox.test",
+                     label = "p.signif")
+  print(p)
+}
+
+for (v in str_subset(colnames(df_plot), "delta_.*_death")){
+  p <- ggviolin(data = df_plot, 
+          x = "switches",
+          y = v,
+          add = "jitter",
+          fill = "switches",
+          draw_quantiles = c(.25, .5, .75)) +
+  theme_bw() +
+  stat_compare_means(ref.group ="Survived-Survived",
+                     method = "wilcox.test",
+                     label = "p.signif",
+                     label.y = 300) +
+    scale_fill_manual(values = c("#c7e9b4", "#1d91c0"), guide = F)
+  print(p)
+}
+```
+
+###### Save AUC_death
+
+```{r}
+p1 <- ggviolin(data = df_plot, 
+          x = "switches",
+          y = "delta_AUC_death",
+          add = "jitter",
+          fill = "switches",
+          draw_quantiles = c(.25, .5, .75)) +
+  theme_bw() +
+  stat_compare_means(ref.group ="Survived-Survived",
+                     method = "wilcox.test",
+                     label = "p.signif",
+                     label.y = 300) +
+    scale_fill_manual(values = c("#c6dbef", "#fc9272"), guide = F) +
+  scale_x_discrete(labels = c("S-S", "S-D")) +
+  labs(x = "Clinical outcome combination", y = "D PI uptake (AUC)") +
+  theme(text = element_text(face = "bold"))
+p1
+```
+
+##### Get stats on this
+
+```{r}
+df_plot %>%
+  group_by(switches) %>%
+  summarise(delta_AUC_death = str_c(quantile(delta_AUC_death, c(.25, .5, .75)), collapse = "|"))
+
+compare_means(
+  formula = delta_AUC_death ~ switches,
+  data = df_plot, 
+  ref.group = "Survived-Died"
+)
+```
+
+
+##### Growt rate
+
+###### Plot delta
+
+```{r}
+for (v in str_subset(colnames(df_plot), "_OD")){
+  p <- ggboxplot(data = df_plot, 
+          x = "switches",
+          y = v,
+          add = "jitter",
+          fill = "switches") +
+  theme_bw() +
+  stat_compare_means(ref.group ="Survived-Survived",
+                     method = "wilcox.test",
+                     label = "p.signif") +
+    scale_fill_manual(values = c("#c7e9b4", "#1d91c0"), guide = F)
+  print(p)
+}
+
+for (v in str_subset(colnames(df_plot), "delta_.*_OD")){
+  p <- ggviolin(data = df_plot, 
+          x = "switches",
+          y = v,
+          add = "jitter",
+          fill = "switches",
+          draw_quantiles = c(.25, .5, .75)) +
+  theme_bw() +
+  stat_compare_means(ref.group ="Survived-Survived",
+                     method = "wilcox.test",
+                     label = "p.signif") +
+    scale_fill_manual(values = c("#c7e9b4", "#1d91c0"), guide = F)
+  print(p)
+}
+```
+
+###### Save AUC_OD
+
+```{r}
+p2 <- ggviolin(data = df_plot, 
+          x = "switches",
+          y = "delta_AUC_OD",
+          add = "jitter",
+          fill = "switches",
+          draw_quantiles = c(.25, .5, .75)) +
+  theme_bw() +
+  stat_compare_means(ref.group ="Survived-Survived",
+                     method = "wilcox.test",
+                     label = "p.signif") +
+    scale_fill_manual(values = c("#c6dbef", "#fc9272"), guide = F) +
+  scale_x_discrete(labels = c("S-S", "S-D")) +
+  labs(x = "Clinical outcome combination", y = "D OD (AUC)") +
+  theme(text = element_text(face = "bold"))
+p2
+```
+
+##### Get stats on this
+
+```{r}
+df_plot %>%
+  group_by(switches) %>%
+  summarise(delta_AUC_OD = str_c(quantile(delta_AUC_OD, c(.25, .5, .75)), collapse = "|"))
+
+compare_means(
+  formula = delta_AUC_OD ~ switches,
+  data = df_plot, 
+  ref.group = "Survived-Died"
+)
+```
+
+#### Combine mortality switches plots
+
+```{r}
+p1 + p2
+
+ggsave("Ideas_Grant_2020_analysis/figures/pheno_switches_plots/pheno_switch_mortality_pairs.pdf", width = 5, height = 3, useDingbats = F)
+```
+
+
+
+### Persistent pairs
+
+```{r}
+df_plot <- df_mortality_phenotypes_switches %>%
+  drop_na(persist_switch, delta_AUC_death) %>%
+  rowwise() %>%
+  mutate(key = str_c(sort(c(iso1, iso2, persist_switch)), collapse = "")) %>%
+  distinct(key, .keep_all = T) %>%
+  filter(persist_switch %in% c("Non persistent-Persistent", "Non persistent-Non persistent")) %>%
+  # filter(iso1_strain_group == iso2_strain_group | all(!is.na(iso1_durationofsab), !is.na(iso2_durationofsab), !is.na(iso1_recurrent_sab), !is.na(iso2_recurrent_sab))) %>%
+select(iso1, iso2, iso1_strain_group, iso2_strain_group, persist_switch, starts_with("delta"), contains("durationofsab"), contains("recurrent_sab"))
+  
+
+ggboxplot(data = df_plot, 
+          x = "persist_switch",
+          y = "delta_AUC_death",
+          add = "jitter") +
+  theme_bw() +
+  stat_compare_means(ref.group ="Non persistent-Non persistent",
+                     method = "wilcox.test",
+                     label = "p.signif")
+
+ggboxplot(data = df_plot, 
+          x = "persist_switch",
+          y = "delta_AUC_OD",
+          add = "jitter") +
+  theme_bw() +
+  stat_compare_means(ref.group ="Non persistent-Non persistent",
+                     method = "wilcox.test",
+                     label = "p.signif")
+```
+
+#### Try different plots
+
+##### Cell death
+
+###### Plot delta
+
+```{r}
+# for (v in str_subset(colnames(df_plot), "_death")){
+#   p <- ggboxplot(data = df_plot, 
+#           x = "persist_switch",
+#           y = v,
+#           add = "jitter",
+#           fill = "persist_switch", order = c("Non persistent-Non persistent", 
+#                                              "Non persistent-Persistent")) +
+#   theme_bw() +
+#   stat_compare_means(ref.group ="Non persistent-Non persistent",
+#                      method = "wilcox.test",
+#                      label = "p.signif")
+#   print(p)
+# }
+
+for (v in str_subset(colnames(df_plot), "delta_.*_death")){
+  p <- ggviolin(data = df_plot, 
+         x = "persist_switch",
+          y = v,
+          add = "jitter",
+          fill = "persist_switch",
+         order = c("Non persistent-Non persistent", 
+                                             "Non persistent-Persistent"),
+          draw_quantiles = c(.25, .5, .75)) +
+  theme_bw() +
+  stat_compare_means(ref.group ="Non persistent-Non persistent",
+                     method = "wilcox.test",
+                     label = "p.signif") +
+    scale_fill_manual(values = c("#c7e9b4", "#1d91c0"), guide = F)
+  print(p)
+}
+```
+
+###### Save AUC_death
+
+```{r}
+p3 <- ggviolin(data = df_plot, 
+          x = "persist_switch",
+          y = "delta_AUC_death",
+          add = "jitter",
+          fill = "persist_switch",
+          order = c("Non persistent-Non persistent", 
+                                             "Non persistent-Persistent"),
+          draw_quantiles = c(.25, .5, .75)) +
+  theme_bw() +
+  stat_compare_means(ref.group ="Non persistent-Non persistent",
+                     method = "wilcox.test",
+                     label = "p.signif",
+                     label.y = 300) +
+    scale_fill_manual(values = c("#7fcdbb", "#9e9ac8"), guide = F) +
+  scale_x_discrete(labels = c("R-R", "R-P")) +
+  labs(x = "Clinical outcome combination", y = "D PI uptake (AUC)") +
+  theme(text = element_text(face = "bold"))
+p3
+```
+
+##### Stats on this
+
+```{r}
+t <- rbind(compare_means(formula =   ~ sample_id, 
+                           data = df_param, 
+                           ref.group = ref, 
+                           method = test,
+                           group.by = group),
+             compare_means(formula =  time_of_max_rate_death ~ sample_id,
+                           data = df_param,
+                           ref.group = ref,
+                           method = test,
+                           group.by = group),
+             # compare_means(formula =  min_rate_death ~ sample_id,
+             #               data = df_param,
+             #               ref.group = ref,
+             #               method = test,
+             #               group.by = group),
+             # compare_means(formula =  time_of_min_rate_death ~ sample_id,
+             #               data = df_param,
+             #               ref.group = ref,
+             #               method = test,
+             #               group.by = group),
+             compare_means(formula =  max_death ~ sample_id,
+                           data = df_param,
+                           ref.group = ref,
+                           method = test,
+                           group.by = group),
+             compare_means(formula =  time_of_max_death ~ sample_id,
+                           data = df_param,
+                           ref.group = ref,
+                           method = test,
+                           group.by = group),
+             compare_means(formula =  min_death ~ sample_id,
+                           data = df_param,
+                           ref.group = ref,
+                           method = test,
+                           group.by = group),
+             compare_means(formula =  time_of_min_death ~ sample_id,
+                           data = df_param,
+                           ref.group = ref,
+                           method = test,
+                           group.by = group),
+             compare_means(formula =  AUC_death ~ sample_id,
+                           data = df_param,
+                           ref.group = ref,
+                           method = test,
+                           group.by = group))
+  colnames(t)[1] <- "tested_parameter"
+  colnames(t)[2] <- "reference"
+  colnames(t)[3] <- "sample_id"
+```
+
+
+
+##### Growt rate
+
+###### Plot delta
+
+```{r}
+# for (v in str_subset(colnames(df_plot), "_OD")){
+#   p <- ggboxplot(data = df_plot, 
+#           x = "switches",
+#           y = v,
+#           add = "jitter",
+#           fill = "switches") +
+#   theme_bw() +
+#   stat_compare_means(ref.group ="Survived-Survived",
+#                      method = "wilcox.test",
+#                      label = "p.signif") +
+#     scale_fill_manual(values = c("#c7e9b4", "#1d91c0"), guide = F)
+#   print(p)
+# }
+
+for (v in str_subset(colnames(df_plot), "delta_.*_OD")){
+  p <- ggviolin(data = df_plot, 
+         x = "persist_switch",
+          y = v,
+          add = "jitter",
+          fill = "persist_switch",
+         order = c("Non persistent-Non persistent", 
+                                             "Non persistent-Persistent"),
+          draw_quantiles = c(.25, .5, .75)) +
+  theme_bw() +
+  stat_compare_means(ref.group ="Non persistent-Non persistent",
+                     method = "wilcox.test",
+                     label = "p.signif") +
+    scale_fill_manual(values = c("#c7e9b4", "#1d91c0"), guide = F)
+  print(p)
+}
+```
+
+###### Compare iso1 and iso2 instead
+
+```{r}
+df_plot_iso1 <- df_plot %>%
+  left_join(df_genetic_pairs) %>%
+  select(PAIR_ID, persist_switch, ISOLATE = iso1, starts_with("iso1")) 
+colnames(df_plot_iso1) <- str_remove(colnames(df_plot_iso1), "iso1_")
+df_plot_iso2 <- df_plot %>%
+  left_join(df_genetic_pairs) %>%
+  select(PAIR_ID, persist_switch, ISOLATE = iso2, starts_with("iso2")) 
+colnames(df_plot_iso2) <- str_remove(colnames(df_plot_iso2), "iso2_")
+df_plot_iso <- bind_rows(df_plot_iso1, df_plot_iso2) %>%
+  filter(persist_switch == "Non persistent-Persistent")
+
+for (v in str_subset(colnames(df_plot_iso), "_OD")){
+  p <- ggviolin(data = df_plot_iso, 
+         x = "persistent",
+          y = v,
+          add = "jitter",
+          fill = "persistent",
+          draw_quantiles = c(.25, .5, .75)) +
+  theme_bw() +
+  stat_compare_means(ref.group ="Non persistent",
+                     method = "wilcox.test",
+                     label = "p.signif") +
+    scale_fill_manual(values = c("#c7e9b4", "#1d91c0"), guide = F)
+  print(p)
+}
+```
+
+
+
+###### Save AUC_OD
+
+```{r}
+p2 <- ggviolin(data = df_plot, 
+          x = "switches",
+          y = "delta_AUC_OD",
+          add = "jitter",
+          fill = "switches",
+          draw_quantiles = c(.25, .5, .75)) +
+  theme_bw() +
+  stat_compare_means(ref.group ="Survived-Survived",
+                     method = "wilcox.test",
+                     label = "p.signif") +
+    scale_fill_manual(values = c("#c6dbef", "#fc9272"), guide = F) +
+  scale_x_discrete(labels = c("S-S", "S-D")) +
+  labs(x = "Clinical outcome combination", y = "D OD (AUC)") +
+  theme(text = element_text(face = "bold"))
+p2
+```
+
+#### Combine mortality switches plots
+
+```{r}
+p1 + p2
+
+ggsave("Ideas_Grant_2020_analysis/figures/pheno_switches_plots/pheno_switch_mortality_pairs.pdf", width = 5, height = 3, useDingbats = F)
+```
+
+
+# Clean HP-1225 figure
+
+```{r}
+# Cinical pair GP-0603
+l_p <- plot_pair(df_pair = df_switches_intersections %>% filter(PAIR_ID == "GP-0603"),
+          pair_type = "persistence",
+          df_c = c_data %>% filter(plate == "P2"),
+          df_g = g_data,
+          combine_plot = F,
+          print_plot = F)
+l_p[1]
+```
+
+# Parameters only
+
+```{r}
+df_plot <- c_parameters %>%
+  filter(plate == "P2") %>%
+  filter(strain_group == "VSS-137" | sample_id %in% c("TOX-4")) %>%
+  bind_rows(c_parameters_neb %>% filter(plate == "G" & sample_id %in% c("JE2", "NE361")) %>% select(-well_col) )
+
+ggviolin(data = df_plot,
+         x = "sample_id",
+         y = "AUC_death",
+         add = "jitter",
+         draw_quantiles = c(.25, .5, .75)) +
+  theme_bw() +
+  stat_compare_means(ref.group ="BPH3336",
+                     method = "t.test",
+                     label = "p.signif") +
+    # scale_fill_manual(values = c("#7fcdbb", "#9e9ac8"), guide = F) +
+  scale_x_discrete(labels = c("Iso1", "Iso2", "agrA mut", "JE2", "NE361")) +
+  labs(x = "Strain", y = "D PI uptake (AUC)") +
+  theme(text = element_text(face = "bold"))
+
+ggsave("Ideas_Grant_2020_analysis/figures/representative_pairs/HP-1225/HP-1225_cell_death_AUC.pdf", width = 3, height = 2)
+```
+
+# Plot NEB361 curve
+
+```{r}
+plot_cell_death(df = c_neb %>% filter(plate == "G" & sample_id %in% c("JE2", "NE361")), standardized = T, fitted = T, comparator = "JE2")
+```
+

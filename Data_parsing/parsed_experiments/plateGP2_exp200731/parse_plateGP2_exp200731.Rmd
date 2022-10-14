@@ -1,0 +1,91 @@
+---
+title: 'Parse results: plate GP2 / exp200731'
+author: "Stefano Giulieri"
+date: "03/08/2020"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = here::here())
+msg <- stringr::str_c("My directory is ", here::here())
+print(msg)
+```
+
+```{r}
+library(tidyverse)
+library(magrittr)
+rm(list = ls())
+source("Functions/all_functions.R")
+```
+
+# Set directories
+
+```{r}
+raw_dir <- "Raw_data/plateGP2/exp200731/"
+parse_dir <- "Data_parsing/parsed_experiments/plateGP2_exp200731/"
+```
+
+
+
+# Parse data
+
+```{r}
+# parameters
+PI_data <- parse_kinetics(file = list.files(str_c(raw_dir, "/PI_kinetics"), full.names = T, recursive = T),
+                          exp = "exp200731",
+                          n_cycles = 221,
+                          n_skip = 13,
+                          plate = "GP2") %>%
+  annotate_wells(well_info = "Genetic_pairs_analysis_completed/plate_info/well_info.csv")
+# save PI data
+PI_data %>%
+  write_csv(str_c(parse_dir, "/PI_data_plateGP2_exp200731.csv"))
+```
+
+# Quick check
+
+```{r}
+PI_data %>%
+  ggplot(aes(x = timepoint/60, y = f_signal)) +
+  geom_point(colour = "#045a8d") +
+  facet_wrap(strain_group~sample_id) +
+  theme_bw()
+```
+
+
+# Parse growth data
+
+```{r}
+growth_data <- parse_growth(file = list.files(str_c(raw_dir, "/Growth_curves"), full.names = T, recursive = T),
+                            duration = c(20,50),
+                            interval = 10,
+                            n_skip = 14,
+                            multiple_tranformations = c(1,1),
+                            exp = "exp200731",
+                            plate = "GP2",
+                            normalised = T,
+                            annotate = "none"
+) %>%
+  annotate_wells(well_info = "Genetic_pairs_analysis_completed/plate_info/well_info.csv")
+
+
+# save growth data
+growth_data %>%
+  write_csv(str_c(parse_dir, "/growth_data_plateGP2_exp200731.csv"))
+# growth_data %>%
+#   write_csv("Data_parsing/parsed_experiments/plateGP1_exp200731/growth_data_plateGP1_exp200730.csv")
+```
+
+# Quick check
+
+```{r}
+growth_data %>%
+  ggplot(aes(x = timepoint/60, y = OD)) +
+  geom_point(colour = "#045a8d") +
+  facet_wrap(strain_group~sample_id) +
+  theme_bw()
+```
+
