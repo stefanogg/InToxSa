@@ -1,0 +1,52 @@
+---
+title: 'Parse results: plate 3 / exp191109'
+author: "Stefano Giulieri"
+date: "04/03/2020"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = here::here())
+msg <- stringr::str_c("My directory is ", here::here())
+print(msg)
+```
+
+```{r}
+library(tidyverse)
+library(magrittr)
+rm(list = ls())
+source("Functions/all_functions.R")
+```
+
+# Parse PI data
+
+```{r}
+PI_data <- parse_kinetics(file = "Raw_data/plate3/exp_191109/PI_kinetics/Vananz plate 3 191109 real time cell death n1.xlsx",
+                          exp = "exp191109",
+                          n_cycles = 209,
+                          wavelength = 535,
+                          plate = 3,
+                          annotate = "minimal")
+# save PI data
+write_csv(PI_data,
+          "Data_parsing/parsed_experiments/exp191109/PI_data_plate3_exp191109.csv")
+```
+
+
+# Parse growth data
+
+```{r}
+growth_data <- parse_growth(file = "Raw_data/plate3/exp_191109/Growth_curves/191108 plate vananz 3 ON Growth n1.xlsx",
+                            duration = c(20,20),
+                            interval = 10,
+                            exp = "exp191109",
+                            plate = 3,
+                            annotate = "minimal"
+)
+# save growth data
+growth_data %>%
+  write_csv("Data_parsing/parsed_experiments/exp191109/growth_data_plate3_exp191109.csv")
+```

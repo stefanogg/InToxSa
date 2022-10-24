@@ -1,0 +1,316 @@
+---
+title: "Identify significant PI changes across all pairs"
+author: "Romain Guerillot"
+date: "17/12/2020"
+output: html_document
+---
+
+Aim: Update genetic pairs metadata with cophenetic distance (new tree trimal + snp-sites) and check correlations between different measure of genetic distance
+
+# Set/check knitR option and working directory
+
+```{r setup, include=T}
+library(tidyverse)
+library(ape)
+library(ggpubr)
+library(here)
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = here())
+setwd(here())
+print(paste("My working directory is:" ,here()))
+rm(list = ls())
+```
+
+
+# Import all genetic pairs metadata and merge with new core distances (new distance from "relaxed core" trimal <10% gap + snp-sites), cophenetic distance from new tree and mash between denovo assemblies
+```{r}
+genetic_pairs_meta.df <- readRDS("Genetic_pairs_analysis_Oct_2020/processed_data/snippy/df_genetic_pairs_mutcounts_metadata.Rda")
+
+core_dist_new <- read.csv("Genetic_pairs_analysis_Oct_2020/metadata/clean.core.full.aln.gt0.9.snp-site.snp-dist.tab", 
+                       sep = "\t",
+                       col.names = c("iso1", "iso2", "dist_new")) %>%
+  filter(iso1 != "Refere-ce") %>%
+  filter(iso2 != "Refere-ce") 
+  
+
+genetic_pairs_meta.df <- merge(genetic_pairs_meta.df,
+                                core_dist_new,
+                                by = c("iso1", "iso2"))
+
+# import cophenetic distance (from new core snp tree snippy + trimal + snp-sites)
+tree_new <- read.tree("Genetic_pairs_analysis_Oct_2020/metadata/iqtree.treefile")
+
+dist <- cophenetic.phylo(tree_new)
+dist_long <- reshape2::melt(dist) 
+colnames(dist_long) <- c("iso1", "iso2", "dist_cophenetic_new")
+dist_long <- dist_long %>%
+  mutate(dist_cophenetic_new = dist_cophenetic_new * 216768) # multiplication by total number of position with snp in core.aln -> provide estimated nb of core SNP substitution.
+
+
+genetic_pairs_meta.df <- merge(genetic_pairs_meta.df,
+                                dist_long,
+                                by = c("iso1", "iso2"))
+
+mash_dist <- read.csv(file = "Genetic_pairs_analysis_Oct_2020/metadata/all_vs_all_s100000_assemblies.dist", sep = "\t", header = F, col.names = c("iso1", "iso2", "dist_mash", "pval", "shared-hashes")) %>%
+   select(iso1, iso2, dist_mash)
+
+mash_dist_2 <- read.csv(file = "Genetic_pairs_analysis_Oct_2020/metadata/all_vs_all_s100000_assemblies.dist", sep = "\t", header = F, col.names = c("iso2", "iso1", "dist_mash", "pval", "shared-hashes")) %>%
+   select(iso1, iso2, dist_mash)
+
+mash_dist <- rbind(mash_dist, mash_dist_2)
+
+genetic_pairs_meta.df <- merge(genetic_pairs_meta.df,
+                               mash_dist,
+                               by = c("iso1", "iso2"))
+```
+
+# Save updated version of df_genetic_pairs_mutcounts_metadata with new genetic distance (new core + new tree cophenetic distance)
+```{r}
+saveRDS(object = genetic_pairs_meta.df, file = "Genetic_pairs_analysis_Oct_2020/processed_data/snippy/df_genetic_pairs_mutcounts_metadata_v2.Rda")
+```
+
+# Check correlation of pairwise distance (core snp single reference (old + new tree), snippy single reference, mapping onto denovo assembly)
+```{r}
+sp <- ggscatter(genetic_pairs_meta.df, x = "dist", y = "n_mutations_denovo",
+   add = "reg.line",  # Add regressin line
+   add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+   conf.int = TRUE, # Add confidence interval
+   size = .5
+   )
+p1 <- sp + stat_cor(method = "pearson", label.x = 3, label.y = max(genetic_pairs_meta.df$n_mutations_denovo))
+
+sp <- ggscatter(genetic_pairs_meta.df, x = "n_mutations_denovo", y = "n_mutations_BPH2947",
+   add = "reg.line",  # Add regressin line
+   add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+   conf.int = TRUE,
+   size = .5# Add confidence interval
+   )
+
+p3 <- sp + stat_cor(method = "pearson", label.x = 3, label.y = max(genetic_pairs_meta.df$n_mutations_BPH2947))
+p3
+
+sp <- ggscatter(genetic_pairs_meta.df, x = "dist", y = "n_mutations_BPH2947",
+   add = "reg.line",  # Add regressin line
+   add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+   conf.int = TRUE, # Add confidence interval.
+   size =.5 )
+
+p2 <- sp + stat_cor(method = "pearson", label.x = 3, label.y = max(genetic_pairs_meta.df$n_mutations_BPH2947))
+p2
+
+sp <- ggscatter(genetic_pairs_meta.df, x = "dist", y = "dist_new",
+   add = "reg.line",  # Add regressin line
+   add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+   conf.int = TRUE, # Add confidence interval.
+   size =.5 )
+
+p4 <- sp + stat_cor(method = "pearson", label.x = 3, label.y = max(genetic_pairs_meta.df$dist_new))
+p4
+
+sp <- ggscatter(genetic_pairs_meta.df, x = "dist_new", y = "n_mutations_denovo",
+   add = "reg.line",  # Add regressin line
+   add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+   conf.int = TRUE, # Add confidence interval.
+   size =.5 )
+
+p5 <- sp + stat_cor(method = "pearson", label.x = 3, label.y = max(genetic_pairs_meta.df$n_mutations_denovo))
+p5
+
+sp <- ggscatter(genetic_pairs_meta.df, x = "dist_new", y = "n_mutations_BPH2947",
+   add = "reg.line",  # Add regressin line
+   add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+   conf.int = TRUE, # Add confidence interval.
+   size =.5 )
+
+p6 <- sp + stat_cor(method = "pearson", label.x = 3, label.y = max(genetic_pairs_meta.df$n_mutations_BPH2947))
+p6
+
+#cowplot::plot_grid(p1,p2,p3,p4,p5,p6, ncol = 3)
+```
+
+# Correlations with cophenetic distance
+
+```{r}
+
+sp <- ggscatter(genetic_pairs_meta.df, x = "dist_cophenetic_new", y = "dist_new",
+   add = "reg.line",  # Add regression line
+   add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+   conf.int = TRUE, # Add confidence interval.
+   size =.5 )
+
+p7 <- sp + stat_cor(method = "pearson", label.x = 0, label.y = max(genetic_pairs_meta.df$dist_new))
+p7
+
+sp <- ggscatter(genetic_pairs_meta.df, x = "dist_cophenetic_new", y = "n_mutations_BPH2947",
+   add = "reg.line",  # Add regression line
+   add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+   conf.int = TRUE, # Add confidence interval.
+   size =.5 )
+
+p8 <- sp + stat_cor(method = "pearson", label.x = 0, label.y = max(genetic_pairs_meta.df$n_mutations_BPH2947))
+p8
+
+sp <- ggscatter(genetic_pairs_meta.df, x = "dist_cophenetic_new", y = "n_mutations_denovo",
+   add = "reg.line",  # Add regression line
+   add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+   conf.int = TRUE, # Add confidence interval.
+   size =.5 )
+
+p9 <- sp + stat_cor(method = "pearson", label.x = 0, label.y = max(genetic_pairs_meta.df$n_mutations_denovo))
+p9
+```
+
+# Correlation with mash distance
+
+```{r}
+
+sp <- ggscatter(genetic_pairs_meta.df, x = "dist_mash", y = "dist_cophenetic_new",
+   add = "reg.line",  # Add regression line
+   add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+   conf.int = TRUE, # Add confidence interval.
+   size =.5 )
+
+p10 <- sp + stat_cor(method = "pearson", label.x = 0, label.y = max(genetic_pairs_meta.df$dist_cophenetic_new))
+p10
+
+sp <- ggscatter(genetic_pairs_meta.df, x = "dist_mash", y = "n_mutations_denovo",
+   add = "reg.line",  # Add regression line
+   add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+   conf.int = TRUE, # Add confidence interval.
+   size =.5 )
+
+p11 <- sp + stat_cor(method = "pearson", label.x = 0, label.y = max(genetic_pairs_meta.df$n_mutations_denovo))
+p11
+
+# sp <- ggscatter(genetic_pairs_meta.df, x = "dist_mash", y = "n_mutations_denovo",
+#    add = "reg.line",  # Add regression line
+#    add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+#    conf.int = TRUE, # Add confidence interval.
+#    size =.5 ) +
+#    ylim(0,200)
+# 
+# p11 <- sp + stat_cor(method = "pearson", label.x = 0, label.y = max(genetic_pairs_meta.df$n_mutations_denovo))
+# p11
+
+cowplot::plot_grid(p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11, ncol = 4)
+```
+
+# Check ST239 only
+```{r}
+strain_ST239_iso1 <- genetic_pairs_meta.df %>%
+   filter(iso1_ST == 5) %>%
+   .$iso1 %>%
+   unique()
+strain_ST239_iso2 <- genetic_pairs_meta.df %>%
+   filter(iso2_ST == 5) %>%
+   .$iso2 %>%
+   unique()
+strain_ST239 <- c(strain_ST239_iso1, strain_ST239_iso2) %>% unique()
+
+genetic_pairs_meta_ST239.df <- genetic_pairs_meta.df %>%
+   filter(iso1 %in% strain_ST239 & iso2 %in% strain_ST239)
+
+
+sp <- ggscatter(genetic_pairs_meta_ST239.df, x = "dist", y = "n_mutations_denovo",
+   add = "reg.line",  # Add regressin line
+   add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+   conf.int = TRUE, # Add confidence interval
+   size = .5
+   )
+p1 <- sp + stat_cor(method = "pearson", label.x = 3, label.y = max(genetic_pairs_meta_ST239.df$n_mutations_denovo))
+
+sp <- ggscatter(genetic_pairs_meta_ST239.df, x = "n_mutations_denovo", y = "n_mutations_BPH2947",
+   add = "reg.line",  # Add regressin line
+   add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+   conf.int = TRUE,
+   size = .5# Add confidence interval
+   )
+
+p3 <- sp + stat_cor(method = "pearson", label.x = 3, label.y = max(genetic_pairs_meta_ST239.df$n_mutations_BPH2947))
+p3
+
+sp <- ggscatter(genetic_pairs_meta_ST239.df, x = "dist", y = "n_mutations_BPH2947",
+   add = "reg.line",  # Add regressin line
+   add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+   conf.int = TRUE, # Add confidence interval.
+   size =.5 )
+
+p2 <- sp + stat_cor(method = "pearson", label.x = 3, label.y = max(genetic_pairs_meta_ST239.df$n_mutations_BPH2947))
+p2
+
+sp <- ggscatter(genetic_pairs_meta_ST239.df, x = "dist", y = "dist_new",
+   add = "reg.line",  # Add regressin line
+   add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+   conf.int = TRUE, # Add confidence interval.
+   size =.5 )
+
+p4 <- sp + stat_cor(method = "pearson", label.x = 3, label.y = max(genetic_pairs_meta_ST239.df$dist_new))
+p4
+
+sp <- ggscatter(genetic_pairs_meta_ST239.df, x = "dist_new", y = "n_mutations_denovo",
+   add = "reg.line",  # Add regressin line
+   add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+   conf.int = TRUE, # Add confidence interval.
+   size =.5 )
+
+p5 <- sp + stat_cor(method = "pearson", label.x = 3, label.y = max(genetic_pairs_meta_ST239.df$n_mutations_denovo))
+p5
+
+sp <- ggscatter(genetic_pairs_meta_ST239.df, x = "dist_new", y = "n_mutations_BPH2947",
+   add = "reg.line",  # Add regressin line
+   add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+   conf.int = TRUE, # Add confidence interval.
+   size =.5 )
+
+p6 <- sp + stat_cor(method = "pearson", label.x = 3, label.y = max(genetic_pairs_meta_ST239.df$n_mutations_BPH2947))
+p6
+
+
+
+sp <- ggscatter(genetic_pairs_meta_ST239.df, x = "dist_cophenetic_new", y = "dist_new",
+   add = "reg.line",  # Add regression line
+   add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+   conf.int = TRUE, # Add confidence interval.
+   size =.5 )
+
+p7 <- sp + stat_cor(method = "pearson", label.x = 0, label.y = max(genetic_pairs_meta_ST239.df$dist_new))
+p7
+
+sp <- ggscatter(genetic_pairs_meta_ST239.df, x = "dist_cophenetic_new", y = "n_mutations_BPH2947",
+   add = "reg.line",  # Add regression line
+   add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+   conf.int = TRUE, # Add confidence interval.
+   size =.5 )
+
+p8 <- sp + stat_cor(method = "pearson", label.x = 0, label.y = max(genetic_pairs_meta_ST239.df$n_mutations_BPH2947))
+p8
+
+sp <- ggscatter(genetic_pairs_meta_ST239.df, x = "dist_cophenetic_new", y = "n_mutations_denovo",
+   add = "reg.line",  # Add regression line
+   add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+   conf.int = TRUE, # Add confidence interval.
+   size =.5 )
+
+p9 <- sp + stat_cor(method = "pearson", label.x = 0, label.y = max(genetic_pairs_meta_ST239.df$n_mutations_denovo))
+p9
+
+sp <- ggscatter(genetic_pairs_meta_ST239.df, x = "dist_mash", y = "dist_cophenetic_new",
+   add = "reg.line",  # Add regression line
+   add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+   conf.int = TRUE, # Add confidence interval.
+   size =.5 )
+
+p10 <- sp + stat_cor(method = "pearson", label.x = 0, label.y = max(genetic_pairs_meta_ST239.df$dist_cophenetic_new))
+p10
+
+sp <- ggscatter(genetic_pairs_meta_ST239.df, x = "dist_mash", y = "n_mutations_denovo",
+   add = "reg.line",  # Add regression line
+   add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+   conf.int = TRUE, # Add confidence interval.
+   size =.5 )
+
+p11 <- sp + stat_cor(method = "pearson", label.x = 0, label.y = max(genetic_pairs_meta_ST239.df$n_mutations_denovo))
+p11
+
+cowplot::plot_grid(p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11, ncol = 4)
+```

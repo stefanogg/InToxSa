@@ -1,0 +1,292 @@
+---
+title: "Identify significant GC changes across all pairs"
+author: "Romain Guerillot"
+date: "24/02/2021"
+output: html_document
+---
+
+
+# Set/check knitR option and working directory
+
+```{r setup, include=T}
+library(tidyverse)
+library(ggpubr)
+library(here)
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = here())
+setwd(here())
+print(paste("My working directory is:" ,here()))
+rm(list = ls())
+```
+
+# Import GC samples AUC
+```{r}
+GC_AUC.df <- readRDS("Genetic_pairs_analysis_Oct_2020/processed_data/GC/dataframes/parameters/GC_parameters.Rda") %>%
+  select(well_id, sample_id, AUC_growth) %>%
+  mutate(sample_id = ifelse(sample_id == "TOX-4", yes = "BPH3757", no = as.character(sample_id))) %>% 
+  filter(grepl(pattern = "BPH", sample_id))
+```
+
+<!-- # Import significant changes across pairs -->
+<!-- ```{r} -->
+<!-- genetic_pairs_AUC_growth_stats.df <- readRDS(file = "Genetic_pairs_analysis_Oct_2020/processed_data/GC/dataframes/parameters/genetic_pairs_AUC_growth_stats.Rda") -->
+<!-- genetic_pairs_decrease_AUC_growth_stats.df <- readRDS(file = "Genetic_pairs_analysis_Oct_2020/processed_data/GC/dataframes/parameters/genetic_pairs_decrease_AUC_growth_stats.Rda") -->
+<!-- ``` -->
+
+# Import tree
+```{r}
+library(ape)
+library(phytools)
+tree <- read.tree("Genetic_pairs_analysis_Oct_2020/metadata/iqtree.treefile")
+plot(tree)
+tree <- midpoint.root(tree)
+plot(tree)  
+
+tree$edge.length <- tree$edge.length * 216768 # multiplication by total number of position with snp in core.aln -> provide estimated nb of core SNP substitution
+```
+
+# Extract major lineages/CCs across tree
+```{r}
+dist_mat <- dist(cophenetic(tree))
+clust <- hclust(dist_mat)
+strain_cluster.df <- cutree(clust, k=34) %>%
+  data.frame(sample_id=names(.), clade=., row.names=NULL)
+```
+
+# Import strain metadata and merge with clade/cluster info
+```{r}
+strain_meta.df <- read.csv("Genetic_pairs_analysis_Oct_2020/metadata/strain_metadata_corrected_mortality_with_controls_pairs_died.csv") %>%
+  merge(., strain_cluster.df)
+```
+
+
+# Assign growth level (quintiles) to each strain
+```{r}
+GC_AUC.df %>%
+  group_by(sample_id) %>%
+  summarise(mean_AUC_growth = mean(AUC_growth)) %>%
+  ggplot(aes(x = mean_AUC_growth)) +
+  geom_density()
+
+GC_AUC.df %>%
+  group_by(sample_id) %>%
+  summarise(mean_AUC_growth = mean(AUC_growth)) %>%
+  mutate(quantile = ntile(mean_AUC_growth, 5)) %>%  
+  ungroup() %>%
+  ggplot(aes(x = as.factor(quantile), y = mean_AUC_growth)) +
+  geom_violin() 
+
+GC_AUC_level.df <- GC_AUC.df %>%
+  group_by(sample_id) %>%
+  summarise(mean_AUC_growth = mean(AUC_growth), sd_AUC_growth = sd(AUC_growth), measurement_AUC_growth = n()) %>%
+  mutate(quantile = ntile(mean_AUC_growth, 5)) %>%  
+  ungroup() %>%
+  mutate(Cell_growth_level = ifelse(quantile == 1, yes = "very low", no = NA)) %>%
+  mutate(Cell_growth_level = ifelse(quantile == 2, yes = "low", no = Cell_growth_level)) %>%
+  mutate(Cell_growth_level = ifelse(quantile == 3, yes = "medium", no = Cell_growth_level)) %>%
+  mutate(Cell_growth_level = ifelse(quantile == 4, yes = "high", no = Cell_growth_level)) %>%
+  mutate(Cell_growth_level = ifelse(quantile == 5, yes = "very high", no = Cell_growth_level)) 
+
+strain_meta.df <- merge(strain_meta.df, GC_AUC_level.df, by = "sample_id", all.x = T) 
+
+
+```
+
+
+# Define CC as top ST in clade
+```{r}
+CC.df <- strain_meta.df %>%
+  filter(ST != "-") %>%
+  group_by(clade) %>%
+  count(ST) %>%
+  slice_max(order_by = n, n = 1) %>%
+  select(-n) %>%
+  rename(CC = "ST") %>%
+  mutate(CC = as.character(CC)) %>%
+  mutate(CC = ifelse(clade == 28, "45A", CC)) %>%
+  mutate(CC = ifelse(clade == 29, "45B", CC)) # fix CC45 wich correspond to two distant ST45 clade (also observed in staphopia and by Yi previously) 
+strain_meta.df <- merge(strain_meta.df, CC.df, by = "clade", all.x = T) 
+
+write.csv(strain_meta.df, file = "Genetic_pairs_analysis_Oct_2020/metadata/strain_metadata_corrected_with_CC_GC_AUC.csv", row.names = F)
+```
+
+# Plot tree with all VANANZ isolates 
+```{r}
+library(ggtree)
+library(ggstance)
+
+# keep only tips with measured GC
+
+p1 <- ggtree(tr = tree, layout = "rectangular") 
+p1
+
+dat <- merge(p1$data, strain_meta.df, by.x = "label", by.y = "sample_id", all.x = T)
+dat
+p1$data <- dat
+p1 + geom_point(aes(color = CC), x = max(p1$data$x))
+
+
+
+d1 <- GC_AUC.df %>%
+  mutate(id = sample_id, val = AUC_growth) %>%
+  select(id, val)
+
+d1
+
+p2 <- facet_plot(p1, panel="Boxplot", data=d1, geom_boxploth, 
+            mapping = aes(x=val, group = label, fill = val))	
+
+p2
+
+```
+
+
+# Plot tree with meaured growth AUC isolates only 
+```{r}
+library(ggtree)
+library(ggstance)
+
+# keep only tips with measured GC
+tree_AUC <- keep.tip(phy = tree, tip = unique(GC_AUC.df$sample_id))
+
+p1 <- ggtree(tr = tree_AUC, layout = "rectangular")
+p1
+
+d1 <- GC_AUC.df %>%
+  mutate(id = sample_id, val = AUC_growth) %>%
+  select(id, val)
+
+d1
+
+p2 <- facet_plot(p1, panel="Boxplot", data=d1, geom_boxploth, 
+            mapping = aes(x=val, group = label, fill = val))	
+
+p2
+
+```
+
+# Make individual plot for each CC
+```{r}
+plot_list = list()
+for (my_CC in unique(strain_meta.df$CC)) {
+  print(my_CC)
+  CC_strains <- strain_meta.df %>%
+    filter(CC == my_CC) %>%
+    .$sample_id %>%
+    as.character()
+
+  if (length(CC_strains) < 2) next
+  
+  my_tree <- keep.tip(phy = tree, tip = CC_strains)
+
+  p1 <- ggtree(tr = my_tree, layout = "rectangular")
+  
+
+  d1 <- GC_AUC.df %>%
+    filter(sample_id %in% CC_strains) %>%
+    mutate(id = sample_id, val = AUC_growth) %>%
+    select(id, val)
+  
+  if (length(d1$id) < 2) next
+
+
+  p2 <- facet_plot(p1, panel="Boxplot", data=d1, geom_boxploth, 
+            mapping = aes(x=val, group = label, fill = val))	+
+    ggtitle(paste0("CC", my_CC))
+
+  p2 
+  
+  plot_list[[my_CC]] <- p2
+}
+
+cowplot::plot_grid(plotlist = plot_list)
+```
+
+# Same but keep only sample with GC AUC and make ridge plot
+```{r}
+library(ggridges)
+p_list = list()
+for (my_CC in unique(strain_meta.df$CC)) {
+  print(my_CC)
+  CC_strains <- strain_meta.df %>%
+    filter(CC == my_CC) %>%
+    filter(sample_id %in% unique(GC_AUC.df$sample_id)) %>%
+    .$sample_id %>%
+    as.character()
+
+  if (length(CC_strains) < 2) next
+  
+  my_tree <- keep.tip(phy = tree, tip = CC_strains)
+  
+
+  p1 <- ggtree(tr = my_tree, layout = "rectangular") +
+    geom_tiplab(size = 4, align = T)
+    
+  p1
+
+  d1 <- GC_AUC.df %>%
+    filter(sample_id %in% CC_strains) %>%
+    merge(., strain_meta.df, by = "sample_id", all.x = T) %>%
+    select(sample_id, AUC_growth, Cell_growth_level)
+  
+  if (length(d1$sample_id) < 2) next
+  
+  cols <- c("very low" = "#0571b0",
+            "low" = "#92c5de",
+            "medium" = "black",
+            "high" = "#f4a582",
+            "very high" = "#ca0020")
+              
+  substitution_scaler <- function(x){x*216768}
+  
+  p2 <- facet_plot(p1, panel="Cell growth", data=d1, geom_boxploth, 
+            mapping = aes(x=AUC_growth, group = label, fill = AUC_growth, colour = Cell_growth_level))	+
+    scale_colour_manual(values = cols) +
+    theme_bw() +
+    theme(legend.position = "none",       
+          strip.background = element_blank(),
+          strip.text = element_blank(),
+          axis.title.y=element_blank(),
+          axis.text.y=element_blank(),
+          axis.ticks.y=element_blank(),
+          panel.border = element_blank(),
+          axis.line.x = element_line(color="black", size = .5)) +
+    ggtitle(paste0("CC", my_CC)) +
+    xlim_expand(c(min(GC_AUC.df$AUC_growth), max(GC_AUC.df$AUC_growth)), panel = "Cell growth") +
+    xlim_expand(c(min(p1$data$x), max(p1$data$x) * 1.3), "Tree")
+
+  p2
+  
+  p3 <- facet_plot(p1, panel="Cell growth", data=d1, geom_density_ridges, 
+            mapping = aes(x=AUC_growth, group = label, fill = Cell_growth_level), colour="grey50", lwd=0.3)	+
+    scale_fill_manual(values = cols) +
+    theme_bw() +
+    theme(legend.position = "none",       
+          strip.background = element_blank(),
+          strip.text = element_blank(),
+          axis.title.y = element_blank(),
+          axis.text.y = element_blank(),
+          axis.ticks.y = element_blank(),
+          panel.border = element_blank(),
+          axis.line.x = element_line(color="black", size = .5)) +
+    ggtitle(paste0("CC", my_CC)) +
+    xlim_expand(c(min(GC_AUC.df$AUC_growth), max(GC_AUC.df$AUC_growth)), panel = "Cell growth") +
+    xlim_expand(c(min(p1$data$x), max(p1$data$x) * 1.3), "Tree")
+
+  print(p3)
+  
+
+ggsave(plot = p2, filename = paste0("Genetic_pairs_analysis_Oct_2020/processed_data/GC/QC_plots/genetic_pairs_comparison/tree_AUC_boxplot/CC_", my_CC, "_tree_AUC_boxplot.jpeg"), device = "jpeg", width = 21, height = 3 + .6 * length(my_tree$tip.label), units = "cm")
+
+ggsave(plot = p3, filename = paste0("Genetic_pairs_analysis_Oct_2020/processed_data/GC/QC_plots/genetic_pairs_comparison/tree_AUC_ridge/CC_", my_CC, "_tree_AUC_ridge.jpeg"), device = "jpeg", width = 21, height = 4 + .6 * length(my_tree$tip.label), units = "cm")
+
+#  print(p2)
+  p_list[[my_CC]] = p2
+
+}
+
+t <- cowplot::plot_grid(plotlist = p_list)
+t
+
+```
+

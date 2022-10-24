@@ -1,0 +1,40 @@
+---
+title: 'Parse results: plate 6 / exp200321'
+author: "Stefano Giulieri"
+date: "25/03/2020"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = here::here())
+msg <- stringr::str_c("My directory is ", here::here())
+print(msg)
+```
+
+```{r}
+library(tidyverse)
+library(magrittr)
+rm(list = ls())
+source("Functions/all_functions.R")
+```
+
+# Parse growth data
+
+```{r}
+growth_data <- parse_growth(file = "Raw_data/plate6/exp_200321/Growth_curves/200321  Plate Vananz 6 n3 ON growth.xlsx",
+                            duration = c(17,30),
+                            interval = 10,
+                            exp = "exp200321",
+                            plate = "6",
+                            normalised = T,
+                            annotate = "minimal"
+) 
+
+
+# save growth data
+growth_data %>%
+  write_csv("Data_parsing/parsed_experiments/exp200321/growth_data_plate6_exp200321.csv")
+```

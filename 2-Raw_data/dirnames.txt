@@ -1,0 +1,4 @@
+Growth_curves
+Inocula_OD
+PI_kinetics
+Parameters

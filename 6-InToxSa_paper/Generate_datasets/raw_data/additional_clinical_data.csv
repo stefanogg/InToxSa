@@ -1,0 +1,748 @@
+mdu_id,db,studyid,studyid_lab,seq_id,sampledate,sampleyear,institution,state,dob,age,gender,h_onset,hca,vancoetest,mrsa_pheno,oxamic,hld_agr,bc_pair,outcome30d,cci,pitt,pat,durationofsab,recurrent_sab,endocarditis_van,pcm_is_endocarditis_vss,osteoarticular_van,pcm_is_osteoarticular_vss
+BPH2700,VANESSA,VAN-001,VAN-001,VAN001,13-Feb-11,2011,Austin,VIC,7-Jun-45,65,female,Hospital-onset,"Hospital-onset, healthcare-associated",1,MRSA,NA,Pos-high,0,Survived,3,8,Vancomyicin,2,0,1,NA,0,NA
+BPH2702,VANESSA,VAN-002,VAN-002,VAN002,19-Feb-11,2011,Austin,VIC,8-Jan-51,60,male,Community-onset,Community-acquired,1.5,MSSA,0.5,Pos-low,0,Survived,0,0,Vancomyicin,3,0,0,NA,0,NA
+BPH2703,VANESSA,VAN-003,VAN-003,VAN003,20-Feb-11,2011,Austin,VIC,6-Dec-39,71,female,Hospital-onset,"Hospital-onset, healthcare-associated",1,MSSA,0.25,Pos-low,0,Survived,2,2,Flucloxacillin,3,0,0,NA,0,NA
+BPH2704,VANESSA,VAN-004,VAN-004,VAN004,24-Feb-11,2011,Austin,VIC,31-Oct-87,23,male,Community-onset,"Community-onset, healthcare-associated",0.75,MRSA,NA,Pos-high,1,Survived,0,1,Vancomyicin,11,0,0,NA,0,NA
+BPH2706,VANESSA,VAN-005,VAN-005,VAN005,2-Mar-11,2011,Austin,VIC,1-Feb-50,61,female,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.125,Pos-high,0,Survived,3,1,Flucloxacillin,3,0,0,NA,0,NA
+BPH2707,VANESSA,VAN-006,VAN-006,VAN006,1-Mar-11,2011,Austin,VIC,30-Oct-75,35,male,Community-onset,Community-acquired,1.5,MSSA,0.25,Pos-high,0,Survived,1,2,Flucloxacillin,2,0,0,NA,1,NA
+BPH2708,VANESSA,VAN-007,VAN-007,VAN007,3-Mar-11,2011,Austin,VIC,19-Mar-65,45,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.38,Pos-high,1,Survived,1,1,Flucloxacillin,6,0,0,NA,1,NA
+BPH2710,VANESSA,VAN-008,VAN-008,VAN008,7-Mar-11,2011,Austin,VIC,9-Sep-49,61,male,Hospital-onset,"Hospital-onset, healthcare-associated",1,MRSA,NA,Neg,0,Died,1,2,Vancomyicin,1,0,0,NA,0,NA
+BPH2711,VANESSA,VAN-009,VAN-009,VAN009,10-Mar-11,2011,Austin,VIC,2-Oct-24,86,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,0.19,Pos-high,0,Died,7,2,Flucloxacillin,4,0,0,NA,0,NA
+BPH2712,VANESSA,VAN-010,VAN-010,VAN010,1-Apr-11,2011,Austin,VIC,14-Mar-32,79,male,Community-onset,"Community-onset, healthcare-associated",1,MSSA,0.38,Pos-high,0,Survived,5,1,Vancomyicin,1,0,1,NA,0,NA
+BPH2713,VANESSA,VAN-011,VAN-011,VAN011,15-Apr-11,2011,Austin,VIC,6-Feb-33,78,male,Hospital-onset,"Hospital-onset, healthcare-associated",0.5,MSSA,0.047,Neg,0,Survived,1,2,Flucloxacillin,1,0,0,NA,0,NA
+BPH2715,VANESSA,VAN-012,VAN-012,VAN012,21-Apr-11,2011,Austin,VIC,10-Jul-27,83,male,Community-onset,"Community-onset, healthcare-associated",0.5,MSSA,0.094,Pos-high,0,Survived,5,3,Flucloxacillin,3,0,0,NA,0,NA
+BPH2716,VANESSA,VAN-013,VAN-013,VAN013,2-May-11,2011,Austin,VIC,12-Oct-31,79,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MRSA,NA,Pos-high,0,Survived,4,0,Vancomyicin,0,0,0,NA,0,NA
+BPH2717,VANESSA,VAN-014,VAN-014,VAN014,6-May-11,2011,Austin,VIC,3-Dec-36,74,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.125,Pos-low,0,Survived,2,0,Flucloxacillin,3,0,0,NA,0,NA
+BPH2718,VANESSA,VAN-015,VAN-015,VAN015,6-May-11,2011,Austin,VIC,26-Sep-40,69,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MRSA,NA,Equivocal,0,Survived,0,0,Vancomyicin,0,0,0,NA,0,NA
+BPH2719,VANESSA,VAN-016,VAN-016,VAN016,10-May-11,2011,Austin,VIC,31-May-57,53,female,Hospital-onset,"Hospital-onset, healthcare-associated",2,MSSA,0.125,Pos-high,0,Survived,3,3,Flucloxacillin,1,0,0,NA,0,NA
+BPH2720,VANESSA,VAN-017,VAN-017,VAN017,14-May-11,2011,Austin,VIC,24-Jun-34,76,female,Community-onset,Community-acquired,0.5,MRSA,NA,Pos-high,0,Survived,5,0,Vancomyicin,4,0,0,NA,0,NA
+BPH2721,VANESSA,VAN-018,VAN-018,VAN018,14-May-11,2011,Austin,VIC,15-Feb-38,73,male,Hospital-onset,"Hospital-onset, healthcare-associated",0.75,MSSA,0.19,Pos-low,0,Died,7,2,Flucloxacillin,5,0,0,NA,0,NA
+BPH2722,VANESSA,VAN-019,VAN-019,VAN019,23-May-11,2011,Austin,VIC,27-Oct-29,81,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,0.125,Pos-low,0,Survived,8,3,Flucloxacillin,6,0,0,NA,0,NA
+BPH2723,VANESSA,VAN-020,VAN-020,VAN020,20-May-11,2011,Alfred,VIC,14-Mar-49,62,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MRSA,NA,Equivocal,0,Survived,4,1,Vancomyicin,1,0,0,NA,1,NA
+BPH2724,VANESSA,VAN-021,VAN-021,VAN021,4-Jun-11,2011,Barwon Health (Geelong),VIC,24-Feb-23,88,male,Community-onset,"Community-onset, healthcare-associated",0.5,MSSA,0.19,Neg,0,Survived,5,3,Other,1,0,0,NA,0,NA
+BPH2725,VANESSA,VAN-022,VAN-022,VAN022,7-Jun-11,2011,Barwon Health (Geelong),VIC,10-Mar-91,20,male,Community-onset,"Community-onset, healthcare-associated",1,MSSA,0.19,Pos-high,0,Survived,0,2,Flucloxacillin,2,0,0,NA,0,NA
+BPH2726,VANESSA,VAN-023,VAN-023,VAN023,13-Jun-11,2011,Austin,VIC,25-May-49,62,male,Hospital-onset,"Hospital-onset, healthcare-associated",1,MRSA,NA,Neg,0,Survived,4,4,Vancomyicin,1,0,0,NA,0,NA
+BPH2728,VANESSA,VAN-024,VAN-024,VAN024,18-Jun-11,2011,Austin,VIC,20-Nov-55,58,female,Hospital-onset,"Hospital-onset, healthcare-associated",0.75,MRSA,NA,Neg,1,Survived,5,2,Vancomyicin,3,0,0,NA,0,NA
+BPH2731,VANESSA,VAN-025,VAN-025,VAN025,24-Jun-11,2011,Austin,VIC,13-Jan-49,62,male,Community-onset,Community-acquired,0.75,MSSA,0.094,Pos-high,0,Survived,1,0,Other,2,0,0,NA,0,NA
+BPH2732,VANESSA,VAN-026,VAN-026,VAN026,29-Jun-11,2011,Austin,VIC,26-Aug-56,54,male,Hospital-onset,"Hospital-onset, healthcare-associated",1,MSSA,0.25,Pos-high,1,Survived,3,1,Flucloxacillin,4,0,0,NA,0,NA
+BPH2735,VANESSA,VAN-027,VAN-027,VAN027,27-Jun-11,2011,Barwon Health (Geelong),VIC,19-Feb-31,80,female,Community-onset,"Community-onset, healthcare-associated",0.75,MRSA,NA,Pos-high,0,Died,5,3,Vancomyicin,3,0,0,NA,0,NA
+BPH2736,VANESSA,VAN-028,VAN-028,VAN028-z,1-Jul-11,2011,Austin,VIC,10-Nov-21,89,male,Community-onset,"Community-onset, healthcare-associated",1,MSSA,0.38,Pos-high,0,Survived,5,0,Flucloxacillin,1,0,0,NA,0,NA
+BPH2737,VANESSA,VAN-029,VAN-029,VAN029,11-Jul-11,2011,Austin,VIC,5-Apr-58,53,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,0.75,Neg,1,Survived,6,3,Vancomyicin,1,1,0,NA,0,NA
+BPH2739,VANESSA,VAN-030,VAN-030,VAN030,14-Jul-11,2011,Barwon Health (Geelong),VIC,26-Sep-79,31,female,Community-onset,Community-acquired,0.75,MSSA,0.19,Neg,1,Survived,1,1,Flucloxacillin,2,0,1,NA,0,NA
+BPH2741,VANESSA,VAN-031,VAN-031,VAN031,1-Aug-11,2011,Austin,VIC,19-Nov-48,62,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,0.38,Pos-high,0,Survived,7,0,Other,1,0,0,NA,1,NA
+BPH2742,VANESSA,VAN-032,VAN-032,VAN032-z,2-Aug-11,2011,Austin,VIC,7-Aug-44,66,female,Community-onset,Community-acquired,1,MRSA,NA,Pos-high,0,Survived,3,0,Vancomyicin,1,0,0,NA,0,NA
+BPH2743,VANESSA,VAN-033,VAN-033,VAN033-z,4-Aug-11,2011,Austin,VIC,23-Nov-29,81,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,0.38,Pos-high,0,Survived,7,0,Flucloxacillin,1,0,0,NA,0,NA
+BPH2744,VANESSA,VAN-034,VAN-034,VAN034-z,6-Aug-11,2011,Austin,VIC,30-Sep-48,62,male,Community-onset,Community-acquired,1,MSSA,0.75,Pos-high,0,Survived,1,2,Other,5,0,0,NA,0,NA
+BPH2745,VANESSA,VAN-035,VAN-035,VAN035,26-Jul-11,2011,Barwon Health (Geelong),VIC,16-Aug-74,36,female,Hospital-onset,"Hospital-onset, healthcare-associated",0.5,MSSA,0.25,Pos-low,0,Survived,1,0,Flucloxacillin,4,0,1,NA,0,NA
+BPH2746,VANESSA,VAN-037,VAN-037,VAN037,10-Aug-11,2011,Barwon Health (Geelong),VIC,22-May-28,83,female,Community-onset,Community-acquired,1.5,MSSA,0.19,Pos-low,0,Survived,2,1,Other,3,0,0,NA,0,NA
+BPH2747,VANESSA,VAN-038,VAN-038,VAN038-z,11-Aug-11,2011,Austin,VIC,30-Apr-75,36,male,Hospital-onset,"Hospital-onset, healthcare-associated",1,MRSA,NA,Pos-low,0,Survived,1,0,Vancomyicin,2,0,0,NA,0,NA
+BPH2749,VANESSA,VAN-039,VAN-039,VAN039,13-Aug-11,2011,Barwon Health (Geelong),VIC,9-Oct-27,84,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,0.125,Pos-high,0,Survived,5,3,Flucloxacillin,1,0,0,NA,0,NA
+BPH2750,VANESSA,VAN-040,VAN-040,VAN040-z,27-Aug-11,2011,Austin,VIC,6-Mar-37,74,female,Community-onset,Community-acquired,1,MSSA,0.064,Neg,1,Died,0,0,Flucloxacillin,1,0,0,NA,1,NA
+BPH2752,VANESSA,VAN-041,VAN-041,VAN041,27-Aug-11,2011,Barwon Health (Geelong),VIC,2-Dec-39,71,female,Community-onset,Community-acquired,2,MSSA,0.094,Pos-low,0,Survived,0,0,Flucloxacillin,7,0,0,NA,1,NA
+BPH2753,VANESSA,VAN-042,VAN-042,VAN042,31-Aug-11,2011,Austin,VIC,25-Dec-48,62,female,Community-onset,"Community-onset, healthcare-associated",1,MSSA,0.125,Pos-low,0,Survived,2,0,Other,1,0,0,NA,0,NA
+BPH2754,VANESSA,VAN-043,VAN-043,VAN043,4-Sep-11,2011,Austin,VIC,18-Aug-67,44,female,Hospital-onset,"Hospital-onset, healthcare-associated",1,MSSA,0.094,Pos-high,1,Survived,3,2,Flucloxacillin,4,0,0,NA,0,NA
+BPH2756,VANESSA,VAN-044,VAN-044,VAN044,5-Sep-11,2011,Austin,VIC,12-Sep-50,60,male,Community-onset,"Community-onset, healthcare-associated",1,MSSA,0.25,Pos-high,0,Survived,3,0,Vancomyicin,1,0,0,NA,1,NA
+BPH2757,VANESSA,VAN-045,VAN-045,VAN045,20-Sep-11,2011,Austin,VIC,23-Dec-42,68,male,Community-onset,"Community-onset, healthcare-associated",1,MSSA,0.5,Pos-high,0,Survived,8,0,Flucloxacillin,1,0,0,NA,1,NA
+BPH2758,VANESSA,VAN-046,VAN-046,VAN046-z,21-Sep-11,2011,Austin,VIC,25-Dec-23,87,male,Community-onset,Community-acquired,1.5,MSSA,0.38,Pos-low,0,Died,0,6,Flucloxacillin,1,0,0,NA,0,NA
+BPH2759,VANESSA,VAN-047,VAN-047,VAN047-z,26-Sep-11,2011,Austin,VIC,6-Mar-52,59,female,Community-onset,Community-acquired,1,MSSA,0.094,Neg,0,Survived,0,0,Vancomyicin,4,0,0,NA,1,NA
+BPH2760,VANESSA,VAN-048,VAN-048,VAN048-z,29-Sep-11,2011,Austin,VIC,6-Oct-72,38,male,Community-onset,Community-acquired,1,MSSA,0.5,Pos-high,0,Survived,0,1,Flucloxacillin,4,0,1,NA,0,NA
+BPH2761,VANESSA,VAN-049,VAN-049,VAN049-z,4-Oct-11,2011,Barwon Health (Geelong),VIC,14-Jun-31,80,male,Community-onset,Community-acquired,0.75,MSSA,0.094,Pos-low,0,Died,1,10,Flucloxacillin,3,0,0,NA,0,NA
+BPH2763,VANESSA,VAN-050,VAN-050,VAN050-z,1-Oct-11,2011,Austin,VIC,12-Apr-50,61,male,Hospital-onset,"Hospital-onset, healthcare-associated",1,MRSA,NA,Neg,0,Survived,1,0,Other,1,0,0,NA,1,NA
+BPH2765,VANESSA,VAN-051,VAN-051,VAN051-z,6-Oct-11,2011,Austin,VIC,1-Jan-38,73,male,Community-onset,Community-acquired,0.75,MSSA,0.75,Pos-low,0,Survived,5,3,Flucloxacillin,1,0,0,NA,0,NA
+BPH2766,VANESSA,VAN-052,VAN-052,VAN052,10-Oct-11,2011,Liverpool,NSW,30-Sep-43,68,female,Community-onset,"Community-onset, healthcare-associated",0.75,MSSA,0.19,Neg,0,Survived,3,3,Flucloxacillin,4,0,0,NA,1,NA
+BPH2767,VANESSA,VAN-053,VAN-053,VAN053-z,12-Oct-11,2011,Liverpool,NSW,6-May-22,89,female,Hospital-onset,"Hospital-onset, healthcare-associated",1,MSSA,0.125,Pos-high,0,Died,5,0,Flucloxacillin,1,0,0,NA,1,NA
+BPH2768,VANESSA,VAN-054,VAN-054,VAN054,11-Oct-11,2011,Monash Health,VIC,20-Dec-60,50,female,Hospital-onset,"Hospital-onset, healthcare-associated",0.75,MSSA,0.094,Neg,0,Survived,2,0,Flucloxacillin,1,0,0,NA,0,NA
+BPH2769,VANESSA,VAN-055,VAN-055,VAN055-z,21-Oct-11,2011,Liverpool,NSW,15-Mar-50,61,male,Community-onset,Community-acquired,0.75,MSSA,0.094,Pos-high,0,Survived,0,1,Other,4,0,0,NA,1,NA
+BPH2770,VANESSA,VAN-056,VAN-056,VAN056-z,20-Oct-11,2011,Austin,VIC,22-Jun-23,88,female,Hospital-onset,"Hospital-onset, healthcare-associated",0.75,MRSA,NA,Pos-low,0,Survived,1,3,Vancomyicin,1,0,0,NA,0,NA
+BPH2773,VANESSA,VAN-058,VAN-058,VAN058,28-Oct-11,2011,Liverpool,NSW,3-Feb-64,47,male,Community-onset,"Community-onset, healthcare-associated",0.75,MSSA,0.25,Pos-high,0,Survived,0,1,Flucloxacillin,1,0,0,NA,1,NA
+BPH2774,VANESSA,VAN-059,VAN-059,VAN059,2-Nov-11,2011,Austin,VIC,16-Dec-23,87,male,Hospital-onset,"Hospital-onset, healthcare-associated",0.5,MRSA,NA,Neg,0,Survived,2,1,Vancomyicin,1,0,0,NA,0,NA
+BPH2775,VANESSA,VAN-060,VAN-060,VAN060,3-Nov-11,2011,Liverpool,NSW,5-Jul-59,52,female,Community-onset,"Community-onset, healthcare-associated",0.38,MSSA,0.19,Neg,0,Survived,3,2,Flucloxacillin,1,0,0,NA,0,NA
+BPH2776,VANESSA,VAN-061,VAN-061,VAN061,5-Nov-11,2011,Liverpool,NSW,18-Nov-65,45,female,Community-onset,"Community-onset, healthcare-associated",0.5,MSSA,0.064,Neg,0,Survived,10,2,Flucloxacillin,1,0,0,NA,0,NA
+BPH2777,VANESSA,VAN-062,VAN-062,VAN062,7-Nov-11,2011,Austin,VIC,15-Dec-40,70,female,Hospital-onset,"Hospital-onset, healthcare-associated",0.75,MSSA,0.094,Pos-low,1,Survived,2,3,Flucloxacillin,4,0,0,NA,0,NA
+BPH2779,VANESSA,VAN-063,VAN-063,VAN063,21-Oct-11,2011,Monash Health,VIC,27-Nov-59,51,male,Community-onset,"Community-onset, healthcare-associated",1,MRSA,NA,Pos-low,0,Survived,4,10,Other,1,0,1,NA,0,NA
+BPH2780,VANESSA,VAN-064,VAN-064,VAN064,13-Nov-11,2011,Austin,VIC,4-Mar-22,89,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MRSA,NA,Pos-low,0,Survived,1,1,Vancomyicin,1,0,0,NA,0,NA
+BPH2781,VANESSA,VAN-065,VAN-065,VAN065,14-Nov-11,2011,Austin,VIC,19-Apr-52,59,female,Community-onset,"Community-onset, healthcare-associated",1,MRSA,NA,Pos-low,0,Survived,3,0,Vancomyicin,2,0,0,NA,0,NA
+BPH2782,VANESSA,VAN-066,VAN-066,VAN066,14-Nov-11,2011,Liverpool,NSW,28-Dec-55,55,male,Hospital-onset,"Hospital-onset, healthcare-associated",0.75,MSSA,0.19,Pos-high,0,Survived,1,0,Flucloxacillin,2,0,0,NA,1,NA
+BPH2783,VANESSA,VAN-067,VAN-067,VAN067,14-Nov-11,2011,Liverpool,NSW,29-Dec-36,74,female,Community-onset,"Community-onset, healthcare-associated",0.5,MRSA,NA,Pos-high,0,Died,1,1,Vancomyicin,1,0,0,NA,0,NA
+BPH2784,VANESSA,VAN-068,VAN-068,VAN068,12-Nov-11,2011,Monash Health,VIC,25-Jan-43,66,male,Community-onset,"Community-onset, healthcare-associated",0.5,MSSA,0.19,Neg,0,Survived,0,3,Flucloxacillin,2,0,0,NA,1,NA
+BPH2785,VANESSA,VAN-069,VAN-069,VAN069,17-Nov-11,2011,Princess Alexandra,QLD,4-Apr-27,84,male,Community-onset,"Community-onset, healthcare-associated",0.5,MRSA,NA,Pos-high,0,Survived,6,2,Vancomyicin,1,0,0,NA,0,NA
+BPH2786,VANESSA,VAN-070,VAN-070,VAN070,18-Nov-11,2011,Liverpool,NSW,18-Jul-17,94,female,Community-onset,"Community-onset, healthcare-associated",0.38,MSSA,0.125,Neg,0,Survived,0,3,Flucloxacillin,1,0,0,NA,1,NA
+BPH2787,VANESSA,VAN-071,VAN-071,VAN071,18-Nov-11,2011,Liverpool,NSW,13-Aug-38,73,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MRSA,NA,Pos-high,0,Survived,6,0,Vancomyicin,1,0,0,NA,0,NA
+BPH2788,VANESSA,VAN-072,VAN-072,VAN072,22-Nov-11,2011,Monash Health,VIC,21-Oct-53,53,male,Community-onset,"Community-onset, healthcare-associated",0.5,MSSA,0.19,Neg,0,Survived,2,0,Flucloxacillin,2,0,0,NA,1,NA
+BPH2789,VANESSA,VAN-073,VAN-073,VAN073,25-Nov-11,2011,Austin,VIC,21-Nov-39,72,female,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.25,Pos-high,0,Survived,3,3,Flucloxacillin,3,0,0,NA,0,NA
+BPH2790,VANESSA,VAN-074,VAN-074,VAN074-z,27-Nov-11,2011,Royal Perth,WA,17-May-37,74,male,Hospital-onset,"Hospital-onset, healthcare-associated",0.75,MRSA,NA,Pos-low,0,Survived,2,0,Vancomyicin,1,0,0,NA,0,NA
+BPH2791,VANESSA,VAN-075,VAN-075,VAN075,26-Nov-11,2011,Liverpool,NSW,13-Sep-38,73,male,Community-onset,"Community-onset, healthcare-associated",0.75,MSSA,0.19,Pos-high,0,Survived,2,4,Flucloxacillin,1,0,0,NA,0,NA
+BPH2792,VANESSA,VAN-076,VAN-076,VAN076,28-Nov-11,2011,Austin,VIC,2-May-19,92,male,Hospital-onset,"Hospital-onset, healthcare-associated",0.75,MRSA,NA,Pos-low,0,Survived,2,1,Vancomyicin,2,0,0,NA,0,NA
+BPH2793,VANESSA,VAN-077,VAN-077,VAN077,29-Nov-11,2011,Austin,VIC,1-Sep-49,62,male,Community-onset,"Community-onset, healthcare-associated",1,MSSA,0.125,Pos-low,0,Survived,2,3,Flucloxacillin,3,0,1,NA,0,NA
+BPH2794,VANESSA,VAN-078,VAN-078,VAN078,29-Nov-11,2011,Austin,VIC,13-Oct-77,34,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MSSA,0.19,Pos-high,0,Survived,0,0,Flucloxacillin,1,0,0,NA,0,NA
+BPH2795,VANESSA,VAN-079,VAN-079,VAN079,29-Nov-11,2011,Liverpool,NSW,27-Jul-33,73,male,Community-onset,"Community-onset, healthcare-associated",0.75,MSSA,0.25,Pos-high,0,Survived,0,3,Other,2,0,0,NA,0,NA
+BPH2796,VANESSA,VAN-080,VAN-080,VAN080-z,29-Nov-11,2011,Royal Perth,WA,17-Jan-47,64,male,Community-onset,"Community-onset, healthcare-associated",1,MSSA,0.25,Pos-high,0,Survived,5,0,Flucloxacillin,1,0,0,NA,1,NA
+BPH2797,VANESSA,VAN-081,VAN-081,VAN081,6-Dec-11,2011,Barwon Health (Geelong),VIC,18-Apr-29,82,female,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.19,Pos-high,0,Died,3,6,Other,4,0,0,NA,0,NA
+BPH2798,VANESSA,VAN-082,VAN-082,VAN082,6-Dec-11,2011,Austin,VIC,20-Jul-76,35,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MRSA,NA,Neg,0,Survived,0,2,Vancomyicin,1,0,0,NA,0,NA
+BPH2801,VANESSA,VAN-083,VAN-083,VAN083,8-Dec-11,2011,Austin,VIC,4-Sep-90,21,male,Community-onset,Community-acquired,1.5,MSSA,0.19,Pos-high,1,Survived,1,0,Flucloxacillin,1,0,0,NA,0,NA
+BPH2805,VANESSA,VAN-084,VAN-084,VAN084,9-Dec-11,2011,Monash Health,VIC,4-Jul-28,83,male,Community-onset,"Community-onset, healthcare-associated",0.75,MSSA,0.125,Pos-low,0,Survived,4,3,Flucloxacillin,2,0,0,NA,0,NA
+BPH2806,VANESSA,VAN-085,VAN-085,VAN085,9-Dec-11,2011,Austin,VIC,3-Jan-31,80,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.094,Pos-low,0,Survived,6,2,Flucloxacillin,1,0,0,NA,0,NA
+BPH2807,VANESSA,VAN-086,VAN-086,VAN086-z,11-Dec-11,2011,Royal Perth,WA,5-Jan-34,77,male,Community-onset,"Community-onset, healthcare-associated",0.75,MRSA,NA,Pos-high,0,Survived,2,0,Other,1,0,0,NA,1,NA
+BPH2809,VANESSA,VAN-087,VAN-087,VAN087,10-Dec-11,2011,Austin,VIC,18-Jun-40,71,female,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.094,Neg,0,Survived,5,0,Flucloxacillin,3,0,0,NA,1,NA
+BPH2810,VANESSA,VAN-088,VAN-088,VAN088-z,10-Dec-11,2011,Royal Perth,WA,21-Jun-44,67,male,Community-onset,Community-acquired,1,MSSA,0.125,Pos-high,0,Survived,1,0,Other,1,0,0,NA,0,NA
+BPH2811,VANESSA,VAN-089,VAN-089,VAN089,1-Dec-11,2011,Monash Health,VIC,13-Oct-48,63,male,Community-onset,"Community-onset, healthcare-associated",1,MSSA,0.125,Pos-high,0,Survived,5,0,Flucloxacillin,1,0,0,NA,0,NA
+BPH2812,VANESSA,VAN-090,VAN-090,VAN090-z,12-Dec-11,2011,Royal Perth,WA,19-Jul-57,54,male,Community-onset,"Community-onset, healthcare-associated",1.5,MRSA,NA,Pos-high,0,Survived,0,0,Other,7,0,0,NA,1,NA
+BPH2816,VANESSA,VAN-091,VAN-091,VAN091,13-Dec-11,2011,Liverpool,NSW,4-Nov-19,92,male,Community-onset,"Community-onset, healthcare-associated",0.75,MSSA,0.19,Pos-high,0,Died,1,0,Flucloxacillin,1,0,0,NA,0,NA
+BPH2817,VANESSA,VAN-092,VAN-092,VAN092,13-Dec-11,2011,Austin,VIC,15-Jun-80,31,male,Community-onset,Community-acquired,1.5,MSSA,0.19,Pos-high,0,Survived,0,2,Other,1,0,0,NA,0,NA
+BPH2818,VANESSA,VAN-093,VAN-093,VAN093-z,14-Dec-11,2011,Royal Perth,WA,4-Jan-59,52,male,Hospital-onset,"Hospital-onset, healthcare-associated",1,MSSA,0.125,Pos-low,0,Survived,0,0,Flucloxacillin,1,0,0,NA,1,NA
+BPH2819,VANESSA,VAN-094,VAN-094,VAN094,15-Dec-11,2011,Austin,VIC,8-Aug-68,43,male,Community-onset,Community-acquired,1,MSSA,0.19,Pos-low,1,Survived,0,1,Flucloxacillin,4,0,0,NA,1,NA
+BPH2821,VANESSA,VAN-095,VAN-095,VAN095,16-Dec-11,2011,Austin,VIC,16-Nov-23,88,male,Community-onset,"Community-onset, healthcare-associated",0.75,MSSA,0.19,Pos-high,0,Survived,1,4,Flucloxacillin,2,0,1,NA,0,NA
+BPH2822,VANESSA,VAN-096,VAN-096,VAN096,16-Dec-11,2011,Austin,VIC,7-Nov-79,32,male,Community-onset,Community-acquired,0.75,MSSA,0.125,Pos-low,0,Survived,0,0,Flucloxacillin,2,0,0,NA,0,NA
+BPH2823,VANESSA,VAN-097,VAN-097,VAN097-z,19-Dec-11,2011,Royal Perth,WA,8-Jun-43,68,male,Community-onset,"Community-onset, healthcare-associated",0.75,MSSA,0.25,Neg,0,Survived,1,1,Vancomyicin,1,0,0,NA,0,NA
+BPH2824,VANESSA,VAN-098,VAN-098,VAN098,16-Dec-11,2011,Austin,VIC,23-Dec-42,68,male,Community-onset,"Community-onset, healthcare-associated",0.75,MRSA,NA,Equivocal,0,Survived,8,3,Vancomyicin,1,0,0,NA,1,NA
+BPH2827,VANESSA,VAN-100,VAN-100,VAN100-z,20-Dec-11,2011,Liverpool,NSW,9-Jun-53,58,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MRSA,NA,Neg,0,Survived,5,2,Vancomyicin,5,0,0,NA,0,NA
+BPH2828,VANESSA,VAN-101,VAN-101,VAN101,23-Dec-11,2011,Austin,VIC,13-Jul-47,64,female,Community-onset,"Community-onset, healthcare-associated",0.75,MSSA,0.094,Pos-low,0,Survived,0,0,Flucloxacillin,NA,0,0,NA,1,NA
+BPH2829,VANESSA,VAN-102,VAN-102,VAN102-z,26-Dec-11,2011,Liverpool,NSW,14-Sep-28,83,male,Community-onset,"Community-onset, healthcare-associated",2,MSSA,0.19,Pos-high,0,Survived,2,0,Flucloxacillin,1,0,0,NA,0,NA
+BPH2830,VANESSA,VAN-103,VAN-103,VAN103-z,26-Dec-11,2011,Royal Perth,WA,21-Nov-42,69,male,Community-onset,"Community-onset, healthcare-associated",0.5,MSSA,0.19,Pos-low,0,Survived,2,0,Other,1,0,0,NA,1,NA
+BPH2831,VANESSA,VAN-104,VAN-104,VAN104-z,26-Dec-11,2011,Royal Perth,WA,6-Apr-60,51,male,Community-onset,"Community-onset, healthcare-associated",0.75,MSSA,0.25,Pos-low,0,Survived,0,0,Flucloxacillin,2,0,0,NA,1,NA
+BPH2834,VANESSA,VAN-105,VAN-105,VAN105,1-Jan-12,2012,Austin,VIC,14-Feb-44,67,male,Community-onset,"Community-onset, healthcare-associated",0.75,MSSA,0.094,Pos-low,0,Survived,2,2,Flucloxacillin,1,0,0,NA,0,NA
+BPH2835,VANESSA,VAN-106,VAN-106,VAN106,3-Jan-12,2012,Royal Perth,WA,3-May-62,49,male,Hospital-onset,"Hospital-onset, healthcare-associated",1,MSSA,0.19,Pos-high,0,Survived,1,0,Flucloxacillin,1,0,1,NA,1,NA
+BPH2836,VANESSA,VAN-107,VAN-107,VAN107-z,5-Jan-12,2012,Liverpool,NSW,3-Jan-41,71,male,Community-onset,"Community-onset, healthcare-associated",2,MSSA,0.75,Pos-high,0,Survived,2,0,Flucloxacillin,1,0,0,NA,0,NA
+BPH2837,VANESSA,VAN-108,VAN-108,VAN108-z,5-Jan-12,2012,Liverpool,NSW,16-Aug-62,49,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.75,Pos-high,0,Survived,0,0,Flucloxacillin,1,0,0,NA,1,NA
+BPH2838,VANESSA,VAN-109,VAN-109,VAN109-z,12-Jan-12,2012,Liverpool,NSW,17-May-53,58,female,Community-onset,Community-acquired,2,MSSA,0.19,Pos-low,0,Survived,1,4,Flucloxacillin,1,0,0,NA,1,NA
+BPH2839,VANESSA,VAN-110,VAN-110,VAN110,9-Jan-12,2012,Barwon Health (Geelong),VIC,27-Jan-52,59,male,Hospital-onset,"Hospital-onset, healthcare-associated",1,MSSA,0.125,Pos-high,0,Survived,4,0,Flucloxacillin,2,0,0,NA,0,NA
+BPH2840,VANESSA,VAN-111,VAN-111,VAN111,18-Jan-12,2012,Austin,VIC,21-May-35,76,male,Community-onset,Community-acquired,1.5,MSSA,0.125,Pos-high,1,Survived,5,0,Other,6,0,0,NA,1,NA
+BPH2844,VANESSA,VAN-113,VAN-113,VAN113-z,19-Jan-12,2012,Liverpool,NSW,31-Aug-49,62,female,Community-onset,"Community-onset, healthcare-associated",2,MSSA,0.19,Pos-high,0,Survived,3,0,Flucloxacillin,1,NA,0,NA,1,NA
+BPH2845,VANESSA,VAN-114,VAN-114,VAN114-z,22-Jan-12,2012,Liverpool,NSW,25-May-70,41,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MRSA,NA,Pos-low,0,Survived,0,1,Vancomyicin,NA,0,0,NA,0,NA
+BPH2846,VANESSA,VAN-115,VAN-115,VAN115-z,24-Jan-12,2012,Austin,VIC,24-Dec-60,51,male,Hospital-onset,"Hospital-onset, healthcare-associated",0.5,MSSA,0.19,Pos-low,0,Survived,4,1,Flucloxacillin,1,0,0,NA,0,NA
+BPH2847,VANESSA,VAN-116,VAN-116,VAN116-z,25-Jan-12,2012,Liverpool,NSW,28-Mar-21,90,male,Community-onset,Community-acquired,1.5,MRSA,NA,Pos-high,0,Died,6,4,Vancomyicin,4,1,1,NA,0,NA
+BPH2848,VANESSA,VAN-117,VAN-117,VAN117,28-Jan-12,2012,Royal Perth,WA,29-Sep-71,40,female,Community-onset,Community-acquired,1.5,MSSA,0.25,Pos-high,0,Survived,0,0,Flucloxacillin,1,0,1,NA,0,NA
+BPH2849,VANESSA,VAN-118,VAN-118,VAN118-z,1-Feb-12,2012,Royal Perth,WA,21-Jan-84,28,male,Hospital-onset,"Hospital-onset, healthcare-associated",0.75,MSSA,0.094,Pos-high,0,Survived,1,2,Flucloxacillin,1,0,0,NA,0,NA
+BPH2851,VANESSA,VAN-119,VAN-119,VAN119-z,1-Feb-12,2012,Liverpool,NSW,26-Aug-37,74,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MRSA,NA,Pos-high,0,Survived,4,3,Vancomyicin,1,0,0,NA,0,NA
+BPH2852,VANESSA,VAN-121,VAN-121,VAN121-z,7-Feb-12,2012,Austin,VIC,23-Mar-38,73,female,Hospital-onset,"Hospital-onset, healthcare-associated",1,MSSA,0.094,Neg,0,Survived,1,0,Flucloxacillin,3,0,0,NA,0,NA
+BPH2853,VANESSA,VAN-122,VAN-122,VAN122-z,6-Feb-12,2012,Princess Alexandra,QLD,14-Apr-39,71,male,Hospital-onset,"Hospital-onset, healthcare-associated",0.38,MSSA,0.094,Neg,0,Survived,1,0,Flucloxacillin,1,0,0,NA,0,NA
+BPH2854,VANESSA,VAN-123,VAN-123,VAN123-z,5-Feb-12,2012,Princess Alexandra,QLD,17-Nov-34,77,female,Hospital-onset,"Hospital-onset, healthcare-associated",0.75,MRSA,NA,Pos-high,0,Survived,0,0,Vancomyicin,1,0,1,NA,1,NA
+BPH2855,VANESSA,VAN-124,VAN-124,VAN124-z,7-Feb-12,2012,Liverpool,NSW,10-Mar-90,21,female,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.094,Pos-high,0,Survived,0,1,Flucloxacillin,2,0,0,NA,0,NA
+BPH2856,VANESSA,VAN-125,VAN-125,VAN125-z,3-Feb-12,2012,Royal Perth,WA,26-May-56,55,male,Community-onset,"Community-onset, healthcare-associated",0.75,MSSA,0.094,Neg,0,Survived,0,0,Other,1,0,0,NA,1,NA
+BPH2859,VANESSA,VAN-127,VAN-127,VAN127-z,15-Feb-12,2012,Royal Perth,WA,21-Mar-66,45,male,Community-onset,Community-acquired,0.75,MRSA,NA,Pos-high,0,Survived,0,0,Vancomyicin,1,0,0,NA,1,NA
+BPH2860,VANESSA,VAN-128,VAN-128,VAN128-z,16-Feb-12,2012,Princess Alexandra,QLD,21-Apr-56,55,female,Community-onset,"Community-onset, healthcare-associated",0.75,MRSA,0.125,Pos-low,0,Survived,2,0,Flucloxacillin,1,0,0,NA,1,NA
+BPH2861,VANESSA,VAN-129,VAN-129,VAN129,18-Feb-12,2012,Austin,VIC,19-Apr-33,78,female,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.094,Pos-low,1,Survived,5,2,Flucloxacillin,4,0,0,NA,1,NA
+BPH2863,VANESSA,VAN-130,VAN-130,VAN130,19-Feb-12,2012,Austin,VIC,6-Jul-78,33,male,Community-onset,Community-acquired,1.5,MSSA,0.19,Neg,1,Survived,1,3,Flucloxacillin,5,0,0,NA,0,NA
+BPH2865,VANESSA,VAN-131,VAN-131,VAN131,22-Feb-12,2012,Austin,VIC,30-Mar-54,57,male,Community-onset,"Community-onset, healthcare-associated",1,MSSA,0.19,Pos-high,0,Survived,1,4,Flucloxacillin,1,0,1,NA,0,NA
+BPH2866,VANESSA,VAN-132,VAN-132,VAN132-z,24-Feb-12,2012,Royal Perth,WA,29-May-21,90,male,Community-onset,Community-acquired,0.5,MSSA,0.38,Neg,0,Survived,1,1,Flucloxacillin,1,0,0,NA,1,NA
+BPH2868,VANESSA,VAN-133,VAN-133,VAN133,25-Feb-12,2012,Royal Perth,WA,21-Dec-84,27,female,Community-onset,Community-acquired,1,MSSA,0.25,Equivocal,0,Survived,0,0,Flucloxacillin,1,0,0,NA,0,NA
+BPH2869,VANESSA,VAN-134,VAN-134,VAN134-z,26-Feb-12,2012,Liverpool,NSW,13-Aug-49,62,female,Hospital-onset,"Hospital-onset, healthcare-associated",2,MRSA,NA,Pos-high,0,Survived,3,0,Vancomyicin,1,0,0,NA,0,NA
+BPH2870,VANESSA,VAN-135,VAN-135,VAN135-z,20-Feb-12,2012,Liverpool,NSW,1-Jul-45,66,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MSSA,0.125,Neg,0,Survived,2,0,Flucloxacillin,1,0,0,NA,0,NA
+BPH2871,VANESSA,VAN-136,VAN-136,VAN136,28-Feb-12,2012,Austin,VIC,14-Feb-44,68,male,Community-onset,Community-acquired,1,MSSA,0.125,Neg,0,Survived,6,2,Flucloxacillin,1,0,0,NA,0,NA
+BPH2872,VANESSA,VAN-137,VAN-137,VAN137,29-Feb-12,2012,Austin,VIC,16-Feb-63,49,male,Community-onset,"Community-onset, healthcare-associated",1,MSSA,0.094,Pos-low,1,Survived,3,0,Flucloxacillin,6,0,1,NA,0,NA
+BPH2874,VANESSA,VAN-138,VAN-138,VAN138-z,28-Feb-12,2012,Princess Alexandra,QLD,13-Jan-69,43,female,Community-onset,"Community-onset, healthcare-associated",1,MSSA,0.75,Neg,0,Survived,0,0,Flucloxacillin,1,0,0,NA,0,NA
+BPH2875,VANESSA,VAN-139,VAN-139,VAN139,3-Mar-12,2012,Austin,VIC,27-Dec-31,80,female,Community-onset,"Community-onset, healthcare-associated",0.75,MSSA,0.19,Neg,0,Survived,0,4,Flucloxacillin,1,0,0,NA,0,NA
+BPH2876,VANESSA,VAN-140,VAN-140,VAN140-z,9-Mar-12,2012,Royal Perth,WA,6-Jun-25,86,male,Hospital-onset,"Hospital-onset, healthcare-associated",0.75,MRSA,NA,Pos-high,0,Survived,3,2,Vancomyicin,3,0,0,NA,0,NA
+BPH2878,VANESSA,VAN-141,VAN-141,VAN141-z,9-Mar-12,2012,Royal Perth,WA,27-Aug-40,71,male,Community-onset,"Community-onset, healthcare-associated",1,MSSA,0.19,Neg,0,Survived,1,0,Flucloxacillin,NA,0,0,NA,0,NA
+BPH2879,VANESSA,VAN-142,VAN-142,VAN142-z,12-Mar-12,2012,Royal Perth,WA,13-Jun-43,68,female,Community-onset,"Community-onset, healthcare-associated",0.5,MRSA,NA,Neg,0,Survived,0,0,Vancomyicin,1,0,0,NA,0,NA
+BPH2880,VANESSA,VAN-143,VAN-143,VAN143,11-Mar-12,2012,Austin,VIC,8-Oct-34,77,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.094,Neg,0,Survived,4,1,Flucloxacillin,2,0,0,NA,0,NA
+BPH2881,VANESSA,VAN-144,VAN-144,VAN144,13-Mar-12,2012,Austin,VIC,31-Jan-71,41,male,Community-onset,"Community-onset, healthcare-associated",1,MRSA,NA,Pos-low,0,Survived,4,1,Vancomyicin,1,0,0,NA,0,NA
+BPH2883,VANESSA,VAN-145,VAN-145,VAN145,17-Mar-12,2012,Austin,VIC,23-Jul-27,84,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.094,Pos-high,1,Survived,2,0,Flucloxacillin,6,0,0,NA,0,NA
+BPH2885,VANESSA,VAN-146,VAN-146,VAN146-z,19-Mar-12,2012,Royal Perth,WA,15-Jun-34,77,male,Hospital-onset,"Hospital-onset, healthcare-associated",1,MSSA,0.125,Pos-high,0,Survived,4,2,Flucloxacillin,1,0,0,NA,0,NA
+BPH2886,VANESSA,VAN-147,VAN-147,VAN147-z,20-Mar-12,2012,Austin,VIC,17-Oct-66,45,male,Community-onset,Community-acquired,0.5,MSSA,0.19,Neg,0,Survived,6,2,Flucloxacillin,1,0,0,NA,1,NA
+BPH2887,VANESSA,VAN-148,VAN-148,VAN148-z,27-Mar-12,2012,Austin,VIC,18-Sep-23,88,male,Community-onset,Community-acquired,0.75,MRSA,NA,Neg,1,Died,5,2,Vancomyicin,7,0,0,NA,1,NA
+BPH2889,VANESSA,VAN-149,VAN-149,VAN149-z,29-Mar-12,2012,Princess Alexandra,QLD,9-Mar-58,53,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.19,Pos-low,0,Survived,2,0,Flucloxacillin,1,0,0,NA,0,NA
+BPH2890,VANESSA,VAN-150,VAN-150,VAN150-z,31-Mar-12,2012,Royal Perth,WA,20-Jun-26,85,female,Community-onset,"Community-onset, healthcare-associated",0.75,MRSA,NA,Equivocal,0,Survived,1,0,Vancomyicin,1,0,0,NA,0,NA
+BPH2892,VANESSA,VAN-151,VAN-151,VAN151-z,1-Apr-12,2012,Princess Alexandra,QLD,6-Sep-77,34,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,0.38,Pos-high,0,Survived,2,1,Flucloxacillin,1,0,0,NA,0,NA
+BPH2893,VANESSA,VAN-152,VAN-152,VAN152-z,3-Apr-12,2012,Princess Alexandra,QLD,28-Sep-85,26,female,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,0.19,Neg,0,Survived,0,1,Flucloxacillin,3,0,0,NA,1,NA
+BPH2894,VANESSA,VAN-153,VAN-153,VAN153,4-Apr-12,2012,Royal Perth,WA,8-Apr-89,22,female,Community-onset,"Community-onset, healthcare-associated",0.75,MSSA,0.19,Pos-high,0,Survived,0,1,Flucloxacillin,1,0,0,NA,0,NA
+BPH2895,VANESSA,VAN-154,VAN-154,VAN154-z,5-Apr-12,2012,Austin,VIC,30-Apr-42,69,male,Community-onset,Community-acquired,1,MSSA,0.19,Pos-high,0,Survived,1,2,Flucloxacillin,2,0,0,NA,0,NA
+BPH2896,VANESSA,VAN-155,VAN-155,VAN155-z,13-Apr-12,2012,Austin,VIC,27-Dec-26,85,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MRSA,NA,Neg,0,Died,6,4,Vancomyicin,4,0,0,NA,0,NA
+BPH2897,VANESSA,VAN-156,VAN-156,VAN156-z,15-Apr-12,2012,Austin,VIC,18-Nov-36,75,female,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.125,Neg,1,Died,0,2,Flucloxacillin,4,0,0,NA,1,NA
+BPH2899,VANESSA,VAN-157,VAN-157,VAN157-z,20-Apr-12,2012,Royal Perth,WA,20-Apr-69,43,female,Hospital-onset,"Hospital-onset, healthcare-associated",0.5,MSSA,0.19,Pos-high,0,Survived,3,0,Other,1,0,0,NA,0,NA
+BPH2900,VANESSA,VAN-158,VAN-158,VAN158,21-Apr-12,2012,Royal Perth,WA,8-Oct-26,85,male,Community-onset,"Community-onset, healthcare-associated",0.5,MRSA,NA,Pos-high,0,Survived,2,0,Vancomyicin,1,0,0,NA,0,NA
+BPH2901,VANESSA,VAN-159,VAN-159,VAN159,22-Apr-12,2012,Royal Perth,WA,27-Jun-52,59,female,Community-onset,"Community-onset, healthcare-associated",0.75,MSSA,0.19,Pos-low,0,Survived,3,0,Flucloxacillin,1,0,0,NA,0,NA
+BPH2902,VANESSA,VAN-160,VAN-160,VAN160-z,1-May-12,2012,Austin,VIC,17-Apr-41,71,female,Hospital-onset,"Hospital-onset, healthcare-associated",0.75,MRSA,NA,Neg,1,Survived,2,0,Vancomyicin,5,0,0,NA,1,NA
+BPH2905,VANESSA,VAN-161,VAN-161,VAN161-z,30-Apr-12,2012,Royal Perth,WA,27-Dec-57,54,male,Community-onset,"Community-onset, healthcare-associated",0.5,MSSA,0.19,Neg,0,Survived,3,1,Other,1,0,0,NA,1,NA
+BPH2906,VANESSA,VAN-162,VAN-162,VAN162-z,2-May-12,2012,Austin,VIC,24-Jun-71,40,female,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.094,Neg,1,Survived,0,1,Flucloxacillin,2,1,0,NA,0,NA
+BPH2908,VANESSA,VAN-163,VAN-163,VAN163-z,4-May-12,2012,Austin,VIC,30-Mar-46,66,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.25,Pos-high,0,Survived,2,2,Flucloxacillin,1,0,0,NA,0,NA
+BPH2909,VANESSA,VAN-164,VAN-164,VAN164-z,5-May-12,2012,Austin,VIC,7-Jun-21,90,female,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,0.19,Pos-high,0,Survived,2,2,Flucloxacillin,1,0,0,NA,0,NA
+BPH2910,VANESSA,VAN-165,VAN-165,VAN165-z,6-May-12,2012,Austin,VIC,12-Jun-53,58,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.38,Pos-high,0,Survived,4,3,Flucloxacillin,2,0,0,NA,0,NA
+BPH2911,VANESSA,VAN-166,VAN-166,VAN166,5-May-12,2012,Princess Alexandra,QLD,21-Dec-93,18,male,Community-onset,"Community-onset, healthcare-associated",1,MRSA,NA,Pos-high,0,Survived,2,1,Vancomyicin,1,0,0,NA,0,NA
+BPH2912,VANESSA,VAN-167,VAN-167,VAN167-z,8-May-12,2012,Royal Perth,WA,17-Dec-39,72,male,Community-onset,"Community-onset, healthcare-associated",1,MSSA,0.19,Pos-low,0,Survived,1,3,Flucloxacillin,1,0,1,NA,0,NA
+BPH2913,VANESSA,VAN-168,VAN-168,VAN168,15-May-12,2012,Barwon Health (Geelong),VIC,26-Feb-47,65,male,Community-onset,"Community-onset, healthcare-associated",1,MSSA,0.19,Pos-high,0,Survived,5,0,Flucloxacillin,2,0,0,NA,0,NA
+BPH2914,VANESSA,VAN-169,VAN-169,VAN169-z,16-May-12,2012,Alfred,VIC,19-May-58,53,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.19,Pos-low,0,Survived,1,0,Flucloxacillin,1,0,0,NA,0,NA
+BPH2915,VANESSA,VAN-170,VAN-170,VAN170-z,17-May-12,2012,Royal Perth,WA,18-Mar-63,49,male,Community-onset,Community-acquired,0.5,MSSA,0.125,Neg,0,Survived,0,0,Flucloxacillin,1,0,0,NA,0,NA
+BPH2916,VANESSA,VAN-171,VAN-171,VAN171-z,18-May-12,2012,Royal Perth,WA,18-Jun-39,72,male,Community-onset,Community-acquired,0.75,MSSA,0.19,Pos-high,0,Survived,4,3,Flucloxacillin,1,0,0,NA,0,NA
+BPH2917,VANESSA,VAN-172,VAN-172,VAN172-z,18-May-12,2012,Alfred,VIC,6-May-46,66,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MSSA,0.094,Pos-high,0,Survived,2,3,Flucloxacillin,2,0,1,NA,0,NA
+BPH2918,VANESSA,VAN-173,VAN-173,VAN173-z,18-May-12,2012,Austin,VIC,13-Mar-32,80,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MSSA,0.19,Neg,0,Survived,5,0,Flucloxacillin,2,0,0,NA,0,NA
+BPH2921,VANESSA,VAN-175,VAN-175,VAN175-z,21-May-12,2012,Alfred,VIC,21-Jun-70,41,female,Community-onset,Community-acquired,1.5,MSSA,0.25,Neg,0,Survived,0,2,Flucloxacillin,2,0,0,NA,1,NA
+BPH2922,VANESSA,VAN-176,VAN-176,VAN176-z,25-May-12,2012,Royal Perth,WA,25-Feb-83,29,female,Community-onset,"Community-onset, healthcare-associated",2,MSSA,0.19,Pos-high,0,Survived,0,1,Flucloxacillin,2,0,1,NA,0,NA
+BPH2927,VANESSA,VAN-177,VAN-177,VAN177-z,28-May-12,2012,Austin,VIC,11-Aug-54,57,female,Community-onset,"Community-onset, healthcare-associated",0.75,MSSA,0.38,Neg,0,Survived,0,1,Other,3,0,0,NA,1,NA
+BPH2928,VANESSA,VAN-178,VAN-178,VAN178,23-May-12,2012,Monash Health,VIC,15-Feb-89,23,male,Community-onset,"Community-onset, healthcare-associated",1,MSSA,0.125,Pos-low,0,Survived,0,0,Flucloxacillin,2,0,1,NA,1,NA
+BPH2929,VANESSA,VAN-179,VAN-179,VAN179,31-May-12,2012,Royal Perth,WA,22-Nov-84,27,male,Community-onset,"Community-onset, healthcare-associated",1,MRSA,NA,Pos-low,0,Survived,0,1,Vancomyicin,1,0,0,NA,0,NA
+BPH2930,VANESSA,VAN-180,VAN-180,VAN180,4-Jun-12,2012,Royal Perth,WA,26-Aug-79,32,female,Community-onset,Community-acquired,0.5,MSSA,0.38,Equivocal,0,Survived,1,0,Flucloxacillin,1,0,0,NA,0,NA
+BPH2931,VANESSA,VAN-181,VAN-181,VAN181,9-Jun-12,2012,Royal Perth,WA,31-Jul-33,78,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.094,Pos-high,0,Survived,2,0,Other,1,0,1,NA,0,NA
+BPH2932,VANESSA,VAN-182,VAN-182,VAN182-z,17-Jun-12,2012,Austin,VIC,13-Jul-67,44,male,Hospital-onset,"Hospital-onset, healthcare-associated",0.75,MSSA,0.5,Pos-high,0,Survived,0,0,Flucloxacillin,3,0,0,NA,0,NA
+BPH2933,VANESSA,VAN-183,VAN-183,VAN183-z,18-Jun-12,2012,Austin,VIC,10-Jun-58,54,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.19,Pos-high,0,Survived,4,0,Flucloxacillin,2,0,0,NA,0,NA
+BPH2934,VANESSA,VAN-184,VAN-184,VAN184,22-Jun-12,2012,Royal Perth,WA,24-Jun-23,89,female,Community-onset,"Community-onset, healthcare-associated",0.75,MSSA,0.5,Pos-high,0,Died,2,0,Flucloxacillin,1,0,0,NA,0,NA
+BPH2935,VANESSA,VAN-185,VAN-185,VAN185,27-Jun-12,2012,Princess Alexandra,QLD,28-Jun-71,41,female,Community-onset,Community-acquired,1.5,MSSA,0.064,Neg,0,Survived,1,0,Vancomyicin,8,0,1,NA,0,NA
+BPH2936,VANESSA,VAN-186,VAN-186,VAN186-z,28-Jun-12,2012,Austin,VIC,4-Jan-31,81,male,Community-onset,"Community-onset, healthcare-associated",0.5,MRSA,NA,Pos-high,0,Survived,5,2,Vancomyicin,2,0,0,NA,0,NA
+BPH2937,VANESSA,VAN-187,VAN-187,VAN187,29-Jun-12,2012,Royal Perth,WA,21-Sep-89,22,female,Community-onset,"Community-onset, healthcare-associated",0.75,MSSA,0.25,Pos-high,0,Survived,3,1,Other,1,0,0,NA,0,NA
+BPH2938,VANESSA,VAN-188,VAN-188,VAN188-z,4-Jul-12,2012,Austin,VIC,1-Nov-32,79,female,Hospital-onset,"Hospital-onset, healthcare-associated",0.38,MSSA,0.094,Neg,0,Died,1,0,Flucloxacillin,1,0,0,NA,0,NA
+BPH2939,VANESSA,VAN-189,VAN-189,VAN189-z,6-Jul-12,2012,Austin,VIC,20-Apr-82,30,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.094,Pos-high,0,Survived,0,0,Flucloxacillin,1,0,0,NA,1,NA
+BPH2940,VANESSA,VAN-190,VAN-190,VAN190-z,10-Jul-12,2012,Austin,VIC,3-Dec-37,74,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.125,Pos-low,0,Survived,6,2,Other,1,0,0,NA,0,NA
+BPH2941,VANESSA,VAN-191,VAN-191,VAN191-z,18-Jul-12,2012,Austin,VIC,19-Jan-51,61,male,Community-onset,"Community-onset, healthcare-associated",1,MSSA,0.25,Pos-low,0,Survived,1,2,Flucloxacillin,3,0,0,NA,1,NA
+BPH2942,VANESSA,VAN-192,VAN-192,VAN192-z,25-Jul-12,2012,Austin,VIC,1-May-28,84,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,0.25,Pos-low,1,Survived,4,0,Flucloxacillin,1,0,0,NA,1,NA
+BPH2944,VANESSA,VAN-193,VAN-193,VAN193-z,28-Jul-12,2012,Austin,VIC,30-Jun-45,67,male,Hospital-onset,"Hospital-onset, healthcare-associated",0.75,MSSA,0.125,Pos-high,0,Survived,6,4,Flucloxacillin,1,0,0,NA,0,NA
+BPH2945,VANESSA,VAN-194,VAN-194,VAN194-z,4-Aug-12,2012,Austin,VIC,17-Dec-55,56,male,Community-onset,"Community-onset, healthcare-associated",1,MSSA,0.094,Neg,0,Survived,3,2,Flucloxacillin,1,0,0,NA,1,NA
+BPH2946,VANESSA,VAN-195,VAN-195,VAN195-z,5-Aug-12,2012,Austin,VIC,19-Jul-45,67,male,Community-onset,"Community-onset, healthcare-associated",1.5,MRSA,NA,Pos-low,0,Survived,1,1,Other,NA,0,0,NA,0,NA
+BPH2947,VANESSA,VAN-196,VAN-196,VAN196,10-Aug-12,2012,Austin,VIC,25-Mar-32,80,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MRSA,NA,Pos-low,1,Survived,4,0,Vancomyicin,8,0,0,NA,0,NA
+BPH2949,VANESSA,VAN-197,VAN-197,VAN197,11-Aug-12,2012,Princess Alexandra,QLD,17-Jan-26,86,male,Community-onset,Community-acquired,1,MRSA,NA,Pos-high,0,Died,1,0,Vancomyicin,4,0,0,NA,0,NA
+BPH2950,VANESSA,VAN-198,VAN-198,VAN198,22-Aug-12,2012,Royal Perth,WA,10-Feb-71,41,male,Community-onset,"Community-onset, healthcare-associated",1,MSSA,0.25,Pos-low,0,Survived,4,0,Flucloxacillin,2,0,1,NA,0,NA
+BPH2951,VANESSA,VAN-199,VAN-199,VAN199,7-Sep-12,2012,Monash Health,VIC,30-Dec-68,43,male,Community-onset,"Community-onset, healthcare-associated",1,MSSA,0.125,Neg,0,Survived,0,0,Other,1,0,0,NA,1,NA
+BPH2952,VANESSA,VAN-200,VAN-200,VAN200,21-Sep-12,2012,Austin,VIC,26-Mar-58,54,female,Community-onset,"Community-onset, healthcare-associated",0.75,MRSA,NA,Pos-low,0,Survived,4,6,Vancomyicin,3,0,0,NA,0,NA
+BPH2954,VANESSA,VAN-201,VAN-201,VAN201,22-Sep-12,2012,Princess Alexandra,QLD,7-Jul-45,67,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MRSA,NA,Pos-high,0,Survived,2,0,Other,NA,0,0,NA,0,NA
+BPH2955,VANESSA,VAN-202,VAN-202,VAN202,24-Sep-12,2012,Royal Perth,WA,20-Jul-58,54,male,Community-onset,Community-acquired,1.5,MSSA,0.38,Pos-high,0,Survived,1,1,Flucloxacillin,1,0,0,NA,0,NA
+BPH2956,VANESSA,VAN-203,VAN-203,VAN203,26-Sep-12,2012,Royal Perth,WA,26-Feb-56,56,male,Community-onset,"Community-onset, healthcare-associated",1.5,MRSA,NA,Pos-high,0,Survived,8,2,Vancomyicin,1,0,0,NA,0,NA
+BPH2957,VANESSA,VAN-204,VAN-204,VAN204,26-Sep-12,2012,Royal Perth,WA,30-Nov-44,67,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.25,Pos-high,0,Survived,2,0,Other,2,0,0,NA,0,NA
+BPH2958,VANESSA,VAN-205,VAN-205,VAN205,30-Sep-12,2012,Royal Prince Alfred,NSW,19-Jun-82,30,female,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,0.38,Pos-high,0,Survived,0,1,Flucloxacillin,1,0,0,NA,0,NA
+BPH2959,VANESSA,VAN-206,VAN-206,VAN206,5-Oct-12,2012,Austin,VIC,31-Aug-59,53,female,Community-onset,"Community-onset, healthcare-associated",0.75,MSSA,0.125,Pos-low,1,Survived,0,1,Other,7,0,0,NA,1,NA
+BPH2962,VANESSA,VAN-207,VAN-207,VAN207,9-Oct-12,2012,Austin,VIC,11-Jun-75,37,female,Community-onset,Community-acquired,1,MSSA,0.19,Pos-high,1,Survived,0,2,Other,8,0,1,NA,0,NA
+BPH2965,VANESSA,VAN-208,VAN-208,VAN208,13-Oct-12,2012,Austin,VIC,1-May-34,78,female,Hospital-onset,"Hospital-onset, healthcare-associated",0.75,MSSA,0.125,Pos-low,1,Died,9,0,Flucloxacillin,4,0,0,NA,0,NA
+BPH2967,VANESSA,VAN-209,VAN-209,VAN209,25-Oct-12,2012,Austin,VIC,26-Oct-39,73,male,Community-onset,"Community-onset, healthcare-associated",1,MSSA,0.19,Pos-high,0,Survived,5,1,Flucloxacillin,1,0,0,NA,0,NA
+BPH2968,VANESSA,VAN-210,VAN-210,VAN210,26-Oct-12,2012,Royal Prince Alfred,NSW,15-May-60,52,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.38,Pos-high,0,Survived,5,0,Flucloxacillin,4,0,0,NA,1,NA
+BPH2969,VANESSA,VAN-211,VAN-211,VAN211,30-Oct-12,2012,Royal Prince Alfred,NSW,1-Jun-56,56,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.25,Pos-low,0,Survived,0,0,Flucloxacillin,1,0,0,NA,1,NA
+BPH2970,VANESSA,VAN-212,VAN-212,VAN212,3-Nov-12,2012,Royal Prince Alfred,NSW,19-Dec-75,36,female,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.064,Neg,0,Survived,6,1,Flucloxacillin,2,0,0,NA,0,NA
+BPH2971,VANESSA,VAN-213,VAN-213,VAN213,6-Nov-12,2012,Royal Perth,WA,23-Dec-58,53,female,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,0.38,Pos-high,0,Survived,2,0,Flucloxacillin,1,0,0,NA,0,NA
+BPH2972,VANESSA,VAN-214,VAN-214,VAN214,10-Nov-12,2012,Austin,VIC,19-Nov-53,58,female,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.064,Pos-low,0,Survived,1,0,Vancomyicin,1,0,0,NA,1,NA
+BPH2973,VANESSA,VAN-215,VAN-215,VAN215,20-Nov-12,2012,Austin,VIC,28-Jan-43,69,male,Community-onset,"Community-onset, healthcare-associated",1,MSSA,0.064,Neg,1,Survived,7,4,Flucloxacillin,6,0,0,NA,0,NA
+BPH2976,VANESSA,VAN-216,VAN-216,VAN216,21-Nov-12,2012,Austin,VIC,17-Nov-68,44,male,Community-onset,"Community-onset, healthcare-associated",1,MRSA,NA,Neg,1,Survived,2,3,Other,13,0,1,NA,0,NA
+BPH2983,VANESSA,VAN-218,VAN-218,VAN218-z,24-Nov-12,2012,Royal Perth,WA,1-Mar-86,26,female,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,1.5,Pos-low,0,Survived,0,1,Other,1,0,0,NA,0,NA
+BPH2984,VANESSA,VAN-219,VAN-219,VAN219,24-Nov-12,2012,Royal Perth,WA,22-Apr-54,58,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,0.5,Pos-high,0,Survived,5,0,Flucloxacillin,1,0,0,NA,0,NA
+BPH2985,VANESSA,VAN-220,VAN-220,VAN220,3-Dec-12,2012,Royal Perth,WA,2-Oct-54,48,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,0.38,Pos-high,0,Survived,5,3,Flucloxacillin,3,0,0,NA,0,NA
+BPH2986,VANESSA,VAN-221,VAN-221,VAN221,6-Dec-12,2012,Austin,VIC,8-Apr-32,80,female,Community-onset,"Community-onset, healthcare-associated",1,MRSA,NA,Pos-low,0,Survived,6,2,Vancomyicin,4,0,0,NA,0,NA
+BPH2987,VANESSA,VAN-222,VAN-222,VAN222,14-Dec-12,2012,Austin,VIC,9-Jan-30,82,female,Community-onset,"Community-onset, healthcare-associated",1,MSSA,0.064,Pos-low,1,Died,3,3,Other,6,0,1,NA,1,NA
+BPH2989,VANESSA,VAN-223,VAN-223,VAN223,16-Dec-12,2012,Austin,VIC,13-Dec-49,63,female,Community-onset,Community-acquired,1,MSSA,0.19,Pos-low,1,Survived,0,3,Flucloxacillin,8,0,0,NA,0,NA
+BPH2992,VANESSA,VAN-224,VAN-224,VAN224,12-Dec-12,2012,Royal Perth,WA,25-Aug-72,40,male,Community-onset,Community-acquired,1.5,MSSA,0.38,Pos-high,0,Survived,0,0,Flucloxacillin,1,0,0,NA,0,NA
+BPH2993,VANESSA,VAN-225,VAN-225,VAN225,13-Dec-12,2012,Royal Perth,WA,13-Nov-66,46,female,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.38,Pos-low,0,Survived,3,0,Flucloxacillin,1,0,0,NA,1,NA
+BPH2994,VANESSA,VAN-226,VAN-226,VAN226,25-Dec-12,2012,Austin,VIC,25-Mar-54,58,male,Community-onset,Community-acquired,1.5,MSSA,0.25,Pos-low,0,Died,3,0,Vancomyicin,1,0,0,NA,0,NA
+BPH3200,ANZCOSS,VSS-001,VSS-001,BPH3200,16-Sep-07,2007,Princess Alexandra,QLD,18-Feb-52,55,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MRSA,NA,Pos-high,0,Survived,0,5,Vancomyicin,9,1,NA,0,NA,0
+BPH3201,ANZCOSS,VSS-002,VSS-002,BPH3201,7-Oct-07,2007,Princess Alexandra,QLD,30-May-28,79,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.38,Pos-low,0,Survived,2,3,Flucloxacillin,1,0,NA,0,NA,0
+BPH3202,ANZCOSS,VSS-003,VSS-003,BPH3202,7-Nov-08,2008,Princess Alexandra,QLD,9-Nov-70,37,male,Community-onset,"Community-onset, healthcare-associated",1,MRSA,NA,Pos-high,0,Survived,1,3,Vancomyicin,1,0,NA,0,NA,0
+BPH3203,ANZCOSS,VSS-004,VSS-004,BPH3203,9-Nov-08,2008,Princess Alexandra,QLD,23-Mar-51,57,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,0.19,Pos-high,0,Survived,3,1,Flucloxacillin,2,1,NA,0,NA,0
+BPH3204,ANZCOSS,VSS-005,VSS-005,BPH3204,29-Sep-07,2007,Princess Alexandra,QLD,18-Jul-41,66,male,Hospital-onset,"Hospital-onset, healthcare-associated",3,MRSA,NA,Equivocal,0,Survived,2,3,Vancomyicin,1,0,NA,0,NA,0
+BPH3205,ANZCOSS,VSS-006,VSS-006,BPH3205,24-Oct-07,2007,Princess Alexandra,QLD,13-Apr-86,21,female,NA,NA,1.5,MSSA,0.19,Neg,0,Survived,0,3,Flucloxacillin,1,0,NA,0,NA,0
+BPH3206,ANZCOSS,VSS-007,VSS-007,BPH3206,28-May-08,2008,Princess Alexandra,QLD,5-Dec-24,83,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.38,Neg,0,Survived,2,2,Other,1,0,NA,0,NA,0
+BPH3207,ANZCOSS,VSS-008,VSS-008,BPH3207,15-Jun-08,2008,Princess Alexandra,QLD,11-Feb-76,32,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.38,Pos-high,0,Survived,2,3,Flucloxacillin,1,0,NA,0,NA,0
+BPH3208,ANZCOSS,VSS-009,VSS-009,BPH3208,20-May-07,2007,Princess Alexandra,QLD,12-Apr-35,72,male,Hospital-onset,NA,1.5,MRSA,NA,Pos-high,0,Survived,1,3,Vancomyicin,1,0,NA,0,NA,0
+BPH3209,ANZCOSS,VSS-010,VSS-010,BPH3209,28-May-07,2007,Princess Alexandra,QLD,3-Feb-18,89,female,Community-onset,NA,1.5,MSSA,0.5,Neg,0,Survived,0,4,Flucloxacillin,1,0,NA,0,NA,0
+BPH3210,ANZCOSS,VSS-011,VSS-011,BPH3210,15-Dec-07,2007,Princess Alexandra,QLD,21-Feb-31,76,male,Hospital-onset,"Hospital-onset, healthcare-associated",1,MRSA,NA,Pos-high,0,Died,1,3,Vancomyicin,1,1,NA,0,NA,0
+BPH3211,ANZCOSS,VSS-012,VSS-012,BPH3211,13-Jan-08,2008,Princess Alexandra,QLD,2-Feb-79,28,female,Community-onset,NA,1.5,MSSA,0.38,Pos-low,0,Survived,0,3,Flucloxacillin,2,1,NA,1,NA,0
+BPH3212,ANZCOSS,VSS-013,VSS-013,BPH3212,25-Jan-08,2008,Princess Alexandra,QLD,14-Apr-56,51,male,Hospital-onset,"Hospital-onset, healthcare-associated",1,MRSA,NA,Pos-high,0,Survived,2,3,Vancomyicin,1,0,NA,0,NA,0
+BPH3213,ANZCOSS,VSS-014,VSS-014,BPH3213,11-Feb-08,2008,Princess Alexandra,QLD,21-May-25,82,female,Community-onset,Community-acquired,1.5,MSSA,0.25,Pos-high,0,Survived,5,3,Flucloxacillin,1,0,NA,0,NA,0
+BPH3214,ANZCOSS,VSS-015,VSS-015,BPH3214,16-Jun-08,2008,Princess Alexandra,QLD,22-May-31,77,female,Community-onset,"Community-onset, healthcare-associated",2,MSSA,0.38,Pos-high,0,Died,2,1,Vancomyicin,1,0,NA,0,NA,0
+BPH3215,ANZCOSS,VSS-016,VSS-016,BPH3215,9-Jul-08,2008,Princess Alexandra,QLD,20-Oct-49,58,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,0.5,Pos-low,0,Died,1,7,Flucloxacillin,1,0,NA,0,NA,0
+BPH3216,ANZCOSS,VSS-017,VSS-017,BPH3216,21-Mar-08,2008,Princess Alexandra,QLD,30-Jul-75,32,male,Community-onset,Community-acquired,1,MSSA,1,Pos-high,0,Survived,0,1,Vancomyicin,3,1,NA,0,NA,0
+BPH3217,ANZCOSS,VSS-018,VSS-018,BPH3217,30-Mar-08,2008,Princess Alexandra,QLD,21-Mar-34,74,female,Community-onset,Community-acquired,1.5,MRSA,0.75,Pos-high,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,0
+BPH3218,ANZCOSS,VSS-019,VSS-019,BPH3218,14-Jun-08,2008,Princess Alexandra,QLD,13-Apr-51,57,male,Hospital-onset,NA,1.5,MSSA,0.75,Equivocal,0,NA,3,3,Flucloxacillin,1,0,NA,0,NA,0
+BPH3219,ANZCOSS,VSS-020,VSS-020,BPH3219,29-Jun-08,2008,Princess Alexandra,QLD,9-Jun-88,20,female,Community-onset,NA,1.5,MSSA,0.75,Pos-high,0,Survived,0,2,Flucloxacillin,1,0,NA,0,NA,0
+BPH3220,ANZCOSS,VSS-021,VSS-021,BPH3220,27-Mar-08,2008,Princess Alexandra,QLD,5-Sep-53,54,male,Community-onset,"Community-onset, healthcare-associated",2,MRSA,NA,Pos-low,0,Survived,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3221,ANZCOSS,VSS-022,VSS-022,BPH3221,17-Apr-08,2008,Princess Alexandra,QLD,15-Jun-73,34,male,Community-onset,"Community-onset, healthcare-associated",1,MSSA,1.5,Pos-high,0,Survived,0,1,Flucloxacillin,1,0,NA,0,NA,0
+BPH3222,ANZCOSS,VSS-023,VSS-023,BPH3222,15-Sep-08,2008,Princess Alexandra,QLD,21-Nov-64,43,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.75,Pos-high,0,Survived,2,1,Flucloxacillin,1,0,NA,0,NA,0
+BPH3223,ANZCOSS,VSS-024,VSS-024,BPH3223,1-Oct-08,2008,Princess Alexandra,QLD,2-Jan-78,30,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.75,Pos-high,0,Survived,1,0,Flucloxacillin,1,0,NA,0,NA,0
+BPH3224,ANZCOSS,VSS-025,VSS-025,BPH3224,7-Jun-08,2008,Princess Alexandra,QLD,12-Nov-72,35,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.75,Pos-low,0,Survived,1,1,Flucloxacillin,2,0,NA,0,NA,0
+BPH3225,ANZCOSS,VSS-026,VSS-026,BPH3225,26-Jun-08,2008,Princess Alexandra,QLD,8-Feb-42,66,female,Hospital-onset,NA,1.5,MSSA,0.5,Neg,0,Died,4,3,Flucloxacillin,1,0,NA,0,NA,0
+BPH3226,ANZCOSS,VSS-027,VSS-027,BPH3226,4-Aug-08,2008,Princess Alexandra,QLD,5-Jul-61,47,female,Hospital-onset,"Hospital-onset, healthcare-associated",3,MRSA,NA,Pos-low,0,Survived,2,3,Vancomyicin,1,0,NA,0,NA,0
+BPH3227,ANZCOSS,VSS-028,VSS-028,BPH3227,21-Sep-08,2008,Princess Alexandra,QLD,26-Oct-45,62,male,Community-onset,"Community-onset, healthcare-associated",2,MSSA,0.25,Equivocal,0,Survived,3,3,Flucloxacillin,1,0,NA,0,NA,0
+BPH3228,ANZCOSS,VSS-029,VSS-029,BPH3228,16-Mar-07,2007,Princess Alexandra,QLD,9-Aug-28,78,female,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MRSA,NA,Pos-high,0,Survived,3,3,Vancomyicin,1,0,NA,0,NA,0
+BPH3229,ANZCOSS,VSS-030,VSS-030,BPH3229,3-Apr-07,2007,Princess Alexandra,QLD,14-Jul-37,69,female,Community-onset,Community-acquired,1.5,MSSA,0.75,Neg,0,Survived,2,1,Flucloxacillin,1,0,NA,0,NA,0
+BPH3230,ANZCOSS,VSS-031,VSS-031,BPH3230,14-Dec-07,2007,Princess Alexandra,QLD,13-Jan-82,25,male,Hospital-onset,"Hospital-onset, healthcare-associated",1,MRSA,NA,Neg,0,Survived,1,1,Vancomyicin,1,0,NA,0,NA,0
+BPH3231,ANZCOSS,VSS-032,VSS-032,BPH3231,1-Jan-08,2008,Princess Alexandra,QLD,18-May-38,69,female,Community-onset,Community-acquired,1.5,MSSA,0.5,Pos-low,0,Survived,0,3,Flucloxacillin,2,0,NA,0,NA,1
+BPH3232,ANZCOSS,VSS-033,VSS-033,BPH3232,15-May-07,2007,Princess Alexandra,QLD,4-Oct-82,24,male,Community-onset,NA,2,MRSA,NA,Neg,0,Survived,2,6,Vancomyicin,1,0,NA,0,NA,0
+BPH3233,ANZCOSS,VSS-034,VSS-034,BPH3233,15-May-07,2007,Princess Alexandra,QLD,20-Jul-87,19,female,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.75,Pos-high,0,Survived,2,3,Flucloxacillin,2,0,NA,0,NA,0
+BPH3234,ANZCOSS,VSS-035,VSS-035,BPH3234,20-Oct-08,2008,Princess Alexandra,QLD,25-Apr-51,57,male,Community-onset,"Community-onset, healthcare-associated",2,MRSA,NA,Equivocal,0,Survived,0,3,Vancomyicin,2,1,NA,0,NA,0
+BPH3235,ANZCOSS,VSS-036,VSS-036,BPH3235,25-Oct-08,2008,Princess Alexandra,QLD,6-Oct-55,53,female,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.75,Pos-high,0,Survived,3,1,Flucloxacillin,1,0,NA,0,NA,0
+BPH3236,ANZCOSS,VSS-037,VSS-037,BPH3236,2-Jun-07,2007,Princess Alexandra,QLD,12-Sep-45,61,male,Community-onset,"Community-onset, healthcare-associated",2,MRSA,NA,Pos-low,0,Survived,0,1,Vancomyicin,1,0,NA,0,NA,0
+BPH3237,ANZCOSS,VSS-038,VSS-038,BPH3237,26-Jun-07,2007,Princess Alexandra,QLD,11-May-45,62,male,Hospital-onset,"Hospital-onset, healthcare-associated",0.5,MSSA,0.38,Pos-low,0,Survived,4,3,Flucloxacillin,2,0,NA,0,NA,0
+BPH3238,ANZCOSS,VSS-039,VSS-039,BPH3238,14-Mar-07,2007,Princess Alexandra,QLD,20-Apr-74,32,male,Community-onset,NA,1.5,MSSA,0.75,Neg,0,Survived,1,4,Flucloxacillin,1,0,NA,0,NA,0
+BPH3239,ANZCOSS,VSS-040,VSS-040,BPH3239,16-Mar-07,2007,Princess Alexandra,QLD,3-Oct-44,62,female,Community-onset,"Community-onset, healthcare-associated",1,MSSA,0.38,Pos-high,0,Survived,2,0,Flucloxacillin,1,0,NA,0,NA,0
+BPH3240,ANZCOSS,VSS-041,VSS-041,BPH3240,12-Feb-08,2008,Princess Alexandra,QLD,13-Jan-28,80,female,Hospital-onset,NA,1,MSSA,0.75,Pos-high,0,Survived,1,3,Vancomyicin,1,0,NA,0,NA,0
+BPH3241,ANZCOSS,VSS-042,VSS-042,BPH3241,26-Feb-08,2008,Princess Alexandra,QLD,20-Oct-30,77,male,Community-onset,Community-acquired,1.5,MSSA,0.75,Pos-low,0,Survived,0,3,Flucloxacillin,1,0,NA,0,NA,0
+BPH3242,ANZCOSS,VSS-043,VSS-043,BPH3242,13-Mar-07,2007,Princess Alexandra,QLD,30-Jul-56,50,female,NA,NA,1.5,MSSA,0.38,Neg,0,Survived,2,1,Other,1,0,NA,0,NA,0
+BPH3243,ANZCOSS,VSS-044,VSS-044,BPH3243,15-Mar-07,2007,Princess Alexandra,QLD,26-Jan-43,64,female,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,0.5,Pos-high,0,Survived,2,3,Flucloxacillin,3,0,NA,0,NA,0
+BPH3244,ANZCOSS,VSS-045,VSS-045,BPH3244,20-Sep-07,2007,Princess Alexandra,QLD,15-Feb-50,57,male,Community-onset,"Community-onset, healthcare-associated",3,MRSA,NA,Pos-low,0,Survived,2,3,Vancomyicin,1,0,NA,0,NA,0
+BPH3245,ANZCOSS,VSS-046,VSS-046,BPH3245,7-Oct-07,2007,Princess Alexandra,QLD,14-Jan-48,59,female,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.75,Neg,0,Survived,2,1,Vancomyicin,1,0,NA,0,NA,0
+BPH3246,ANZCOSS,VSS-047,VSS-047,BPH3246,21-Aug-08,2008,Princess Alexandra,QLD,31-Aug-60,47,male,Hospital-onset,NA,1.5,MRSA,NA,Pos-high,0,Survived,2,2,Vancomyicin,1,0,NA,0,NA,0
+BPH3247,ANZCOSS,VSS-048,VSS-048,BPH3247,27-Sep-08,2008,Princess Alexandra,QLD,17-Oct-31,76,male,Hospital-onset,"Hospital-onset, healthcare-associated",1,MSSA,0.38,Pos-low,0,Survived,1,1,Flucloxacillin,1,0,NA,0,NA,0
+BPH3248,ANZCOSS,VSS-049,VSS-049,BPH3248,26-Mar-08,2008,Princess Alexandra,QLD,4-Apr-62,45,male,Community-onset,"Community-onset, healthcare-associated",1.5,MRSA,NA,Neg,0,Survived,6,3,Vancomyicin,2,0,NA,0,NA,0
+BPH3249,ANZCOSS,VSS-050,VSS-050,BPH3249,11-Apr-08,2008,Princess Alexandra,QLD,20-May-40,67,male,Community-onset,Community-acquired,1,MSSA,1,Neg,0,Survived,1,1,Flucloxacillin,3,0,NA,1,NA,0
+BPH3250,ANZCOSS,VSS-051,VSS-051,BPH3250,1-Jul-07,2007,Princess Alexandra,QLD,5-Sep-53,53,female,Hospital-onset,"Hospital-onset, healthcare-associated",2,MRSA,NA,Equivocal,0,Survived,2,3,Vancomyicin,1,1,NA,0,NA,0
+BPH3251,ANZCOSS,VSS-052,VSS-052,BPH3251,6-Jul-07,2007,Princess Alexandra,QLD,15-Apr-54,53,male,Community-onset,"Community-onset, healthcare-associated",0.75,MSSA,0.38,Pos-high,0,Survived,0,1,Flucloxacillin,1,0,NA,0,NA,0
+BPH3252,ANZCOSS,VSS-053,VSS-053,BPH3252,21-Sep-07,2007,Princess Alexandra,QLD,8-Feb-34,73,female,Hospital-onset,NA,1.5,MRSA,NA,Pos-high,0,Died,2,3,Vancomyicin,1,0,NA,0,NA,0
+BPH3253,ANZCOSS,VSS-054,VSS-054,BPH3253,19-Oct-07,2007,Princess Alexandra,QLD,24-May-84,23,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,1,Pos-high,0,Survived,0,0,Flucloxacillin,1,0,NA,0,NA,0
+BPH3254,ANZCOSS,VSS-055,VSS-055,BPH3254,3-Jun-08,2008,Princess Alexandra,QLD,26-Sep-39,68,male,Community-onset,"Community-onset, healthcare-associated",1.5,MRSA,NA,Equivocal,0,Survived,2,3,Vancomyicin,1,1,NA,0,NA,0
+BPH3255,ANZCOSS,VSS-056,VSS-056,BPH3255,25-Jun-08,2008,Princess Alexandra,QLD,5-Feb-49,59,male,Hospital-onset,NA,1.5,MSSA,0.38,Pos-high,0,Survived,3,1,Flucloxacillin,1,0,NA,0,NA,0
+BPH3256,ANZCOSS,VSS-057,VSS-057,BPH3256,3-Feb-08,2008,Princess Alexandra,QLD,13-Dec-85,22,male,Hospital-onset,NA,1.5,MSSA,1,Pos-high,0,Survived,0,3,Vancomyicin,2,0,NA,0,NA,0
+BPH3257,ANZCOSS,VSS-058,VSS-058,BPH3257,15-Feb-08,2008,Princess Alexandra,QLD,17-Jul-52,55,male,Community-onset,"Community-onset, healthcare-associated",0.5,MSSA,0.75,Neg,0,Survived,2,3,Flucloxacillin,1,0,NA,0,NA,0
+BPH3258,ANZCOSS,VSS-059,VSS-059,BPH3258,18-Jul-07,2007,Princess Alexandra,QLD,12-Feb-52,55,male,Community-onset,"Community-onset, healthcare-associated",3,MRSA,NA,Pos-high,0,Survived,0,1,Vancomyicin,1,0,NA,0,NA,0
+BPH3259,ANZCOSS,VSS-060,VSS-060,BPH3259,1-Aug-07,2007,Princess Alexandra,QLD,10-Mar-60,47,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.38,Pos-low,0,Survived,0,0,Vancomyicin,1,0,NA,0,NA,0
+BPH3260,ANZCOSS,VSS-061,VSS-061,BPH3260,15-Jun-07,2007,Princess Alexandra,QLD,12-Mar-49,58,male,Community-onset,"Community-onset, healthcare-associated",1.5,MRSA,256,Pos-low,0,Survived,2,3,Vancomyicin,1,0,NA,0,NA,0
+BPH3261,ANZCOSS,VSS-062,VSS-062,BPH3261,29-Jun-07,2007,Princess Alexandra,QLD,23-Jan-58,49,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,0.75,Pos-high,0,Survived,2,3,Flucloxacillin,2,0,NA,0,NA,0
+BPH3262,ANZCOSS,VSS-063,VSS-063,BPH3262,11-Mar-08,2008,Princess Alexandra,QLD,6-Feb-63,45,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MRSA,NA,Pos-low,0,Survived,1,3,Vancomyicin,1,0,NA,0,NA,0
+BPH3263,ANZCOSS,VSS-064,VSS-064,BPH3263,29-Mar-08,2008,Princess Alexandra,QLD,11-Jun-56,51,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,1,Pos-high,0,Survived,4,2,Flucloxacillin,1,0,NA,0,NA,0
+BPH3264,ANZCOSS,VSS-065,VSS-065,BPH3264,30-May-07,2007,Princess Alexandra,QLD,20-Mar-62,45,female,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,1,Pos-low,0,Survived,0,2,Vancomyicin,1,0,NA,0,NA,0
+BPH3265,ANZCOSS,VSS-066,VSS-066,BPH3265,25-Jun-07,2007,Princess Alexandra,QLD,9-Feb-64,43,male,Community-onset,NA,2,MSSA,0.38,Pos-low,0,Survived,0,3,Flucloxacillin,1,0,NA,0,NA,0
+BPH3266,ANZCOSS,VSS-067,VSS-067,BPH3266,13-May-08,2008,Princess Alexandra,QLD,1-Mar-38,70,male,Community-onset,"Community-onset, healthcare-associated",2,MRSA,NA,Pos-low,0,Survived,2,3,Vancomyicin,11,0,NA,0,NA,1
+BPH3267,ANZCOSS,VSS-068,VSS-068,BPH3267,13-May-08,2008,Princess Alexandra,QLD,11-Sep-52,55,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.25,Neg,0,Survived,1,3,Flucloxacillin,1,0,NA,0,NA,0
+BPH3268,ANZCOSS,VSS-069,VSS-069,BPH3268,28-May-07,2007,Princess Alexandra,QLD,11-Dec-29,77,female,Hospital-onset,NA,1.5,MRSA,3,Neg,0,Survived,2,2,Vancomyicin,2,1,NA,0,NA,0
+BPH3269,ANZCOSS,VSS-070,VSS-070,BPH3269,22-Jun-07,2007,Princess Alexandra,QLD,2-Jul-29,77,male,Hospital-onset,"Hospital-onset, healthcare-associated",1,MSSA,0.38,Neg,0,Survived,3,3,Flucloxacillin,1,0,NA,0,NA,0
+BPH3270,ANZCOSS,VSS-071,VSS-071,BPH3270,21-Mar-08,2008,Princess Alexandra,QLD,30-Jul-75,32,male,Community-onset,Community-acquired,1,MSSA,2,Pos-high,0,Survived,0,1,Vancomyicin,3,0,NA,0,NA,0
+BPH3271,ANZCOSS,VSS-072,VSS-072,BPH3271,11-Apr-08,2008,Princess Alexandra,QLD,2-Jul-40,67,female,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.25,Pos-low,0,Survived,6,3,Flucloxacillin,4,0,NA,0,NA,0
+BPH3272,ANZCOSS,VSS-073,VSS-073,BPH3272,21-Jul-07,2007,Princess Alexandra,QLD,23-May-44,63,male,Hospital-onset,"Hospital-onset, healthcare-associated",3,MRSA,NA,Pos-high,0,Survived,4,3,Vancomyicin,2,0,NA,0,NA,0
+BPH3273,ANZCOSS,VSS-074,VSS-074,BPH3273,19-Aug-07,2007,Princess Alexandra,QLD,7-Apr-66,41,male,NA,NA,2,MSSA,0.38,Pos-high,0,Survived,1,3,Flucloxacillin,1,0,NA,0,NA,1
+BPH3274,ANZCOSS,VSS-075,VSS-075,BPH3274,22-Jul-08,2008,Princess Alexandra,QLD,9-Nov-70,37,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MRSA,NA,Pos-low,0,Survived,1,1,Vancomyicin,1,0,NA,0,NA,0
+BPH3275,ANZCOSS,VSS-076,VSS-076,BPH3275,16-Aug-08,2008,Princess Alexandra,QLD,30-Aug-59,48,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.75,Neg,0,Survived,2,1,Flucloxacillin,1,0,NA,0,NA,0
+BPH3276,ANZCOSS,VSS-077,VSS-077,BPH3276,26-May-08,2008,Princess Alexandra,QLD,10-Aug-39,68,male,Community-onset,"Community-onset, healthcare-associated",3,MRSA,NA,Neg,0,Died,4,0,Vancomyicin,2,0,NA,0,NA,0
+BPH3277,ANZCOSS,VSS-078,VSS-078,BPH3277,31-May-08,2008,Princess Alexandra,QLD,19-Mar-28,80,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,1.5,Pos-high,0,Died,4,3,Flucloxacillin,1,0,NA,0,NA,0
+BPH3278,ANZCOSS,VSS-079,VSS-079,BPH3278,5-Mar-08,2008,Princess Alexandra,QLD,24-Apr-28,79,male,Hospital-onset,NA,1,MSSA,0.5,Pos-high,0,Survived,1,3,Other,2,0,NA,0,NA,0
+BPH3279,ANZCOSS,VSS-080,VSS-080,BPH3279,27-Mar-08,2008,Princess Alexandra,QLD,4-Dec-85,22,male,Community-onset,"Community-onset, healthcare-associated",1,MSSA,0.75,Equivocal,0,Survived,0,4,Vancomyicin,1,0,NA,0,NA,0
+BPH3280,ANZCOSS,VSS-081,VSS-081,BPH3280,16-Mar-07,2007,Princess Alexandra,QLD,17-Feb-35,72,female,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.75,Pos-high,0,Survived,3,1,Flucloxacillin,1,0,NA,0,NA,0
+BPH3281,ANZCOSS,VSS-082,VSS-082,BPH3281,21-Mar-07,2007,Princess Alexandra,QLD,31-Dec-43,63,female,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.75,Neg,0,Survived,1,1,Flucloxacillin,1,0,NA,0,NA,0
+BPH3282,ANZCOSS,VSS-083,VSS-083,BPH3282,15-Jul-08,2008,Princess Alexandra,QLD,4-May-24,84,male,Community-onset,"Community-onset, healthcare-associated",1.5,MRSA,NA,Neg,0,Died,3,7,Vancomyicin,8,0,NA,0,NA,0
+BPH3283,ANZCOSS,VSS-084,VSS-084,BPH3283,26-Jul-08,2008,Princess Alexandra,QLD,9-Jun-65,43,male,Community-onset,"Community-onset, healthcare-associated",2,MSSA,0.5,Pos-low,0,Survived,3,3,Flucloxacillin,1,0,NA,0,NA,0
+BPH3284,ANZCOSS,VSS-085,VSS-085,BPH3284,4-Feb-08,2008,Princess Alexandra,QLD,25-Oct-62,45,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MRSA,NA,Pos-high,0,Survived,2,3,Vancomyicin,2,0,NA,0,NA,0
+BPH3285,ANZCOSS,VSS-086,VSS-086,BPH3285,19-Feb-08,2008,Princess Alexandra,QLD,25-Jul-57,50,male,Community-onset,Community-acquired,1.5,MSSA,0.75,Pos-low,0,Survived,0,9,Flucloxacillin,2,NA,NA,0,NA,0
+BPH3286,ANZCOSS,VSS-087,VSS-087,BPH3286,22-Sep-08,2008,Princess Alexandra,QLD,19-Oct-59,48,male,Community-onset,"Community-onset, healthcare-associated",1.5,MRSA,NA,Pos-low,0,Survived,2,1,Vancomyicin,1,0,NA,0,NA,0
+BPH3287,ANZCOSS,VSS-088,VSS-088,BPH3287,1-Oct-08,2008,Princess Alexandra,QLD,29-May-54,54,male,Community-onset,Community-acquired,1.5,MSSA,0.75,Neg,0,Survived,0,2,Flucloxacillin,1,0,NA,0,NA,0
+BPH3288,ANZCOSS,VSS-089,VSS-089,BPH3288,17-Apr-08,2008,Princess Alexandra,QLD,24-Jul-37,70,male,Hospital-onset,NA,1.5,MRSA,NA,Neg,0,Survived,2,7,Vancomyicin,4,0,NA,0,NA,0
+BPH3289,ANZCOSS,VSS-090,VSS-090,BPH3289,3-May-08,2008,Princess Alexandra,QLD,24-Jul-49,58,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.25,Neg,0,Survived,3,1,Other,1,0,NA,0,NA,1
+BPH3290,ANZCOSS,VSS-091,VSS-091,BPH3290,17-Jan-07,2007,Princess Alexandra,QLD,8-Nov-60,46,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MRSA,NA,Equivocal,0,Survived,1,4,Vancomyicin,1,0,NA,0,NA,0
+BPH3291,ANZCOSS,VSS-092,VSS-092,BPH3291,24-Jan-07,2007,Princess Alexandra,QLD,9-Mar-10,96,male,Hospital-onset,NA,1.5,MSSA,0.5,Neg,0,Died,1,2,Flucloxacillin,1,0,NA,0,NA,1
+BPH3292,ANZCOSS,VSS-093,VSS-093,BPH3292,27-Mar-08,2008,Princess Alexandra,QLD,30-Sep-69,38,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MRSA,NA,Neg,0,NA,0,2,Vancomyicin,3,0,NA,0,NA,0
+BPH3293,ANZCOSS,VSS-094,VSS-094,BPH3293,19-Apr-08,2008,Princess Alexandra,QLD,26-Dec-62,45,male,Community-onset,NA,1.5,MSSA,0.19,Pos-low,0,Survived,3,1,Flucloxacillin,2,0,NA,0,NA,0
+BPH3294,ANZCOSS,VSS-095,VSS-095,BPH3294,18-Jul-08,2008,Princess Alexandra,QLD,31-Aug-60,47,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MRSA,NA,Equivocal,0,Survived,3,3,Vancomyicin,1,1,NA,0,NA,0
+BPH3295,ANZCOSS,VSS-096,VSS-096,BPH3295,27-Jul-08,2008,Princess Alexandra,QLD,28-Aug-34,73,female,Hospital-onset,"Hospital-onset, healthcare-associated",2,MSSA,0.25,Neg,0,Survived,1,3,Flucloxacillin,1,0,NA,0,NA,0
+BPH3296,ANZCOSS,VSS-097,VSS-097,BPH3296,20-Oct-07,2007,Princess Alexandra,QLD,27-Aug-90,17,male,Community-onset,Community-acquired,1.5,MRSA,NA,Neg,0,Survived,0,1,Vancomyicin,1,0,NA,0,NA,0
+BPH3297,ANZCOSS,VSS-098,VSS-098,BPH3297,3-Nov-07,2007,Princess Alexandra,QLD,7-Sep-39,68,male,Community-onset,Community-acquired,1.5,MSSA,0.5,Pos-low,0,Survived,0,3,Flucloxacillin,1,0,NA,0,NA,1
+BPH3298,ANZCOSS,VSS-099,VSS-099,BPH3298,9-Oct-08,2008,Princess Alexandra,QLD,16-Dec-55,52,male,Community-onset,"Community-onset, healthcare-associated",1.5,MRSA,NA,Neg,0,Survived,1,1,Vancomyicin,1,0,NA,0,NA,1
+BPH3299,ANZCOSS,VSS-100,VSS-100,BPH3299,14-Oct-08,2008,Princess Alexandra,QLD,6-Apr-18,90,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MSSA,0.75,Neg,0,Died,3,0,Flucloxacillin,1,0,NA,0,NA,0
+BPH3300,ANZCOSS,VSS-101,VSS-101,BPH3300,23-Jan-08,2008,Princess Alexandra,QLD,10-Jan-50,58,male,Community-onset,Community-acquired,1.5,MSSA,0.38,Neg,0,Survived,1,3,Flucloxacillin,1,0,NA,0,NA,1
+BPH3301,ANZCOSS,VSS-102,VSS-102,BPH3301,7-Feb-08,2008,Princess Alexandra,QLD,12-Feb-93,14,female,Community-onset,Community-acquired,2,MSSA,0.38,Pos-low,0,NA,0,1,Flucloxacillin,1,0,NA,0,NA,1
+BPH3302,ANZCOSS,VSS-103,VSS-103,BPH3302,23-Jan-07,2007,Princess Alexandra,QLD,14-Jan-49,58,female,Community-onset,"Community-onset, healthcare-associated",2,MSSA,0.38,Pos-low,0,Survived,3,0,Flucloxacillin,1,0,NA,0,NA,0
+BPH3303,ANZCOSS,VSS-104,VSS-104,BPH3303,24-Jan-07,2007,Princess Alexandra,QLD,25-Dec-54,52,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,0.75,Pos-high,0,Survived,2,2,Flucloxacillin,1,0,NA,0,NA,0
+BPH3304,ANZCOSS,VSS-105,VSS-105,BPH3304,23-May-07,2007,Princess Alexandra,QLD,11-Dec-29,77,female,Community-onset,"Community-onset, healthcare-associated",1,MSSA,1.5,Neg,0,Survived,2,3,Vancomyicin,9,1,NA,0,NA,0
+BPH3305,ANZCOSS,VSS-106,VSS-106,BPH3305,11-Jun-07,2007,Princess Alexandra,QLD,14-Jun-27,79,female,Community-onset,Community-acquired,0.75,MSSA,0.5,Pos-high,0,Survived,3,3,Flucloxacillin,1,0,NA,0,NA,0
+BPH3306,ANZCOSS,VSS-107,VSS-107,BPH3306,23-Jun-07,2007,Princess Alexandra,QLD,18-Nov-42,64,female,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MRSA,NA,Neg,0,Died,3,9,Vancomyicin,2,0,NA,0,NA,0
+BPH3307,ANZCOSS,VSS-108,VSS-108,BPH3307,5-Jul-07,2007,Princess Alexandra,QLD,9-Jan-38,69,male,Hospital-onset,NA,1.5,MSSA,0.25,Pos-high,0,Died,5,1,Other,1,0,NA,0,NA,0
+BPH3308,ANZCOSS,VSS-109,VSS-109,BPH3308,4-May-07,2007,Princess Alexandra,QLD,4-Apr-28,79,male,Community-onset,"Community-onset, healthcare-associated",0.75,MRSA,NA,Pos-low,0,Survived,4,7,Vancomyicin,1,0,NA,0,NA,1
+BPH3309,ANZCOSS,VSS-110,VSS-110,BPH3309,4-May-07,2007,Princess Alexandra,QLD,13-Aug-29,77,male,Community-onset,NA,1.5,MSSA,0.5,Pos-high,0,Survived,2,1,Flucloxacillin,1,0,NA,0,NA,0
+BPH3310,ANZCOSS,VSS-111,VSS-111,BPH3310,21-Apr-08,2008,Princess Alexandra,QLD,1-Dec-39,68,male,Hospital-onset,"Hospital-onset, healthcare-associated",1,MSSA,0.38,Equivocal,0,Died,1,4,Flucloxacillin,1,0,NA,0,NA,0
+BPH3311,ANZCOSS,VSS-112,VSS-112,BPH3311,8-May-08,2008,Princess Alexandra,QLD,8-Dec-37,70,male,Community-onset,Community-acquired,1.5,MSSA,0.25,Pos-low,0,Survived,0,0,Flucloxacillin,1,0,NA,0,NA,0
+BPH3312,ANZCOSS,VSS-113,VSS-113,BPH3312,21-Sep-07,2007,Princess Alexandra,QLD,1-Mar-34,73,female,Community-onset,Community-acquired,1.5,MSSA,0.38,Pos-high,0,Survived,0,1,Vancomyicin,1,1,NA,0,NA,0
+BPH3313,ANZCOSS,VSS-114,VSS-114,BPH3313,23-Oct-07,2007,Princess Alexandra,QLD,3-May-76,31,male,Hospital-onset,NA,1.5,MSSA,0.38,Pos-low,0,Survived,0,5,Flucloxacillin,1,0,NA,0,NA,0
+BPH3314,ANZCOSS,VSS-115,VSS-115,BPH3314,6-Apr-07,2007,Princess Alexandra,QLD,9-Mar-55,52,female,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.38,Pos-high,0,Survived,5,3,Vancomyicin,2,0,NA,0,NA,0
+BPH3315,ANZCOSS,VSS-116,VSS-116,BPH3315,13-Apr-07,2007,Princess Alexandra,QLD,23-Aug-79,27,male,Hospital-onset,NA,1.5,MSSA,0.75,Equivocal,0,Survived,0,4,Flucloxacillin,2,0,NA,0,NA,0
+BPH3316,ANZCOSS,VSS-117,VSS-117,BPH3316,14-Jul-08,2008,Princess Alexandra,QLD,8-Jan-54,54,male,Hospital-onset,"Hospital-onset, healthcare-associated",3,MRSA,NA,Pos-low,0,Survived,1,3,Vancomyicin,1,0,NA,0,NA,0
+BPH3317,ANZCOSS,VSS-118,VSS-118,BPH3317,23-Jul-08,2008,Princess Alexandra,QLD,23-Nov-77,30,male,Community-onset,Community-acquired,1.5,MSSA,0.38,Pos-high,0,Survived,0,3,Flucloxacillin,1,0,NA,1,NA,0
+BPH3318,ANZCOSS,VSS-119,VSS-119,BPH3318,11-Aug-07,2007,Princess Alexandra,QLD,19-Jan-34,73,male,Hospital-onset,NA,1.5,MSSA,0.38,Pos-high,0,Survived,1,2,Vancomyicin,1,0,NA,0,NA,0
+BPH3319,ANZCOSS,VSS-120,VSS-120,BPH3319,19-Aug-07,2007,Princess Alexandra,QLD,3-Nov-50,56,male,Hospital-onset,"Hospital-onset, healthcare-associated",1,MSSA,0.75,Neg,0,Survived,3,3,Flucloxacillin,1,0,NA,0,NA,0
+BPH3320,ANZCOSS,VSS-121,VSS-121,BPH3320,16-Nov-07,2007,Princess Alexandra,QLD,16-Feb-83,24,male,Community-onset,"Community-onset, healthcare-associated",2,MRSA,NA,Equivocal,0,Survived,0,3,Vancomyicin,1,0,NA,0,NA,0
+BPH3321,ANZCOSS,VSS-122,VSS-122,BPH3321,9-Dec-07,2007,Princess Alexandra,QLD,5-May-89,18,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,0.38,Pos-high,0,Survived,0,1,Flucloxacillin,3,0,NA,0,NA,0
+BPH3322,ANZCOSS,VSS-123,VSS-123,BPH3322,28-Mar-07,2007,Princess Alexandra,QLD,20-Jun-63,43,female,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,0.25,Pos-low,0,Died,0,5,Vancomyicin,1,0,NA,0,NA,0
+BPH3323,ANZCOSS,VSS-124,VSS-124,BPH3323,12-Apr-07,2007,Princess Alexandra,QLD,17-May-30,76,female,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.19,Pos-high,0,Survived,3,1,Flucloxacillin,1,0,NA,0,NA,0
+BPH3324,ANZCOSS,VSS-125,VSS-125,BPH3324,19-Feb-08,2008,Austin,VIC,5-Jun-21,86,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MRSA,NA,Neg,0,Survived,3,3,Vancomyicin,1,0,NA,0,NA,0
+BPH3325,ANZCOSS,VSS-126,VSS-126,BPH3325,20-Feb-08,2008,Austin,VIC,8-Apr-42,65,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.75,Neg,0,Died,5,2,Flucloxacillin,1,0,NA,0,NA,0
+BPH3326,ANZCOSS,VSS-127,VSS-127,BPH3326,3-May-08,2008,Austin,VIC,10-Mar-25,83,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.38,Pos-high,0,Survived,5,0,Vancomyicin,1,0,NA,0,NA,0
+BPH3327,ANZCOSS,VSS-128,VSS-128,BPH3327,10-Jun-08,2008,Austin,VIC,23-Mar-34,74,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.5,Pos-high,0,Survived,3,0,Flucloxacillin,2,0,NA,0,NA,0
+BPH3328,ANZCOSS,VSS-129,VSS-129,BPH3328,8-Sep-08,2008,Austin,VIC,31-May-42,66,female,Hospital-onset,NA,2,MRSA,NA,Neg,0,Died,1,4,Vancomyicin,1,0,NA,0,NA,0
+BPH3329,ANZCOSS,VSS-130,VSS-130,BPH3329,14-Sep-08,2008,Austin,VIC,2-Jan-29,79,female,Community-onset,Community-acquired,2,MSSA,0.19,Equivocal,0,Survived,2,5,Flucloxacillin,1,0,NA,0,NA,0
+BPH3330,ANZCOSS,VSS-131,VSS-131,BPH3330,26-Nov-07,2007,Austin,VIC,18-Jan-29,78,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.5,Neg,0,Survived,5,2,Other,2,1,NA,0,NA,0
+BPH3331,ANZCOSS,VSS-132,VSS-132,BPH3331,28-Nov-07,2007,Austin,VIC,10-Dec-44,62,female,Hospital-onset,"Hospital-onset, healthcare-associated",2,MSSA,0.75,Pos-low,0,Survived,3,3,Flucloxacillin,2,0,NA,0,NA,0
+BPH3332,ANZCOSS,VSS-133,VSS-133,BPH3332,9-May-08,2008,Austin,VIC,25-May-43,64,female,Hospital-onset,"Hospital-onset, healthcare-associated",3,MRSA,NA,Equivocal,0,Survived,0,1,Vancomyicin,1,0,NA,0,NA,0
+BPH3333,ANZCOSS,VSS-134,VSS-134,BPH3333,17-Jun-08,2008,Austin,VIC,14-Mar-37,71,male,Community-onset,Community-acquired,1.5,MSSA,0.5,Neg,0,Survived,2,4,Flucloxacillin,1,0,NA,0,NA,0
+BPH3334,ANZCOSS,VSS-135,VSS-135,BPH3334,18-Jun-08,2008,Austin,VIC,4-Apr-25,83,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MSSA,0.38,Pos-high,0,Survived,8,3,Other,1,0,NA,0,NA,0
+BPH3335,ANZCOSS,VSS-136,VSS-136,BPH3335,29-Jun-08,2008,Austin,VIC,3-May-33,75,male,Community-onset,"Community-onset, healthcare-associated",2,MSSA,0.38,Neg,0,Survived,0,1,Flucloxacillin,1,0,NA,0,NA,0
+BPH3336,ANZCOSS,VSS-137,VSS-137,BPH3336,12-Dec-07,2007,Austin,VIC,13-May-30,77,male,Community-onset,"Community-onset, healthcare-associated",1.5,MRSA,NA,Equivocal,1,Survived,3,4,Vancomyicin,15,1,NA,0,NA,0
+BPH3337,ANZCOSS,VSS-138,VSS-138,BPH3337,31-Dec-07,2007,Austin,VIC,13-Jan-75,32,male,Community-onset,Community-acquired,1.5,MSSA,0.38,Pos-high,1,Survived,0,3,Flucloxacillin,5,0,NA,1,NA,0
+BPH3338,ANZCOSS,VSS-139,VSS-139,BPH3338,4-Oct-07,2007,Austin,VIC,2-Jan-27,80,male,Hospital-onset,NA,1.5,MRSA,NA,Neg,0,Died,1,2,Vancomyicin,1,0,NA,0,NA,1
+BPH3339,ANZCOSS,VSS-140,VSS-140,BPH3339,24-Oct-07,2007,Austin,VIC,14-Nov-44,62,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,0.38,Pos-low,0,Survived,2,3,Flucloxacillin,2,0,NA,0,NA,0
+BPH3340,ANZCOSS,VSS-141,VSS-141,BPH3340,25-Sep-07,2007,Austin,VIC,29-Jan-23,84,male,Community-onset,"Community-onset, healthcare-associated",1.5,MRSA,NA,Neg,0,Survived,3,4,Vancomyicin,1,0,NA,0,NA,0
+BPH3341,ANZCOSS,VSS-142,VSS-142,BPH3341,16-Oct-07,2007,Austin,VIC,5-Oct-29,78,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,1,Pos-low,0,Survived,3,2,Flucloxacillin,1,0,NA,0,NA,0
+BPH3342,ANZCOSS,VSS-143,VSS-143,BPH3342,16-Jan-08,2008,Austin,VIC,25-Oct-54,53,male,Community-onset,Community-acquired,2,MSSA,0.5,Neg,0,Survived,2,4,Vancomyicin,1,0,NA,0,NA,0
+BPH3343,ANZCOSS,VSS-144,VSS-144,BPH3343,24-Jan-08,2008,Austin,VIC,25-Feb-62,45,female,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.75,Neg,0,Survived,0,4,Flucloxacillin,1,0,NA,0,NA,0
+BPH3344,ANZCOSS,VSS-145,VSS-145,BPH3344,30-Jun-08,2008,Austin,VIC,10-Mar-70,38,female,Hospital-onset,"Hospital-onset, healthcare-associated",2,MSSA,0.75,Equivocal,0,Survived,3,3,Other,1,0,NA,0,NA,0
+BPH3345,ANZCOSS,VSS-146,VSS-146,BPH3345,2-Jul-08,2008,Austin,VIC,17-Mar-58,50,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.38,Neg,0,Survived,4,3,Flucloxacillin,4,0,NA,1,NA,0
+BPH3346,ANZCOSS,VSS-147,VSS-147,BPH3346,26-Feb-08,2008,Austin,VIC,28-May-58,49,male,Community-onset,"Community-onset, healthcare-associated",2,MRSA,NA,Neg,0,Survived,1,2,Vancomyicin,1,0,NA,0,NA,0
+BPH3347,ANZCOSS,VSS-148,VSS-148,BPH3347,10-Mar-08,2008,Austin,VIC,1-Sep-78,29,female,Community-onset,Community-acquired,1.5,MSSA,0.19,Pos-low,0,Survived,0,1,Flucloxacillin,2,0,NA,1,NA,0
+BPH3348,ANZCOSS,VSS-149,VSS-149,BPH3348,21-Oct-07,2007,Austin,VIC,30-Apr-47,60,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MRSA,NA,Neg,1,Survived,7,3,Vancomyicin,15,0,NA,0,NA,0
+BPH3349,ANZCOSS,VSS-150,VSS-150,BPH3349,6-Nov-07,2007,Austin,VIC,1-Nov-24,83,female,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,0.5,Neg,0,NA,2,3,Flucloxacillin,1,0,NA,0,NA,0
+BPH3350,ANZCOSS,VSS-151,VSS-151,BPH3350,27-Oct-07,2007,Austin,VIC,26-Aug-25,82,female,Community-onset,NA,2,MSSA,0.5,Pos-low,0,Died,2,0,Vancomyicin,1,0,NA,0,NA,1
+BPH3351,ANZCOSS,VSS-152,VSS-152,BPH3351,6-Nov-07,2007,Austin,VIC,20-Apr-28,79,female,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,0.5,Neg,0,Survived,3,0,Flucloxacillin,3,0,NA,0,NA,0
+BPH3352,ANZCOSS,VSS-153,VSS-153,BPH3352,11-May-08,2008,Austin,VIC,17-Nov-68,39,male,Community-onset,"Community-onset, healthcare-associated",1.5,MRSA,NA,Neg,1,Survived,0,3,Vancomyicin,6,0,NA,1,NA,0
+BPH3353,ANZCOSS,VSS-154,VSS-154,BPH3353,21-Jun-08,2008,Austin,VIC,6-Jul-25,82,male,Community-onset,"Community-onset, healthcare-associated",2,MSSA,0.5,Pos-low,0,Survived,1,5,Flucloxacillin,2,0,NA,1,NA,0
+BPH3354,ANZCOSS,VSS-155,VSS-155,BPH3354,25-Mar-08,2008,Austin,VIC,7-Sep-56,51,female,Hospital-onset,"Hospital-onset, healthcare-associated",1,MSSA,0.38,Pos-low,0,Survived,2,1,Other,1,0,NA,0,NA,0
+BPH3355,ANZCOSS,VSS-156,VSS-156,BPH3355,10-May-08,2008,Austin,VIC,1-Jul-76,31,male,Community-onset,Community-acquired,1.5,MSSA,0.5,Pos-low,0,Survived,0,3,Flucloxacillin,4,0,NA,0,NA,0
+BPH3356,ANZCOSS,VSS-157,VSS-157,BPH3356,5-Dec-07,2007,Austin,VIC,12-Nov-44,63,male,Community-onset,"Community-onset, healthcare-associated",2,MRSA,NA,Pos-low,1,Survived,3,4,Vancomyicin,2,1,NA,0,NA,0
+BPH3357,ANZCOSS,VSS-158,VSS-158,BPH3357,25-Dec-07,2007,Austin,VIC,5-Aug-34,73,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.25,Neg,0,Survived,0,3,Flucloxacillin,2,0,NA,0,NA,0
+BPH3358,ANZCOSS,VSS-159,VSS-159,BPH3358,13-Sep-08,2008,Austin,VIC,15-May-35,73,male,Community-onset,"Community-onset, healthcare-associated",1.5,MRSA,NA,Pos-low,0,Died,5,0,Vancomyicin,1,0,NA,0,NA,0
+BPH3359,ANZCOSS,VSS-160,VSS-160,BPH3359,15-Sep-08,2008,Austin,VIC,1-Apr-74,34,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.5,Equivocal,0,Survived,2,1,Flucloxacillin,1,0,NA,0,NA,0
+BPH3360,ANZCOSS,VSS-161,VSS-161,BPH3360,30-Aug-08,2008,Austin,VIC,26-Sep-29,78,female,Hospital-onset,"Hospital-onset, healthcare-associated",2,MRSA,NA,Neg,0,Died,5,3,Vancomyicin,5,0,NA,0,NA,0
+BPH3361,ANZCOSS,VSS-162,VSS-162,BPH3361,1-Sep-08,2008,Austin,VIC,19-Apr-28,80,female,Community-onset,Community-acquired,1.5,MSSA,0.38,Pos-low,0,Died,1,4,Flucloxacillin,1,0,NA,0,NA,0
+BPH3362,ANZCOSS,VSS-163,VSS-163,BPH3362,21-Aug-08,2008,Austin,VIC,1-Oct-49,58,female,Hospital-onset,NA,2,MRSA,NA,Neg,0,Survived,0,3,Vancomyicin,1,0,NA,0,NA,0
+BPH3363,ANZCOSS,VSS-164,VSS-164,BPH3363,27-Aug-08,2008,Austin,VIC,25-Sep-50,57,male,Community-onset,Community-acquired,2,MSSA,0.38,Pos-low,0,Survived,0,3,Vancomyicin,1,0,NA,0,NA,1
+BPH3364,ANZCOSS,VSS-165,VSS-165,BPH3364,9-Jun-08,2008,Austin,VIC,27-Oct-63,44,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.5,Neg,0,Survived,3,1,Vancomyicin,1,0,NA,0,NA,0
+BPH3365,ANZCOSS,VSS-166,VSS-166,BPH3365,26-Jun-08,2008,Austin,VIC,1-Aug-62,45,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.38,Pos-low,0,Survived,3,3,Flucloxacillin,6,0,NA,0,NA,0
+BPH3366,ANZCOSS,VSS-167,VSS-167,BPH3366,3-Jan-08,2008,Austin,VIC,18-Jan-29,78,male,Community-onset,"Community-onset, healthcare-associated",3,MRSA,NA,Neg,0,Survived,4,0,Vancomyicin,1,0,NA,0,NA,0
+BPH3367,ANZCOSS,VSS-170,VSS-170,BPH3367,9-Nov-07,2007,Austin,VIC,4-Aug-41,66,male,Hospital-onset,NA,2,MSSA,0.38,Equivocal,0,Died,2,1,Flucloxacillin,1,0,NA,1,NA,0
+BPH3368,ANZCOSS,VSS-171,VSS-171,BPH3368,21-Mar-08,2008,Austin,VIC,29-Jun-35,72,female,Community-onset,"Community-onset, healthcare-associated",2,MRSA,NA,Neg,0,Died,3,3,Vancomyicin,1,1,NA,0,NA,0
+BPH3369,ANZCOSS,VSS-172,VSS-172,BPH3369,15-Apr-08,2008,Austin,VIC,8-Dec-43,64,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.75,Pos-low,0,Survived,3,3,Vancomyicin,5,0,NA,0,NA,0
+BPH3370,ANZCOSS,VSS-173,VSS-173,BPH3370,16-Jan-08,2008,Austin,VIC,9-Dec-48,59,female,Hospital-onset,NA,2,MRSA,NA,Equivocal,0,Survived,3,3,Vancomyicin,1,0,NA,0,NA,0
+BPH3371,ANZCOSS,VSS-174,VSS-174,BPH3371,28-Jan-08,2008,Austin,VIC,6-Apr-16,91,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.38,Equivocal,0,Survived,2,3,Flucloxacillin,1,0,NA,0,NA,0
+BPH3372,ANZCOSS,VSS-175,VSS-175,BPH3372,2-Oct-08,2008,Austin,VIC,12-Jan-47,61,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MRSA,NA,Neg,0,Died,1,0,Vancomyicin,1,0,NA,0,NA,0
+BPH3373,ANZCOSS,VSS-176,VSS-176,BPH3373,6-Oct-08,2008,Austin,VIC,18-Aug-67,41,female,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.38,Neg,0,Survived,4,3,Flucloxacillin,7,0,NA,0,NA,0
+BPH3374,ANZCOSS,VSS-177,VSS-177,BPH3374,8-Nov-07,2007,Austin,VIC,24-Feb-45,62,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MSSA,0.5,Pos-low,0,Survived,7,3,Flucloxacillin,2,0,NA,0,NA,0
+BPH3375,ANZCOSS,VSS-178,VSS-178,BPH3375,11-Nov-07,2007,Austin,VIC,11-Oct-25,82,female,Community-onset,"Community-onset, healthcare-associated",2,MSSA,0.75,Pos-low,0,Died,3,3,Flucloxacillin,2,0,NA,1,NA,0
+BPH3376,ANZCOSS,VSS-179,VSS-179,BPH3376,24-Dec-07,2007,Austin,VIC,18-Mar-40,67,female,Hospital-onset,"Hospital-onset, healthcare-associated",3,MRSA,NA,Neg,0,Survived,4,0,Vancomyicin,1,0,NA,0,NA,0
+BPH3377,ANZCOSS,VSS-180,VSS-180,BPH3377,12-Jan-08,2008,Austin,VIC,18-Jun-40,67,female,Community-onset,"Community-onset, healthcare-associated",2,MSSA,0.5,Neg,0,Survived,5,3,Flucloxacillin,3,0,NA,0,NA,0
+BPH3378,ANZCOSS,VSS-181,VSS-181,BPH3378,27-Sep-07,2007,Austin,VIC,9-Sep-18,89,male,Hospital-onset,NA,1.5,MSSA,0.5,Pos-high,0,Survived,2,3,Vancomyicin,1,0,NA,0,NA,0
+BPH3379,ANZCOSS,VSS-182,VSS-182,BPH3379,16-Oct-07,2007,Austin,VIC,13-Oct-46,61,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.5,Neg,0,Survived,5,3,Flucloxacillin,2,0,NA,0,NA,0
+BPH3380,ANZCOSS,VSS-183,VSS-183,BPH3380,29-Apr-08,2008,Austin,VIC,12-Sep-36,71,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,1,Pos-high,0,Survived,2,5,Flucloxacillin,1,0,NA,0,NA,0
+BPH3381,ANZCOSS,VSS-184,VSS-184,BPH3381,8-Jun-08,2008,Austin,VIC,26-Dec-58,49,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.5,Pos-high,1,Survived,3,3,Flucloxacillin,6,0,NA,0,NA,0
+BPH3382,ANZCOSS,VSS-185,VSS-185,BPH3382,14-Feb-08,2008,Austin,VIC,23-Mar-29,78,female,Community-onset,"Community-onset, healthcare-associated",2,MRSA,3,Neg,0,Survived,4,3,Vancomyicin,1,0,NA,0,NA,0
+BPH3383,ANZCOSS,VSS-186,VSS-186,BPH3383,16-Feb-08,2008,Austin,VIC,19-Mar-26,81,male,Community-onset,"Community-onset, healthcare-associated",2,MSSA,0.75,Neg,0,Died,0,3,Flucloxacillin,4,0,NA,0,NA,0
+BPH3384,ANZCOSS,VSS-187,VSS-187,BPH3384,18-Oct-07,2007,Austin,VIC,14-Oct-39,68,male,Community-onset,"Community-onset, healthcare-associated",1.5,MRSA,NA,Neg,0,Died,1,3,Vancomyicin,5,1,NA,0,NA,0
+BPH3387,ANZCOSS,VSS-190,VSS-190,BPH3387,3-Jun-08,2008,Austin,VIC,21-Apr-56,52,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,0.75,Neg,0,Survived,2,1,Flucloxacillin,2,0,NA,0,NA,0
+BPH3388,ANZCOSS,VSS-191,VSS-191,BPH3388,31-Jul-07,2007,Monash Health,VIC,18-May-74,33,female,Hospital-onset,"Hospital-onset, healthcare-associated",2,MRSA,NA,Pos-low,0,Survived,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3389,ANZCOSS,VSS-192,VSS-192,BPH3389,31-Jul-07,2007,Monash Health,VIC,23-Jan-07,0,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.75,Pos-high,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,1
+BPH3390,ANZCOSS,VSS-193,VSS-193,BPH3390,22-Jun-08,2008,Monash Health,VIC,27-Aug-69,38,male,Community-onset,"Community-onset, healthcare-associated",1.5,MRSA,NA,Neg,1,Survived,1,3,Vancomyicin,1,0,NA,0,NA,0
+BPH3391,ANZCOSS,VSS-194,VSS-194,BPH3391,23-Jun-08,2008,Monash Health,VIC,5-Nov-96,11,female,Community-onset,Community-acquired,2,MSSA,0.75,Pos-high,0,Survived,0,1,Flucloxacillin,1,0,NA,0,NA,1
+BPH3392,ANZCOSS,VSS-195,VSS-195,BPH3392,2-Jun-08,2008,Monash Health,VIC,20-Nov-40,67,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.19,Pos-low,0,Survived,1,3,Vancomyicin,1,0,NA,0,NA,0
+BPH3393,ANZCOSS,VSS-196,VSS-196,BPH3393,8-Jun-08,2008,Monash Health,VIC,17-Jun-50,57,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,1,Neg,0,Survived,2,3,Flucloxacillin,1,0,NA,0,NA,0
+BPH3394,ANZCOSS,VSS-197,VSS-197,BPH3394,30-Oct-07,2007,Monash Health,VIC,23-Nov-47,59,female,Hospital-onset,NA,3,MRSA,NA,Neg,0,Died,0,5,Vancomyicin,1,0,NA,0,NA,0
+BPH3395,ANZCOSS,VSS-198,VSS-198,BPH3395,5-Nov-07,2007,Monash Health,VIC,29-Sep-48,59,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MSSA,0.38,Neg,0,Survived,2,3,Flucloxacillin,1,0,NA,0,NA,0
+BPH3396,ANZCOSS,VSS-199,VSS-199,BPH3396,26-Nov-07,2007,Monash Health,VIC,25-Jul-29,78,male,Hospital-onset,"Hospital-onset, healthcare-associated",1,MRSA,NA,Pos-high,0,Died,1,4,Vancomyicin,7,0,NA,0,NA,0
+BPH3397,ANZCOSS,VSS-200,VSS-200,BPH3397,30-Nov-07,2007,Monash Health,VIC,20-Jul-53,54,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,0.19,Neg,0,Survived,0,3,Flucloxacillin,1,0,NA,0,NA,0
+BPH3398,ANZCOSS,VSS-202,VSS-202,BPH3398,4-Nov-08,2008,Monash Health,VIC,17-Feb-55,53,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.75,Pos-high,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,0
+BPH3399,ANZCOSS,VSS-203,VSS-203,BPH3399,24-Feb-08,2008,Monash Health,VIC,12-Aug-52,55,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MRSA,NA,Pos-low,1,Survived,1,0,Vancomyicin,8,0,NA,0,NA,1
+BPH3400,ANZCOSS,VSS-204,VSS-204,BPH3400,24-Feb-08,2008,Monash Health,VIC,6-Jan-18,90,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,0.5,Pos-low,0,Survived,2,3,Flucloxacillin,1,0,NA,0,NA,0
+BPH3401,ANZCOSS,VSS-205,VSS-205,BPH3401,20-Aug-07,2007,Monash Health,VIC,13-Nov-32,74,female,Community-onset,"Community-onset, healthcare-associated",3,MRSA,NA,Equivocal,1,Survived,0,3,Vancomyicin,2,1,NA,0,NA,0
+BPH3402,ANZCOSS,VSS-206,VSS-206,BPH3402,24-Aug-07,2007,Monash Health,VIC,30-Aug-63,43,male,Community-onset,Community-acquired,1.5,MSSA,0.38,Neg,0,NA,2,4,Flucloxacillin,3,0,NA,1,NA,0
+BPH3403,ANZCOSS,VSS-207,VSS-207,BPH3403,26-Feb-07,2007,Monash Health,VIC,25-Oct-32,74,female,Hospital-onset,"Hospital-onset, healthcare-associated",2,MRSA,NA,Neg,0,Survived,1,2,Vancomyicin,1,0,NA,0,NA,0
+BPH3404,ANZCOSS,VSS-208,VSS-208,BPH3404,27-Feb-07,2007,Monash Health,VIC,31-Oct-94,12,male,Community-onset,Community-acquired,1.5,MSSA,0.75,Equivocal,0,Survived,0,1,Flucloxacillin,2,0,NA,0,NA,1
+BPH3406,ANZCOSS,VSS-210,VSS-210,BPH3406,11-Apr-08,2008,Monash Health,VIC,22-Feb-08,0,male,Hospital-onset,NA,1.5,MSSA,0.5,Pos-high,0,Survived,NA,NA,Flucloxacillin,1,0,NA,1,NA,0
+BPH3407,ANZCOSS,VSS-211,VSS-211,BPH3407,30-Mar-07,2007,Monash Health,VIC,17-Aug-71,35,female,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MRSA,NA,Neg,0,Survived,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3408,ANZCOSS,VSS-212,VSS-212,BPH3408,1-Apr-07,2007,Monash Health,VIC,19-Sep-64,42,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.5,Pos-high,0,Survived,1,7,Flucloxacillin,1,0,NA,0,NA,0
+BPH3409,ANZCOSS,VSS-213,VSS-213,BPH3409,19-Apr-08,2008,Monash Health,VIC,8-Nov-23,84,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,0.094,Pos-high,0,Survived,1,0,Vancomyicin,3,0,NA,0,NA,0
+BPH3410,ANZCOSS,VSS-214,VSS-214,BPH3410,19-Apr-08,2008,Monash Health,VIC,1-Nov-37,70,male,Community-onset,"Community-onset, healthcare-associated",1,MSSA,0.25,Pos-low,0,Survived,1,3,Flucloxacillin,1,0,NA,1,NA,0
+BPH3411,ANZCOSS,VSS-215,VSS-215,BPH3411,4-May-07,2007,Monash Health,VIC,21-Aug-51,55,male,Community-onset,"Community-onset, healthcare-associated",1,MRSA,NA,Pos-high,0,Survived,1,1,Vancomyicin,1,0,NA,0,NA,1
+BPH3412,ANZCOSS,VSS-216,VSS-216,BPH3412,15-May-07,2007,Monash Health,VIC,17-Dec-24,82,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.5,Pos-high,0,Died,1,3,Flucloxacillin,3,0,NA,0,NA,0
+BPH3413,ANZCOSS,VSS-217,VSS-217,BPH3413,8-Apr-07,2007,Monash Health,VIC,15-Jun-58,48,female,Community-onset,"Community-onset, healthcare-associated",2,MRSA,NA,Neg,0,Survived,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3414,ANZCOSS,VSS-218,VSS-218,BPH3414,13-Apr-07,2007,Monash Health,VIC,17-Jun-21,85,female,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.75,Pos-high,0,Survived,2,3,Flucloxacillin,1,0,NA,1,NA,0
+BPH3415,ANZCOSS,VSS-219,VSS-219,BPH3415,8-Sep-07,2007,Monash Health,VIC,1-Apr-85,22,male,Community-onset,"Community-onset, healthcare-associated",2,MRSA,NA,Neg,0,NA,1,3,Other,1,0,NA,0,NA,0
+BPH3416,ANZCOSS,VSS-220,VSS-220,BPH3416,15-Sep-07,2007,Monash Health,VIC,14-Oct-27,79,female,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,0.25,Pos-high,0,Died,0,9,Flucloxacillin,3,0,NA,0,NA,0
+BPH3417,ANZCOSS,VSS-221,VSS-221,BPH3417,7-Dec-07,2007,Monash Health,VIC,13-Nov-32,75,female,Hospital-onset,NA,3,MRSA,NA,Neg,1,Survived,0,2,Vancomyicin,4,0,NA,0,NA,0
+BPH3418,ANZCOSS,VSS-222,VSS-222,BPH3418,9-Dec-07,2007,Monash Health,VIC,12-Nov-07,0,female,Community-onset,Community-acquired,1.5,MSSA,0.38,Pos-high,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,0
+BPH3419,ANZCOSS,VSS-223,VSS-223,BPH3419,13-Sep-08,2008,Monash Health,VIC,11-Jun-31,77,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MRSA,NA,Pos-high,0,Survived,3,3,Vancomyicin,1,0,NA,0,NA,0
+BPH3420,ANZCOSS,VSS-224,VSS-224,BPH3420,18-Sep-08,2008,Monash Health,VIC,12-Apr-40,68,male,Community-onset,Community-acquired,1.5,MSSA,0.75,Pos-high,0,Survived,2,3,Flucloxacillin,1,0,NA,0,NA,1
+BPH3421,ANZCOSS,VSS-225,VSS-225,BPH3421,27-Sep-08,2008,Monash Health,VIC,17-Aug-27,81,male,Community-onset,Community-acquired,1.5,MSSA,0.5,Pos-high,0,Survived,NA,NA,Vancomyicin,NA,NA,NA,0,NA,1
+BPH3422,ANZCOSS,VSS-226,VSS-226,BPH3422,28-Sep-08,2008,Monash Health,VIC,1-Mar-49,59,male,Community-onset,Community-acquired,1.5,MSSA,0.25,Neg,0,Survived,0,3,Flucloxacillin,4,0,NA,1,NA,0
+BPH3423,ANZCOSS,VSS-227,VSS-227,BPH3423,25-Mar-08,2008,Monash Health,VIC,16-Apr-29,78,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MRSA,0.25,Pos-high,1,Died,1,2,Vancomyicin,1,0,NA,0,NA,0
+BPH3424,ANZCOSS,VSS-228,VSS-228,BPH3424,30-Mar-08,2008,Monash Health,VIC,23-Jan-49,59,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.5,Neg,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,1
+BPH3425,ANZCOSS,VSS-229,VSS-229,BPH3425,9-Jun-07,2007,Monash Health,VIC,15-Jan-30,77,male,Community-onset,Community-acquired,2,MSSA,0.75,Pos-low,0,Died,3,3,Flucloxacillin,1,0,NA,0,NA,1
+BPH3426,ANZCOSS,VSS-230,VSS-230,BPH3426,11-Jun-07,2007,Monash Health,VIC,22-Nov-66,40,female,Community-onset,Community-acquired,1.5,MSSA,0.125,Pos-high,0,Survived,0,2,Flucloxacillin,4,0,NA,1,NA,0
+BPH3427,ANZCOSS,VSS-231,VSS-231,BPH3427,6-Apr-08,2008,Monash Health,VIC,5-Feb-43,65,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MRSA,NA,Pos-high,1,Survived,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3428,ANZCOSS,VSS-232,VSS-232,BPH3428,16-Apr-08,2008,Monash Health,VIC,30-Jun-23,84,male,Community-onset,"Community-onset, healthcare-associated",2,MSSA,0.125,Pos-high,0,Died,3,4,Flucloxacillin,3,0,NA,0,NA,0
+BPH3429,ANZCOSS,VSS-233,VSS-233,BPH3429,8-Aug-08,2008,Monash Health,VIC,3-Feb-17,91,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,2,Neg,0,Died,8,2,Vancomyicin,1,0,NA,0,NA,0
+BPH3430,ANZCOSS,VSS-234,VSS-234,BPH3430,9-Aug-08,2008,Monash Health,VIC,16-Oct-22,85,female,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.19,Pos-low,0,Survived,6,3,Flucloxacillin,3,0,NA,0,NA,0
+BPH3431,ANZCOSS,VSS-235,VSS-235,BPH3431,26-Jun-07,2007,Monash Health,VIC,28-Mar-21,86,male,Hospital-onset,"Hospital-onset, healthcare-associated",3,MRSA,NA,Neg,0,Died,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3432,ANZCOSS,VSS-236,VSS-236,BPH3432,27-Jun-07,2007,Monash Health,VIC,30-Apr-54,53,male,Community-onset,"Community-onset, healthcare-associated",2,MSSA,0.38,Pos-high,0,Survived,2,2,Flucloxacillin,1,0,NA,0,NA,0
+BPH3433,ANZCOSS,VSS-237,VSS-237,BPH3433,16-Mar-08,2008,Monash Health,VIC,8-Mar-32,76,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MRSA,NA,Neg,1,Died,2,4,Vancomyicin,10,0,NA,0,NA,0
+BPH3434,ANZCOSS,VSS-238,VSS-238,BPH3434,17-Mar-08,2008,Monash Health,VIC,16-Apr-29,78,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.38,Pos-high,0,Died,1,6,Flucloxacillin,1,1,NA,0,NA,0
+BPH3435,ANZCOSS,VSS-239,VSS-239,BPH3435,5-Nov-07,2007,Monash Health,VIC,7-Jun-45,62,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MRSA,NA,Neg,0,Survived,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3436,ANZCOSS,VSS-240,VSS-240,BPH3436,11-Nov-07,2007,Monash Health,VIC,28-Sep-06,1,male,Community-onset,Community-acquired,1.5,MSSA,0.38,Pos-high,0,Survived,NA,NA,Other,1,0,NA,0,NA,1
+BPH3437,ANZCOSS,VSS-241,VSS-241,BPH3437,1-May-07,2007,Monash Health,VIC,15-Oct-36,70,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MRSA,NA,Neg,1,Survived,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3438,ANZCOSS,VSS-242,VSS-242,BPH3438,11-May-07,2007,Monash Health,VIC,5-Dec-51,55,male,Community-onset,Community-acquired,1.5,MSSA,0.5,Pos-high,0,Survived,1,1,Flucloxacillin,1,0,NA,0,NA,1
+BPH3439,ANZCOSS,VSS-243,VSS-243,BPH3439,30-Jul-07,2007,Monash Health,VIC,26-Apr-38,69,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MRSA,NA,Neg,0,Survived,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3440,ANZCOSS,VSS-244,VSS-244,BPH3440,30-Jul-07,2007,Monash Health,VIC,5-Feb-39,68,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,0.75,Pos-low,0,Survived,1,8,Flucloxacillin,1,0,NA,0,NA,0
+BPH3441,ANZCOSS,VSS-245,VSS-245,BPH3441,2-Oct-07,2007,Monash Health,VIC,4-Jun-30,77,female,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,NA,Pos-high,0,Survived,4,3,Other,1,0,NA,0,NA,0
+BPH3442,ANZCOSS,VSS-246,VSS-246,BPH3442,2-Oct-07,2007,Monash Health,VIC,1-Apr-36,71,male,Community-onset,Community-acquired,1.5,MSSA,0.38,Neg,0,Survived,0,3,Flucloxacillin,1,0,NA,0,NA,0
+BPH3443,ANZCOSS,VSS-247,VSS-247,BPH3443,22-Sep-07,2007,Monash Health,VIC,18-Oct-26,80,male,Community-onset,"Community-onset, healthcare-associated",2,MRSA,NA,Neg,0,Survived,5,4,Vancomyicin,2,0,NA,0,NA,0
+BPH3444,ANZCOSS,VSS-248,VSS-248,BPH3444,25-Sep-07,2007,Monash Health,VIC,3-Jan-51,56,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,0.5,Neg,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,0
+BPH3445,ANZCOSS,VSS-249,VSS-249,BPH3445,9-Nov-08,2008,Monash Health,VIC,4-Jan-20,88,female,Hospital-onset,"Hospital-onset, healthcare-associated",2,MSSA,0.75,Neg,0,Died,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3446,ANZCOSS,VSS-250,VSS-250,BPH3446,19-Nov-08,2008,Monash Health,VIC,16-Dec-18,89,male,Community-onset,"Community-onset, healthcare-associated",2,MSSA,0.19,Pos-high,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,0
+BPH3447,ANZCOSS,VSS-251,VSS-251,BPH3447,3-Apr-08,2008,Monash Health,VIC,17-Jul-53,54,male,Community-onset,"Community-onset, healthcare-associated",2,MRSA,NA,Pos-low,0,Survived,0,2,Vancomyicin,1,0,NA,0,NA,0
+BPH3448,ANZCOSS,VSS-252,VSS-252,BPH3448,14-Apr-08,2008,Monash Health,VIC,12-Dec-26,81,male,Hospital-onset,NA,2,MSSA,0.38,Neg,0,Died,2,0,Flucloxacillin,1,0,NA,0,NA,0
+BPH3450,ANZCOSS,VSS-254,VSS-254,BPH3450,18-Jul-07,2007,Monash Health,VIC,11-Jul-07,0,male,Community-onset,Community-acquired,2,MSSA,0.75,Pos-low,0,Survived,NA,NA,Flucloxacillin,1,0,NA,0,NA,0
+BPH3451,ANZCOSS,VSS-255,VSS-255,BPH3451,30-Aug-07,2007,Monash Health,VIC,23-Sep-19,87,male,Community-onset,"Community-onset, healthcare-associated",2,MRSA,NA,Neg,0,Died,4,4,Vancomyicin,8,0,NA,0,NA,0
+BPH3452,ANZCOSS,VSS-256,VSS-256,BPH3452,3-Sep-07,2007,Monash Health,VIC,21-Oct-91,15,male,Community-onset,Community-acquired,2,MSSA,1,Neg,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,0
+BPH3453,ANZCOSS,VSS-257,VSS-257,BPH3453,15-Jan-08,2008,Monash Health,VIC,15-May-45,62,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MRSA,NA,Neg,1,Died,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3454,ANZCOSS,VSS-258,VSS-258,BPH3454,17-Jan-08,2008,Monash Health,VIC,10-Mar-55,52,female,Community-onset,Community-acquired,1.5,MSSA,0.38,Pos-low,0,Died,NA,NA,Flucloxacillin,NA,NA,NA,1,NA,0
+BPH3455,ANZCOSS,VSS-259,VSS-259,BPH3455,27-Jan-08,2008,Monash Health,VIC,1-Jan-40,68,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MRSA,NA,Neg,0,Died,4,3,Vancomyicin,5,0,NA,0,NA,0
+BPH3456,ANZCOSS,VSS-260,VSS-260,BPH3456,1-Feb-08,2008,Monash Health,VIC,5-Dec-33,74,female,Community-onset,Community-acquired,2,MSSA,0.75,Equivocal,0,Died,2,4,Flucloxacillin,2,0,NA,0,NA,0
+BPH3457,ANZCOSS,VSS-261,VSS-261,BPH3457,27-Feb-08,2008,Monash Health,VIC,31-Mar-32,75,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MRSA,NA,Neg,0,Survived,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3458,ANZCOSS,VSS-262,VSS-262,BPH3458,2-Mar-08,2008,Monash Health,VIC,18-Nov-45,62,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,0.5,Pos-high,0,Survived,0,6,Flucloxacillin,2,0,NA,0,NA,0
+BPH3459,ANZCOSS,VSS-263,VSS-263,BPH3459,22-Apr-07,2007,Monash Health,VIC,17-Sep-75,31,female,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MRSA,NA,Pos-high,0,Survived,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3460,ANZCOSS,VSS-264,VSS-264,BPH3460,10-May-07,2007,Monash Health,VIC,23-Feb-37,70,male,Hospital-onset,NA,2,MSSA,0.5,Pos-high,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,0
+BPH3461,ANZCOSS,VSS-265,VSS-265,BPH3461,20-Mar-08,2008,Monash Health,VIC,20-Nov-26,81,male,Community-onset,Community-acquired,2,MRSA,NA,Pos-high,0,Survived,NA,NA,Vancomyicin,NA,NA,NA,1,NA,0
+BPH3462,ANZCOSS,VSS-266,VSS-266,BPH3462,25-Mar-08,2008,Monash Health,VIC,8-Feb-27,81,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MSSA,0.38,Pos-high,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,0
+BPH3463,ANZCOSS,VSS-267,VSS-267,BPH3463,6-Nov-07,2007,Monash Health,VIC,13-Nov-32,74,female,Hospital-onset,"Hospital-onset, healthcare-associated",2,MRSA,NA,Neg,0,Survived,0,1,Other,3,1,NA,0,NA,0
+BPH3464,ANZCOSS,VSS-268,VSS-268,BPH3464,11-Nov-07,2007,Monash Health,VIC,11-Aug-37,70,male,Community-onset,"Community-onset, healthcare-associated",2,MSSA,0.5,Neg,0,Survived,0,3,Other,1,0,NA,0,NA,0
+BPH3465,ANZCOSS,VSS-269,VSS-269,BPH3465,17-Aug-07,2007,Monash Health,VIC,16-May-35,72,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MRSA,NA,Neg,0,Survived,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3466,ANZCOSS,VSS-270,VSS-270,BPH3466,23-Aug-07,2007,Monash Health,VIC,31-Dec-54,52,male,Community-onset,Community-acquired,1.5,MSSA,0.75,Pos-high,0,Survived,0,4,Flucloxacillin,1,0,NA,1,NA,0
+BPH3467,ANZCOSS,VSS-271,VSS-271,BPH3467,21-Jan-08,2008,Monash Health,VIC,11-Mar-36,71,male,Hospital-onset,NA,1.5,MRSA,NA,Pos-low,0,Survived,2,0,Vancomyicin,1,0,NA,0,NA,1
+BPH3468,ANZCOSS,VSS-272,VSS-272,BPH3468,21-Jan-08,2008,Monash Health,VIC,1-Jul-32,75,female,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.19,Pos-low,0,Survived,1,1,Flucloxacillin,1,0,NA,0,NA,1
+BPH3469,ANZCOSS,VSS-273,VSS-273,BPH3469,21-Dec-07,2007,Monash Health,VIC,5-May-22,85,female,Community-onset,"Community-onset, healthcare-associated",2,MRSA,NA,Neg,0,Survived,2,1,Vancomyicin,2,1,NA,1,NA,0
+BPH3470,ANZCOSS,VSS-274,VSS-274,BPH3470,21-Dec-07,2007,Monash Health,VIC,16-Aug-69,38,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MSSA,0.38,Neg,0,Survived,3,1,Other,1,0,NA,0,NA,0
+BPH3471,ANZCOSS,VSS-275,VSS-275,BPH3471,8-Nov-08,2008,Monash Health,VIC,16-Jul-56,52,female,Community-onset,Community-acquired,1.5,MRSA,NA,Pos-low,1,Survived,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3472,ANZCOSS,VSS-276,VSS-276,BPH3472,15-Nov-08,2008,Monash Health,VIC,2-Apr-55,53,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,0.5,Neg,0,Survived,3,1,Flucloxacillin,1,0,NA,0,NA,0
+BPH3473,ANZCOSS,VSS-277,VSS-277,BPH3473,18-Mar-07,2007,Monash Health,VIC,25-Sep-48,58,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MRSA,NA,Neg,0,Survived,3,5,Vancomyicin,4,0,NA,0,NA,0
+BPH3474,ANZCOSS,VSS-278,VSS-278,BPH3474,22-Mar-07,2007,Monash Health,VIC,14-Sep-62,44,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.25,Pos-high,0,Survived,2,3,Flucloxacillin,2,0,NA,0,NA,0
+BPH3475,ANZCOSS,VSS-279,VSS-279,BPH3475,26-Jul-08,2008,Monash Health,VIC,30-Apr-70,38,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MSSA,0.25,Pos-high,0,Survived,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3476,ANZCOSS,VSS-280,VSS-280,BPH3476,28-Jul-08,2008,Monash Health,VIC,28-Apr-39,69,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MSSA,0.5,Pos-high,0,Survived,3,3,Vancomyicin,2,0,NA,0,NA,0
+BPH3477,ANZCOSS,VSS-281,VSS-281,BPH3477,25-Jan-08,2008,Monash Health,VIC,25-Mar-26,81,female,Community-onset,"Community-onset, healthcare-associated",2,MRSA,NA,Neg,0,Died,4,4,Vancomyicin,1,0,NA,0,NA,0
+BPH3478,ANZCOSS,VSS-282,VSS-282,BPH3478,25-Jan-08,2008,Monash Health,VIC,15-Dec-13,94,male,Community-onset,"Community-onset, healthcare-associated",2,MSSA,0.5,Pos-high,0,Died,4,3,Flucloxacillin,1,0,NA,0,NA,0
+BPH3479,ANZCOSS,VSS-283,VSS-283,BPH3479,2-Jul-07,2007,Monash Health,VIC,6-Feb-34,73,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MRSA,NA,Neg,0,Survived,2,4,Vancomyicin,1,0,NA,0,NA,0
+BPH3480,ANZCOSS,VSS-284,VSS-284,BPH3480,2-Jul-07,2007,Monash Health,VIC,24-Jun-82,25,female,Community-onset,Community-acquired,2,MSSA,0.19,Pos-high,0,Survived,0,0,Flucloxacillin,3,0,NA,0,NA,1
+BPH3481,ANZCOSS,VSS-285,VSS-285,BPH3481,12-Jul-08,2008,Monash Health,VIC,16-Aug-69,38,male,Community-onset,"Community-onset, healthcare-associated",0.38,MRSA,NA,Pos-high,0,Survived,3,0,Vancomyicin,5,0,NA,0,NA,0
+BPH3482,ANZCOSS,VSS-286,VSS-286,BPH3482,16-Jul-08,2008,Monash Health,VIC,25-Jul-44,63,male,Community-onset,"Community-onset, healthcare-associated",2,MSSA,0.38,Pos-high,0,Survived,2,2,Flucloxacillin,2,0,NA,0,NA,0
+BPH3483,ANZCOSS,VSS-287,VSS-287,BPH3483,20-Mar-08,2008,Monash Health,VIC,27-Oct-49,58,male,Hospital-onset,NA,3,MRSA,NA,Neg,0,Died,1,8,Vancomyicin,4,0,NA,1,NA,0
+BPH3484,ANZCOSS,VSS-288,VSS-288,BPH3484,30-Mar-08,2008,Monash Health,VIC,9-Sep-26,81,female,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.75,Pos-high,0,Survived,1,5,Other,1,0,NA,1,NA,0
+BPH3485,ANZCOSS,VSS-289,VSS-289,BPH3485,13-May-08,2008,Monash Health,VIC,4-Apr-20,88,female,Community-onset,"Community-onset, healthcare-associated",2,MRSA,NA,Neg,0,Survived,3,3,Vancomyicin,8,0,NA,0,NA,0
+BPH3486,ANZCOSS,VSS-290,VSS-290,BPH3486,15-May-08,2008,Monash Health,VIC,2-Jul-88,19,male,Community-onset,Community-acquired,2,MSSA,1,Neg,0,Survived,0,1,Flucloxacillin,3,0,NA,0,NA,0
+BPH3487,ANZCOSS,VSS-291,VSS-291,BPH3487,14-Sep-07,2007,Monash Health,VIC,6-Jun-14,93,female,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.5,Pos-high,0,Died,2,4,Vancomyicin,2,0,NA,0,NA,0
+BPH3488,ANZCOSS,VSS-292,VSS-292,BPH3488,19-Sep-07,2007,Monash Health,VIC,17-Dec-63,43,female,Community-onset,"Community-onset, healthcare-associated",1,MSSA,1,Pos-high,0,Survived,0,3,Flucloxacillin,1,0,NA,0,NA,0
+BPH3489,ANZCOSS,VSS-293,VSS-293,BPH3489,22-Nov-08,2008,Monash Health,VIC,15-Feb-55,53,female,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MRSA,NA,Pos-high,0,Survived,3,1,Vancomyicin,2,0,NA,0,NA,0
+BPH3490,ANZCOSS,VSS-294,VSS-294,BPH3490,23-Nov-08,2008,Monash Health,VIC,25-Mar-99,9,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.5,Neg,0,Survived,0,1,Flucloxacillin,1,0,NA,0,NA,1
+BPH3491,ANZCOSS,VSS-295,VSS-295,BPH3491,29-Aug-07,2007,Monash Health,VIC,4-Oct-35,71,male,Community-onset,"Community-onset, healthcare-associated",1.5,MRSA,NA,Neg,0,NA,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3492,ANZCOSS,VSS-296,VSS-296,BPH3492,29-Aug-07,2007,Monash Health,VIC,20-Jul-49,58,male,Community-onset,Community-acquired,1.5,MSSA,0.38,Pos-high,0,Survived,0,0,Flucloxacillin,3,0,NA,0,NA,0
+BPH3493,ANZCOSS,VSS-297,VSS-297,BPH3493,31-Aug-07,2007,Monash Health,VIC,20-Sep-56,50,male,Hospital-onset,"Hospital-onset, healthcare-associated",3,MRSA,NA,Neg,0,Survived,0,5,Vancomyicin,3,0,NA,0,NA,0
+BPH3494,ANZCOSS,VSS-298,VSS-298,BPH3494,7-Sep-07,2007,Monash Health,VIC,14-Mar-57,50,female,Community-onset,Community-acquired,1.5,MSSA,0.5,Pos-high,0,Survived,0,3,Flucloxacillin,1,0,NA,0,NA,0
+BPH3495,ANZCOSS,VSS-299,VSS-299,BPH3495,11-Apr-08,2008,Monash Health,VIC,23-Apr-35,72,male,Hospital-onset,"Hospital-onset, healthcare-associated",3,MRSA,NA,Neg,0,Died,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3496,ANZCOSS,VSS-300,VSS-300,BPH3496,19-Apr-08,2008,Monash Health,VIC,5-May-25,82,male,Hospital-onset,NA,1.5,MSSA,0.75,Pos-high,0,Survived,1,5,Flucloxacillin,1,0,NA,0,NA,0
+BPH3497,ANZCOSS,VSS-301,VSS-301,BPH3497,18-Aug-08,2008,Monash Health,VIC,12-Sep-26,81,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MRSA,NA,Pos-high,0,Survived,3,3,Vancomyicin,1,0,NA,0,NA,0
+BPH3499,ANZCOSS,VSS-303,VSS-303,BPH3499,5-Apr-07,2007,Monash Health,VIC,29-Aug-46,60,male,Hospital-onset,"Hospital-onset, healthcare-associated",3,MRSA,NA,Neg,0,Died,2,9,Other,1,0,NA,0,NA,0
+BPH3500,ANZCOSS,VSS-304,VSS-304,BPH3500,12-Apr-07,2007,Monash Health,VIC,22-Apr-34,72,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MSSA,0.25,Pos-low,0,Survived,4,0,Flucloxacillin,1,0,NA,0,NA,0
+BPH3501,ANZCOSS,VSS-305,VSS-305,BPH3501,23-Sep-08,2008,Monash Health,VIC,4-Jun-51,57,female,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MRSA,NA,Equivocal,0,Survived,1,1,Vancomyicin,4,0,NA,0,NA,0
+BPH3502,ANZCOSS,VSS-306,VSS-306,BPH3502,24-Sep-08,2008,Monash Health,VIC,31-May-48,60,male,Community-onset,Community-acquired,1.5,MSSA,0.75,Equivocal,0,NA,1,3,Flucloxacillin,1,0,NA,0,NA,0
+BPH3503,ANZCOSS,VSS-307,VSS-307,BPH3503,8-Jan-07,2007,Monash Health,VIC,3-Jul-29,77,male,Hospital-onset,NA,1.5,MSSA,0.75,Neg,0,Survived,2,3,Vancomyicin,2,0,NA,0,NA,0
+BPH3504,ANZCOSS,VSS-308,VSS-308,BPH3504,9-Jan-07,2007,Monash Health,VIC,26-Jun-34,72,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,1,Pos-low,0,Died,3,3,Flucloxacillin,1,0,NA,0,NA,0
+BPH3505,ANZCOSS,VSS-309,VSS-309,BPH3505,21-Jun-07,2007,Monash Health,VIC,18-May-57,50,female,Community-onset,NA,1.5,MRSA,NA,Neg,0,Survived,2,4,Vancomyicin,7,0,NA,0,NA,0
+BPH3506,ANZCOSS,VSS-310,VSS-310,BPH3506,23-Jun-07,2007,Monash Health,VIC,19-Apr-33,74,female,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,0.38,Pos-low,0,Died,0,3,Flucloxacillin,1,0,NA,0,NA,0
+BPH3507,ANZCOSS,VSS-311,VSS-311,BPH3507,7-Nov-07,2007,Monash Health,VIC,15-May-41,66,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MRSA,NA,Neg,0,Died,1,9,Vancomyicin,2,0,NA,0,NA,0
+BPH3508,ANZCOSS,VSS-312,VSS-312,BPH3508,14-Nov-07,2007,Monash Health,VIC,25-Jul-44,63,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.38,Pos-low,0,Survived,2,4,Flucloxacillin,2,0,NA,0,NA,0
+BPH3509,ANZCOSS,VSS-313,VSS-313,BPH3509,16-Jun-07,2007,Monash Health,VIC,17-Apr-38,69,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.5,Pos-low,0,Survived,3,2,Vancomyicin,1,0,NA,0,NA,0
+BPH3510,ANZCOSS,VSS-314,VSS-314,BPH3510,20-Jun-07,2007,Monash Health,VIC,2-Aug-24,82,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,0.25,Equivocal,0,Survived,2,3,Flucloxacillin,1,0,NA,0,NA,0
+BPH3511,ANZCOSS,VSS-315,VSS-315,BPH3511,20-Apr-07,2007,Monash Health,VIC,17-Jun-22,84,female,Hospital-onset,"Hospital-onset, healthcare-associated",3,MRSA,NA,Neg,0,Survived,0,0,Vancomyicin,1,0,NA,0,NA,0
+BPH3512,ANZCOSS,VSS-316,VSS-316,BPH3512,4-May-07,2007,Monash Health,VIC,3-May-28,79,male,Community-onset,"Community-onset, healthcare-associated",2,MSSA,0.75,Pos-low,0,Survived,3,7,Flucloxacillin,1,0,NA,0,NA,0
+BPH3513,ANZCOSS,VSS-317,VSS-317,BPH3513,23-Sep-07,2007,Monash Health,VIC,19-Jan-24,83,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MRSA,NA,Equivocal,0,Survived,3,1,Vancomyicin,1,0,NA,0,NA,0
+BPH3514,ANZCOSS,VSS-318,VSS-318,BPH3514,30-Sep-07,2007,Monash Health,VIC,11-Dec-78,28,male,Community-onset,"Community-onset, healthcare-associated",1,MSSA,1,Pos-low,0,Survived,0,3,Flucloxacillin,2,0,NA,1,NA,0
+BPH3515,ANZCOSS,VSS-319,VSS-319,BPH3515,19-Oct-08,2008,Monash Health,VIC,25-Jan-24,84,female,Community-onset,"Community-onset, healthcare-associated",1,MRSA,NA,Neg,0,Died,5,3,Vancomyicin,3,0,NA,0,NA,0
+BPH3516,ANZCOSS,VSS-320,VSS-320,BPH3516,19-Oct-08,2008,Monash Health,VIC,19-Jan-47,61,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.38,Pos-low,0,Survived,2,3,Other,4,0,NA,0,NA,1
+BPH3517,ANZCOSS,VSS-321,VSS-321,BPH3517,10-Jan-08,2008,Monash Health,VIC,4-Feb-40,67,female,Hospital-onset,"Hospital-onset, healthcare-associated",1,MRSA,NA,Neg,0,Survived,5,4,Vancomyicin,3,0,NA,0,NA,0
+BPH3518,ANZCOSS,VSS-322,VSS-322,BPH3518,10-Jan-08,2008,Monash Health,VIC,1-Jan-40,68,male,Community-onset,NA,1.5,MSSA,0.5,Pos-low,0,Survived,2,2,Flucloxacillin,1,0,NA,0,NA,0
+BPH3519,ANZCOSS,VSS-323,VSS-323,BPH3519,2-Jun-07,2007,Monash Health,VIC,29-Jul-52,54,female,Hospital-onset,"Hospital-onset, healthcare-associated",2,MSSA,0.38,Equivocal,0,Survived,2,1,Vancomyicin,1,0,NA,0,NA,0
+BPH3520,ANZCOSS,VSS-324,VSS-324,BPH3520,3-Jun-07,2007,Monash Health,VIC,9-Jul-79,27,male,Community-onset,Community-acquired,1,MSSA,0.75,Pos-low,0,Survived,0,0,Flucloxacillin,1,0,NA,1,NA,0
+BPH3521,ANZCOSS,VSS-325,VSS-325,BPH3521,13-Jan-08,2008,Monash Health,VIC,30-Jan-40,67,female,Hospital-onset,NA,2,MRSA,NA,Pos-low,0,Died,1,2,Vancomyicin,2,0,NA,0,NA,0
+BPH3522,ANZCOSS,VSS-326,VSS-326,BPH3522,13-Jan-08,2008,Monash Health,VIC,16-Feb-22,85,female,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.5,Neg,0,Survived,1,3,Flucloxacillin,1,0,NA,0,NA,1
+BPH3523,ANZCOSS,VSS-327,VSS-327,BPH3523,1-Mar-07,2007,Monash Health,VIC,28-Jan-22,85,male,Community-onset,"Community-onset, healthcare-associated",3,MRSA,NA,Neg,0,Survived,3,3,Vancomyicin,1,0,NA,0,NA,0
+BPH3524,ANZCOSS,VSS-328,VSS-328,BPH3524,11-Mar-07,2007,Monash Health,VIC,1-May-36,70,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MSSA,0.25,Neg,0,Died,3,7,Flucloxacillin,1,0,NA,0,NA,0
+BPH3525,ANZCOSS,VSS-329,VSS-329,BPH3525,19-Mar-07,2007,Monash Health,VIC,18-Nov-39,67,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MRSA,NA,Neg,0,Died,1,7,Vancomyicin,1,0,NA,0,NA,0
+BPH3526,ANZCOSS,VSS-330,VSS-330,BPH3526,26-Mar-07,2007,Monash Health,VIC,27-Sep-81,25,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MSSA,0.75,Pos-low,0,Survived,0,8,Flucloxacillin,3,0,NA,0,NA,0
+BPH3527,ANZCOSS,VSS-331,VSS-331,BPH3527,1-Dec-07,2007,Monash Health,VIC,12-Jan-47,60,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MRSA,NA,Neg,0,Died,2,3,Vancomyicin,7,0,NA,0,NA,0
+BPH3528,ANZCOSS,VSS-332,VSS-332,BPH3528,1-Dec-07,2007,Monash Health,VIC,12-Nov-01,6,female,Hospital-onset,"Hospital-onset, healthcare-associated",1,MSSA,0.75,Neg,0,Survived,2,2,Flucloxacillin,1,0,NA,0,NA,0
+BPH3529,ANZCOSS,VSS-333,VSS-333,BPH3529,6-Oct-07,2007,Monash Health,VIC,27-Aug-69,38,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MRSA,NA,Neg,0,Survived,1,1,Vancomyicin,1,0,NA,0,NA,0
+BPH3530,ANZCOSS,VSS-334,VSS-334,BPH3530,8-Oct-07,2007,Monash Health,VIC,15-Sep-07,0,female,Hospital-onset,NA,1.5,MSSA,0.25,Neg,0,Survived,NA,NA,Flucloxacillin,1,0,NA,0,NA,0
+BPH3531,ANZCOSS,VSS-335,VSS-335,BPH3531,19-Apr-07,2007,Monash Health,VIC,1-Jan-48,59,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MRSA,512,Neg,0,Survived,4,1,Vancomyicin,1,0,NA,0,NA,0
+BPH3532,ANZCOSS,VSS-336,VSS-336,BPH3532,1-May-07,2007,Monash Health,VIC,2-Sep-36,70,female,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,0.5,Pos-low,0,Survived,2,0,Flucloxacillin,1,0,NA,0,NA,0
+BPH3533,ANZCOSS,VSS-337,VSS-337,BPH3533,16-Sep-08,2008,Monash Health,VIC,17-Jul-15,93,male,Community-onset,"Community-onset, healthcare-associated",2,MRSA,NA,Neg,0,Died,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3534,ANZCOSS,VSS-338,VSS-338,BPH3534,19-Sep-08,2008,Monash Health,VIC,12-Aug-32,76,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MSSA,0.38,Pos-low,0,Died,3,3,Flucloxacillin,1,0,NA,0,NA,0
+BPH3535,ANZCOSS,VSS-339,VSS-339,BPH3535,24-Sep-07,2007,Monash Health,VIC,1-Jan-44,63,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MRSA,NA,Neg,1,Survived,1,9,Vancomyicin,11,1,NA,0,NA,0
+BPH3536,ANZCOSS,VSS-340,VSS-340,BPH3536,30-Sep-07,2007,Monash Health,VIC,10-Jun-49,58,female,Hospital-onset,"Hospital-onset, healthcare-associated",1,MSSA,0.38,Neg,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,0
+BPH3537,ANZCOSS,VSS-341,VSS-341,BPH3537,12-May-07,2007,Monash Health,VIC,23-May-43,63,female,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MRSA,NA,Neg,0,Survived,4,5,Vancomyicin,3,0,NA,0,NA,0
+BPH3538,ANZCOSS,VSS-342,VSS-342,BPH3538,17-May-07,2007,Monash Health,VIC,10-Feb-59,48,male,Hospital-onset,NA,1,MSSA,1,Neg,0,Survived,2,3,Flucloxacillin,2,0,NA,0,NA,0
+BPH3539,ANZCOSS,VSS-343,VSS-343,BPH3539,26-Apr-08,2008,Monash Health,VIC,18-Aug-31,76,male,Community-onset,"Community-onset, healthcare-associated",2,MRSA,NA,Neg,0,Survived,6,4,Vancomyicin,1,0,NA,0,NA,1
+BPH3540,ANZCOSS,VSS-344,VSS-344,BPH3540,1-May-08,2008,Monash Health,VIC,27-Sep-22,85,male,Hospital-onset,"Hospital-onset, healthcare-associated",1,MSSA,0.5,Pos-low,0,Survived,2,1,Flucloxacillin,2,0,NA,1,NA,0
+BPH3541,ANZCOSS,VSS-345,VSS-345,BPH3541,27-Feb-08,2008,Monash Health,VIC,21-Jan-30,78,female,Hospital-onset,NA,2,MRSA,NA,Neg,0,Died,4,0,Vancomyicin,1,0,NA,0,NA,0
+BPH3542,ANZCOSS,VSS-346,VSS-346,BPH3542,1-Mar-08,2008,Monash Health,VIC,15-Aug-61,46,female,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.5,Pos-high,0,Survived,0,1,Flucloxacillin,1,0,NA,0,NA,0
+BPH3543,ANZCOSS,VSS-347,VSS-347,BPH3543,23-Aug-07,2007,Monash Health,VIC,21-Aug-15,92,male,Community-onset,"Community-onset, healthcare-associated",1,MRSA,NA,Neg,0,Survived,2,3,Vancomyicin,1,0,NA,0,NA,0
+BPH3544,ANZCOSS,VSS-348,VSS-348,BPH3544,24-Aug-07,2007,Monash Health,VIC,14-Aug-07,0,male,Hospital-onset,NA,1.5,MSSA,0.5,Pos-high,0,Survived,NA,NA,Flucloxacillin,1,0,NA,0,NA,0
+BPH3545,ANZCOSS,VSS-349,VSS-349,BPH3545,20-Mar-08,2008,Monash Health,VIC,18-Sep-38,69,male,Community-onset,"Community-onset, healthcare-associated",2,MRSA,NA,Neg,0,Survived,0,1,Vancomyicin,2,0,NA,0,NA,0
+BPH3546,ANZCOSS,VSS-350,VSS-350,BPH3546,21-Mar-08,2008,Monash Health,VIC,25-Aug-38,69,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,1,Pos-high,0,Survived,1,3,Flucloxacillin,2,0,NA,0,NA,1
+BPH3547,ANZCOSS,VSS-351,VSS-351,BPH3547,18-Feb-07,2007,Monash Health,VIC,9-Nov-81,25,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MRSA,NA,Neg,0,Survived,0,1,Vancomyicin,1,0,NA,0,NA,0
+BPH3548,ANZCOSS,VSS-352,VSS-352,BPH3548,18-Feb-07,2007,Monash Health,VIC,1-May-36,70,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MSSA,0.38,Neg,0,Survived,3,7,Flucloxacillin,1,0,NA,0,NA,0
+BPH3549,ANZCOSS,VSS-353,VSS-353,BPH3549,16-Oct-07,2007,Monash Health,VIC,27-Nov-25,81,male,Community-onset,"Community-onset, healthcare-associated",2,MRSA,NA,Neg,0,Died,3,4,Vancomyicin,2,0,NA,0,NA,0
+BPH3550,ANZCOSS,VSS-354,VSS-354,BPH3550,18-Oct-07,2007,Monash Health,VIC,26-Jan-33,74,male,Community-onset,"Community-onset, healthcare-associated",1,MSSA,0.5,Neg,0,NA,1,3,Flucloxacillin,2,0,NA,0,NA,0
+BPH3551,ANZCOSS,VSS-355,VSS-355,BPH3551,6-Mar-07,2007,Monash Health,VIC,7-Feb-64,43,male,Hospital-onset,"Hospital-onset, healthcare-associated",1,MRSA,NA,Pos-high,0,Survived,2,3,Vancomyicin,1,0,NA,0,NA,0
+BPH3552,ANZCOSS,VSS-356,VSS-356,BPH3552,12-Mar-07,2007,Monash Health,VIC,16-Mar-64,42,female,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,0.38,Neg,0,Survived,3,4,Flucloxacillin,2,1,NA,0,NA,0
+BPH3553,ANZCOSS,VSS-357,VSS-357,BPH3553,3-Jan-08,2008,Ipswich,QLD,3-Jun-61,46,male,Community-onset,"Community-onset, healthcare-associated",1,MSSA,0.75,Neg,0,Survived,4,3,Vancomyicin,1,0,NA,0,NA,0
+BPH3554,ANZCOSS,VSS-360,VSS-360,BPH3554,22-Feb-08,2008,Ipswich,QLD,10-Jan-35,73,female,Community-onset,Community-acquired,0.75,MSSA,0.5,Pos-high,0,Survived,0,2,Flucloxacillin,5,1,NA,0,NA,0
+BPH3555,ANZCOSS,VSS-361,VSS-361,BPH3555,7-Sep-08,2008,Ipswich,QLD,6-Nov-85,22,female,Community-onset,NA,1,MRSA,64,Pos-low,0,Survived,2,1,Vancomyicin,1,0,NA,0,NA,0
+BPH3556,ANZCOSS,VSS-363,VSS-363,BPH3556,20-Jun-07,2007,Royal Hobart,TAS,2-Apr-37,70,female,Hospital-onset,NA,1.5,MSSA,0.5,Pos-low,0,Survived,1,3,Vancomyicin,1,0,NA,0,NA,0
+BPH3557,ANZCOSS,VSS-364,VSS-364,BPH3557,23-Jun-07,2007,Royal Hobart,TAS,15-Oct-85,21,female,NA,NA,1.5,MSSA,0.5,Equivocal,0,Survived,0,3,Flucloxacillin,1,0,NA,0,NA,0
+BPH3558,ANZCOSS,VSS-365,VSS-365,BPH3558,19-Sep-08,2008,Royal Hobart,TAS,10-Dec-63,44,female,Hospital-onset,"Hospital-onset, healthcare-associated",1,MRSA,NA,Pos-low,0,Survived,0,7,Vancomyicin,1,0,NA,0,NA,0
+BPH3559,ANZCOSS,VSS-366,VSS-366,BPH3559,25-Sep-08,2008,Royal Hobart,TAS,18-May-21,87,male,Community-onset,"Community-onset, healthcare-associated",1,MSSA,0.19,Pos-high,0,Died,1,2,Flucloxacillin,1,0,NA,0,NA,0
+BPH3560,ANZCOSS,VSS-367,VSS-367,BPH3560,11-Mar-08,2008,Royal Hobart,TAS,18-Oct-43,64,male,Community-onset,Community-acquired,1.5,MSSA,0.19,Pos-high,0,Died,0,8,Other,1,0,NA,0,NA,0
+BPH3561,ANZCOSS,VSS-368,VSS-368,BPH3561,25-Mar-08,2008,Royal Hobart,TAS,5-Nov-46,61,male,Community-onset,"Community-onset, healthcare-associated",2,MSSA,0.75,Neg,0,Survived,0,1,Flucloxacillin,2,0,NA,1,NA,0
+BPH3562,ANZCOSS,VSS-369,VSS-369,BPH3562,3-Jul-08,2008,Royal Hobart,TAS,20-Feb-46,62,male,Community-onset,Community-acquired,2,MSSA,0.75,Pos-high,0,Survived,2,2,Vancomyicin,1,0,NA,0,NA,0
+BPH3563,ANZCOSS,VSS-370,VSS-370,BPH3563,8-Jul-08,2008,Royal Hobart,TAS,7-Jun-08,0,male,Hospital-onset,NA,2,MSSA,0.38,Pos-low,0,Died,NA,NA,Flucloxacillin,1,0,NA,0,NA,0
+BPH3564,ANZCOSS,VSS-371,VSS-371,BPH3564,5-Oct-08,2008,Royal Hobart,TAS,16-May-14,94,male,Community-onset,Community-acquired,1.5,MSSA,0.19,Neg,0,Died,1,4,Vancomyicin,1,0,NA,0,NA,1
+BPH3565,ANZCOSS,VSS-372,VSS-372,BPH3565,11-Oct-08,2008,Royal Hobart,TAS,5-Mar-22,86,female,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.38,Neg,0,Survived,1,0,Flucloxacillin,1,0,NA,0,NA,1
+BPH3566,ANZCOSS,VSS-373,VSS-373,BPH3566,26-May-08,2008,Royal Hobart,TAS,22-May-08,0,male,Hospital-onset,"Hospital-onset, healthcare-associated",1,MSSA,0.25,Pos-low,0,Survived,NA,NA,Vancomyicin,1,0,NA,0,NA,0
+BPH3567,ANZCOSS,VSS-374,VSS-374,BPH3567,18-Jun-08,2008,Royal Hobart,TAS,12-Jun-08,0,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,0.38,Neg,0,Survived,NA,NA,Flucloxacillin,1,0,NA,0,NA,0
+BPH3568,ANZCOSS,VSS-375,VSS-375,BPH3568,4-Sep-08,2008,Royal Hobart,TAS,24-Mar-71,37,male,Hospital-onset,"Hospital-onset, healthcare-associated",0.75,MRSA,NA,Equivocal,0,Survived,0,0,Vancomyicin,1,0,NA,0,NA,0
+BPH3569,ANZCOSS,VSS-376,VSS-376,BPH3569,14-Sep-08,2008,Royal Hobart,TAS,20-Aug-05,3,male,Community-onset,Community-acquired,1.5,MSSA,0.75,Pos-low,0,Survived,NA,NA,Flucloxacillin,1,0,NA,0,NA,0
+BPH3570,ANZCOSS,VSS-377,VSS-377,BPH3570,9-Jul-08,2008,Royal Hobart,TAS,4-Sep-33,74,female,Community-onset,NA,1.5,MRSA,NA,Equivocal,0,Survived,2,3,Vancomyicin,1,0,NA,0,NA,1
+BPH3571,ANZCOSS,VSS-378,VSS-378,BPH3571,8-Aug-08,2008,Royal Hobart,TAS,2-Aug-57,51,female,Community-onset,Community-acquired,1.5,MSSA,0.38,Equivocal,0,Survived,0,1,Flucloxacillin,7,0,NA,0,NA,0
+BPH3572,ANZCOSS,VSS-379,VSS-379,BPH3572,23-Jan-07,2007,Royal Perth,WA,15-Aug-33,73,male,Community-onset,"Community-onset, healthcare-associated",1.5,MRSA,NA,Pos-high,0,Died,5,4,Vancomyicin,1,0,NA,0,NA,0
+BPH3573,ANZCOSS,VSS-380,VSS-380,BPH3573,26-Jan-07,2007,Royal Perth,WA,27-Aug-56,50,male,Community-onset,Community-acquired,1.5,MSSA,0.5,Pos-high,0,Survived,0,1,Flucloxacillin,9,0,NA,0,NA,0
+BPH3574,ANZCOSS,VSS-381,VSS-381,BPH3574,26-Mar-08,2008,Royal Perth,WA,13-Mar-22,86,male,Community-onset,"Community-onset, healthcare-associated",1,MRSA,NA,Neg,0,Survived,2,4,Vancomyicin,1,0,NA,0,NA,0
+BPH3575,ANZCOSS,VSS-382,VSS-382,BPH3575,28-Mar-08,2008,Royal Perth,WA,2-Oct-32,75,male,Community-onset,NA,2,MSSA,0.25,Neg,0,Survived,1,3,Flucloxacillin,1,0,NA,0,NA,1
+BPH3576,ANZCOSS,VSS-383,VSS-383,BPH3576,13-Jan-07,2007,Royal Perth,WA,13-Sep-46,60,male,Community-onset,Community-acquired,1.5,MRSA,NA,Equivocal,0,Died,0,2,Vancomyicin,1,0,NA,0,NA,0
+BPH3577,ANZCOSS,VSS-384,VSS-384,BPH3577,13-Jan-07,2007,Royal Perth,WA,23-Sep-46,60,male,Hospital-onset,"Hospital-onset, healthcare-associated",1,MSSA,0.75,Neg,0,Survived,3,4,Flucloxacillin,2,0,NA,0,NA,0
+BPH3578,ANZCOSS,VSS-387,VSS-387,BPH3578,8-Feb-07,2007,Royal Perth,WA,11-Apr-29,77,male,Community-onset,"Community-onset, healthcare-associated",1.5,MRSA,NA,Pos-high,0,Survived,1,3,Vancomyicin,2,1,NA,0,NA,0
+BPH3579,ANZCOSS,VSS-388,VSS-388,BPH3579,16-Feb-07,2007,Royal Perth,WA,19-Jan-72,35,male,Community-onset,Community-acquired,2,MSSA,0.38,Pos-low,0,Survived,0,3,Flucloxacillin,2,0,NA,1,NA,0
+BPH3580,ANZCOSS,VSS-389,VSS-389,BPH3580,18-Aug-08,2008,Royal Perth,WA,9-Apr-70,38,male,Hospital-onset,NA,0.75,MRSA,NA,Equivocal,0,Survived,0,3,Vancomyicin,1,0,NA,0,NA,0
+BPH3581,ANZCOSS,VSS-390,VSS-390,BPH3581,4-Sep-08,2008,Royal Perth,WA,4-Jul-41,67,male,Community-onset,NA,1.5,MSSA,0.5,Neg,0,Survived,0,2,Flucloxacillin,1,0,NA,0,NA,1
+BPH3582,ANZCOSS,VSS-391,VSS-391,BPH3582,24-Apr-08,2008,Royal Perth,WA,12-May-59,48,female,Community-onset,"Community-onset, healthcare-associated",1.5,MRSA,NA,Pos-low,0,Survived,2,2,Vancomyicin,1,0,NA,0,NA,0
+BPH3583,ANZCOSS,VSS-392,VSS-392,BPH3583,26-Apr-08,2008,Royal Perth,WA,30-May-66,41,female,Community-onset,"Community-onset, healthcare-associated",2,MSSA,0.75,Neg,0,Survived,0,1,Flucloxacillin,1,0,NA,1,NA,0
+BPH3584,ANZCOSS,VSS-393,VSS-393,BPH3584,25-Dec-07,2007,Royal Perth,WA,31-Aug-50,57,female,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.75,Pos-low,0,Survived,2,3,Vancomyicin,1,1,NA,0,NA,0
+BPH3585,ANZCOSS,VSS-394,VSS-394,BPH3585,26-Dec-07,2007,Royal Perth,WA,24-Jun-46,61,male,Community-onset,"Community-onset, healthcare-associated",2,MSSA,0.38,Pos-low,0,Died,0,3,Flucloxacillin,2,0,NA,0,NA,1
+BPH3586,ANZCOSS,VSS-395,VSS-395,BPH3586,26-Jun-08,2008,Royal Perth,WA,17-May-43,65,female,Hospital-onset,NA,1.5,MRSA,NA,Neg,0,Survived,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3587,ANZCOSS,VSS-396,VSS-396,BPH3587,29-Jun-08,2008,Royal Perth,WA,8-Oct-65,42,male,Community-onset,Community-acquired,1.5,MSSA,0.75,Pos-low,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,0
+BPH3588,ANZCOSS,VSS-397,VSS-397,BPH3588,15-Feb-08,2008,Royal Perth,WA,31-Aug-50,57,female,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.5,Pos-low,0,Survived,2,1,Other,1,0,NA,0,NA,0
+BPH3589,ANZCOSS,VSS-398,VSS-398,BPH3589,28-Feb-08,2008,Royal Perth,WA,21-Feb-82,26,female,Hospital-onset,NA,1.5,MSSA,1,Pos-low,0,Survived,0,3,Flucloxacillin,1,0,NA,0,NA,0
+BPH3590,ANZCOSS,VSS-399,VSS-399,BPH3590,9-Jul-07,2007,Royal Perth,WA,10-Dec-56,50,male,Community-onset,"Community-onset, healthcare-associated",0.75,MRSA,NA,Pos-low,0,Survived,0,1,Vancomyicin,1,0,NA,0,NA,0
+BPH3591,ANZCOSS,VSS-400,VSS-400,BPH3591,19-Jul-07,2007,Royal Perth,WA,21-Apr-56,51,female,Hospital-onset,"Hospital-onset, healthcare-associated",2,MSSA,0.5,Pos-low,0,Survived,0,4,Flucloxacillin,1,0,NA,0,NA,0
+BPH3592,ANZCOSS,VSS-401,VSS-401,BPH3592,29-Oct-07,2007,Royal Perth,WA,13-Feb-71,36,male,Community-onset,"Community-onset, healthcare-associated",1.5,MRSA,NA,Pos-high,0,Survived,0,1,Vancomyicin,1,0,NA,1,NA,0
+BPH3593,ANZCOSS,VSS-402,VSS-402,BPH3593,6-Nov-07,2007,Royal Perth,WA,14-Feb-38,69,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.75,Pos-low,0,Survived,2,4,Flucloxacillin,2,0,NA,0,NA,0
+BPH3594,ANZCOSS,VSS-403,VSS-403,BPH3594,10-Jul-08,2008,Royal Perth,WA,1-Feb-24,84,male,Community-onset,"Community-onset, healthcare-associated",1.5,MRSA,NA,Pos-low,0,Died,2,1,Vancomyicin,8,0,NA,0,NA,0
+BPH3595,ANZCOSS,VSS-404,VSS-404,BPH3595,10-Aug-08,2008,Royal Perth,WA,15-Nov-70,37,male,Community-onset,NA,2,MSSA,0.5,Pos-high,0,Survived,0,3,Flucloxacillin,1,0,NA,0,NA,0
+BPH3596,ANZCOSS,VSS-411,VSS-411,BPH3596,13-Jul-08,2008,Royal Perth,WA,28-Feb-87,21,male,Hospital-onset,NA,1.5,MRSA,NA,Pos-high,0,Survived,0,8,Vancomyicin,1,0,NA,0,NA,0
+BPH3597,ANZCOSS,VSS-412,VSS-412,BPH3597,20-Aug-08,2008,Royal Perth,WA,24-Nov-30,77,male,Hospital-onset,NA,1.5,MSSA,1,Pos-high,0,Died,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,0
+BPH3598,ANZCOSS,VSS-413,VSS-413,BPH3598,7-Dec-07,2007,Royal Perth,WA,11-Jan-76,31,male,Hospital-onset,"Hospital-onset, healthcare-associated",1,MSSA,0.75,Equivocal,0,Survived,2,3,Vancomyicin,1,0,NA,0,NA,0
+BPH3599,ANZCOSS,VSS-414,VSS-414,BPH3599,10-Dec-07,2007,Royal Perth,WA,26-Dec-75,31,female,Community-onset,Community-acquired,1.5,MSSA,1,Neg,0,Survived,1,1,Flucloxacillin,1,0,NA,1,NA,0
+BPH3600,ANZCOSS,VSS-415,VSS-415,BPH3600,12-Feb-08,2008,Royal Perth,WA,28-Dec-87,20,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MRSA,NA,Pos-high,0,Survived,2,3,Vancomyicin,1,0,NA,0,NA,0
+BPH3601,ANZCOSS,VSS-416,VSS-416,BPH3601,26-Feb-08,2008,Royal Perth,WA,12-Jan-22,86,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,1,Pos-low,0,Survived,2,3,Flucloxacillin,1,0,NA,0,NA,0
+BPH3602,ANZCOSS,VSS-417,VSS-417,BPH3602,11-Aug-08,2008,Royal Perth,WA,23-Apr-32,76,female,Hospital-onset,"Hospital-onset, healthcare-associated",0.75,MRSA,NA,Neg,0,Survived,2,3,Vancomyicin,1,0,NA,1,NA,0
+BPH3603,ANZCOSS,VSS-418,VSS-418,BPH3603,31-Aug-08,2008,Royal Perth,WA,21-May-29,79,female,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.38,Pos-low,0,Survived,2,3,Flucloxacillin,1,0,NA,0,NA,1
+BPH3604,ANZCOSS,VSS-419,VSS-419,BPH3604,6-Mar-07,2007,Royal Perth,WA,25-Aug-19,87,male,Community-onset,"Community-onset, healthcare-associated",1,MRSA,NA,Pos-high,0,Survived,1,0,Vancomyicin,1,0,NA,0,NA,0
+BPH3605,ANZCOSS,VSS-420,VSS-420,BPH3605,7-Mar-07,2007,Royal Perth,WA,2-Oct-41,65,female,Community-onset,Community-acquired,1.5,MSSA,0.75,Pos-low,0,Survived,0,3,Flucloxacillin,2,0,NA,0,NA,1
+BPH3606,ANZCOSS,VSS-421,VSS-421,BPH3606,20-Sep-07,2007,Royal Perth,WA,14-Sep-53,54,female,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.75,Neg,0,Survived,2,3,Vancomyicin,1,0,NA,0,NA,0
+BPH3607,ANZCOSS,VSS-422,VSS-422,BPH3607,23-Sep-07,2007,Royal Perth,WA,23-Oct-53,53,female,Community-onset,Community-acquired,1.5,MSSA,0.38,Pos-low,0,Survived,1,3,Flucloxacillin,1,0,NA,0,NA,0
+BPH3608,ANZCOSS,VSS-427,VSS-427,BPH3608,13-Apr-07,2007,Royal Perth,WA,16-May-31,75,male,Community-onset,"Community-onset, healthcare-associated",0.75,MRSA,NA,Neg,0,Survived,1,0,Vancomyicin,1,0,NA,0,NA,0
+BPH3609,ANZCOSS,VSS-428,VSS-428,BPH3609,13-Apr-07,2007,Royal Perth,WA,27-Nov-41,65,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,1,Pos-low,0,Died,2,5,Flucloxacillin,1,0,NA,0,NA,0
+BPH3610,ANZCOSS,VSS-429,VSS-429,BPH3610,12-Aug-07,2007,Royal Perth,WA,23-Dec-19,87,female,Community-onset,"Community-onset, healthcare-associated",2,MSSA,0.38,Pos-low,0,Survived,1,3,Vancomyicin,1,0,NA,0,NA,0
+BPH3611,ANZCOSS,VSS-430,VSS-430,BPH3611,12-Aug-07,2007,Royal Perth,WA,21-Jan-54,53,female,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.5,Pos-low,0,Survived,0,2,Flucloxacillin,1,0,NA,0,NA,0
+BPH3612,ANZCOSS,VSS-431,VSS-431,BPH3612,6-Aug-08,2008,Royal Perth,WA,10-Jan-35,73,male,Hospital-onset,NA,0.5,MRSA,NA,Neg,0,Survived,0,3,Vancomyicin,1,1,NA,0,NA,0
+BPH3613,ANZCOSS,VSS-432,VSS-432,BPH3613,29-Aug-08,2008,Royal Perth,WA,6-Jan-57,51,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,1,Pos-low,0,Survived,0,2,Flucloxacillin,1,0,NA,0,NA,0
+BPH3614,ANZCOSS,VSS-433,VSS-433,BPH3614,23-Jan-07,2007,Royal Perth,WA,10-May-65,41,male,Community-onset,"Community-onset, healthcare-associated",1.5,MRSA,NA,Pos-low,0,Survived,2,3,Vancomyicin,3,0,NA,0,NA,0
+BPH3615,ANZCOSS,VSS-434,VSS-434,BPH3615,3-Feb-07,2007,Royal Perth,WA,19-Jul-72,34,female,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.5,Neg,0,Survived,0,1,Flucloxacillin,1,0,NA,1,NA,0
+BPH3616,ANZCOSS,VSS-435,VSS-435,BPH3616,28-May-07,2007,Royal Perth,WA,22-Dec-39,67,male,Community-onset,Community-acquired,1.5,MRSA,NA,Neg,0,Survived,3,3,Vancomyicin,1,0,NA,0,NA,1
+BPH3617,ANZCOSS,VSS-436,VSS-436,BPH3617,29-May-07,2007,Royal Perth,WA,18-Jul-49,57,male,Community-onset,"Community-onset, healthcare-associated",1,MSSA,0.5,Equivocal,0,Died,1,3,Flucloxacillin,1,0,NA,1,NA,0
+BPH3618,ANZCOSS,VSS-437,VSS-437,BPH3618,12-Sep-08,2008,Royal Perth,WA,7-Apr-89,19,male,Hospital-onset,"Hospital-onset, healthcare-associated",1,MRSA,NA,Pos-high,0,Survived,0,1,Vancomyicin,1,0,NA,0,NA,1
+BPH3619,ANZCOSS,VSS-438,VSS-438,BPH3619,22-Sep-08,2008,Royal Perth,WA,9-Apr-52,56,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,1,Pos-low,0,Survived,2,0,Flucloxacillin,1,0,NA,0,NA,0
+BPH3620,ANZCOSS,VSS-439,VSS-439,BPH3620,23-Jan-07,2007,Royal Perth,WA,3-Feb-83,23,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MRSA,NA,Pos-low,0,Survived,0,2,Vancomyicin,1,1,NA,0,NA,0
+BPH3621,ANZCOSS,VSS-440,VSS-440,BPH3621,25-Jan-07,2007,Royal Perth,WA,17-Apr-43,63,male,Community-onset,"Community-onset, healthcare-associated",0.75,MSSA,1,Equivocal,0,Survived,3,2,Vancomyicin,1,0,NA,0,NA,0
+BPH3622,ANZCOSS,VSS-441,VSS-441,BPH3622,26-Jan-08,2008,Royal Perth,WA,7-Aug-31,76,male,Community-onset,Community-acquired,2,MSSA,0.38,Neg,0,Survived,1,2,Vancomyicin,2,0,NA,0,NA,0
+BPH3623,ANZCOSS,VSS-442,VSS-442,BPH3623,26-Jan-08,2008,Royal Perth,WA,21-Aug-68,39,male,Community-onset,"Community-onset, healthcare-associated",2,MSSA,0.5,Pos-low,0,Survived,2,2,Flucloxacillin,2,0,NA,0,NA,0
+BPH3625,ANZCOSS,VSS-444,VSS-444,BPH3625,31-Mar-08,2008,Royal Perth,WA,9-Aug-80,27,male,Community-onset,NA,1.5,MSSA,0.25,Pos-low,0,Survived,0,2,Flucloxacillin,1,0,NA,1,NA,0
+BPH3626,ANZCOSS,VSS-445,VSS-445,BPH3626,29-Mar-08,2008,Royal Perth,WA,19-Jul-57,50,male,Community-onset,Community-acquired,1.5,MRSA,NA,Pos-low,0,Survived,1,0,Vancomyicin,11,0,NA,1,NA,0
+BPH3627,ANZCOSS,VSS-446,VSS-446,BPH3627,1-Apr-08,2008,Royal Perth,WA,12-Feb-34,74,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MSSA,0.38,Pos-low,0,Died,3,1,Flucloxacillin,1,0,NA,0,NA,0
+BPH3628,ANZCOSS,VSS-447,VSS-447,BPH3628,27-Jan-08,2008,Royal Perth,WA,1-Jul-45,62,female,Community-onset,"Community-onset, healthcare-associated",1.5,MRSA,NA,Pos-high,0,Survived,4,1,Vancomyicin,13,0,NA,0,NA,0
+BPH3629,ANZCOSS,VSS-448,VSS-448,BPH3629,29-Jan-08,2008,Royal Perth,WA,13-Sep-84,23,male,Community-onset,"Community-onset, healthcare-associated",1,MSSA,0.38,Pos-low,0,Survived,0,1,Flucloxacillin,1,0,NA,1,NA,0
+BPH3630,ANZCOSS,VSS-449,VSS-449,BPH3630,10-Apr-08,2008,Royal Perth,WA,13-Apr-37,70,male,Community-onset,"Community-onset, healthcare-associated",1.5,MRSA,NA,Pos-high,0,Survived,3,1,Vancomyicin,17,1,NA,1,NA,0
+BPH3631,ANZCOSS,VSS-450,VSS-450,BPH3631,15-Apr-08,2008,Royal Perth,WA,16-Mar-57,51,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.5,Pos-low,0,Survived,3,2,Flucloxacillin,1,0,NA,0,NA,0
+BPH3632,ANZCOSS,VSS-451,VSS-451,BPH3632,14-Jan-08,2008,Westmead,NSW,1-Dec-30,77,female,Hospital-onset,NA,2,MRSA,NA,Neg,0,Survived,2,3,Vancomyicin,1,0,NA,0,NA,0
+BPH3633,ANZCOSS,VSS-452,VSS-452,BPH3633,10-Mar-08,2008,Westmead,NSW,5-Sep-37,70,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,0.38,Equivocal,0,Survived,1,9,Flucloxacillin,2,0,NA,0,NA,0
+BPH3634,ANZCOSS,VSS-453,VSS-453,BPH3634,22-Dec-07,2007,Westmead,NSW,14-Apr-35,72,male,Community-onset,"Community-onset, healthcare-associated",1.5,MRSA,NA,Neg,0,Survived,2,4,Vancomyicin,1,0,NA,0,NA,0
+BPH3635,ANZCOSS,VSS-454,VSS-454,BPH3635,6-Feb-08,2008,Westmead,NSW,23-Jan-54,54,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,1,Pos-low,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,0
+BPH3636,ANZCOSS,VSS-455,VSS-455,BPH3636,10-Dec-07,2007,Westmead,NSW,13-Jun-69,38,female,NA,NA,1.5,MRSA,NA,Pos-low,0,Survived,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3637,ANZCOSS,VSS-456,VSS-456,BPH3637,30-Dec-07,2007,Westmead,NSW,11-Apr-49,58,female,Community-onset,"Community-onset, healthcare-associated",2,MSSA,0.5,Pos-high,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,0
+BPH3638,ANZCOSS,VSS-457,VSS-457,BPH3638,12-Jun-07,2007,Westmead,NSW,12-May-83,24,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MRSA,NA,Pos-low,0,Survived,0,7,Vancomyicin,1,0,NA,0,NA,0
+BPH3639,ANZCOSS,VSS-458,VSS-458,BPH3639,29-Jun-07,2007,Westmead,NSW,14-May-74,33,female,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.38,Neg,0,Survived,0,0,Flucloxacillin,1,0,NA,1,NA,0
+BPH3640,ANZCOSS,VSS-459,VSS-459,BPH3640,3-Nov-07,2007,Westmead,NSW,2-Mar-38,69,male,Community-onset,"Community-onset, healthcare-associated",1.5,MRSA,NA,Neg,0,Survived,NA,NA,Vancomyicin,NA,NA,NA,1,NA,0
+BPH3641,ANZCOSS,VSS-460,VSS-460,BPH3641,18-Nov-07,2007,Westmead,NSW,4-May-31,76,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.38,Pos-low,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,0
+BPH3642,ANZCOSS,VSS-461,VSS-461,BPH3642,14-Oct-07,2007,Westmead,NSW,29-Sep-62,45,female,Hospital-onset,NA,1,MRSA,NA,Equivocal,0,Survived,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3643,ANZCOSS,VSS-462,VSS-462,BPH3643,14-Oct-07,2007,Westmead,NSW,6-Jan-48,59,female,Hospital-onset,NA,1.5,MSSA,2,Equivocal,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,1,NA,0
+BPH3644,ANZCOSS,VSS-463,VSS-463,BPH3644,11-Jun-07,2007,Westmead,NSW,4-Apr-37,70,male,Hospital-onset,NA,2,MRSA,NA,Pos-low,0,Died,2,1,Vancomyicin,2,0,NA,0,NA,0
+BPH3645,ANZCOSS,VSS-464,VSS-464,BPH3645,28-Jun-07,2007,Westmead,NSW,21-Dec-47,59,female,Community-onset,NA,1,MSSA,0.5,Neg,0,Survived,0,2,Flucloxacillin,1,0,NA,0,NA,1
+BPH3646,ANZCOSS,VSS-465,VSS-465,BPH3646,27-Mar-08,2008,Westmead,NSW,28-Jan-21,87,female,Hospital-onset,NA,2,MRSA,NA,Pos-low,0,Died,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3647,ANZCOSS,VSS-466,VSS-466,BPH3647,5-May-08,2008,Westmead,NSW,22-Oct-71,36,male,Community-onset,"Community-onset, healthcare-associated",2,MSSA,0.38,Neg,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,0
+BPH3648,ANZCOSS,VSS-467,VSS-467,BPH3648,9-Mar-08,2008,Westmead,NSW,15-Feb-62,46,female,Hospital-onset,NA,1.5,MRSA,NA,Neg,0,Survived,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3649,ANZCOSS,VSS-468,VSS-468,BPH3649,8-Apr-08,2008,Westmead,NSW,11-Jun-36,71,male,Hospital-onset,"Hospital-onset, healthcare-associated",1,MSSA,0.38,Pos-low,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,0
+BPH3650,ANZCOSS,VSS-469,VSS-469,BPH3650,4-Feb-08,2008,Westmead,NSW,15-Feb-62,45,female,Hospital-onset,NA,2,MRSA,NA,Neg,0,Survived,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3651,ANZCOSS,VSS-470,VSS-470,BPH3651,22-Mar-08,2008,Westmead,NSW,12-Sep-87,20,male,Community-onset,Community-acquired,2,MSSA,1,Neg,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,1,NA,0
+BPH3652,ANZCOSS,VSS-471,VSS-471,BPH3652,7-Oct-07,2007,Westmead,NSW,26-Aug-73,34,female,Hospital-onset,"Hospital-onset, healthcare-associated",1,MRSA,NA,Neg,0,Survived,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3653,ANZCOSS,VSS-472,VSS-472,BPH3653,11-Oct-07,2007,Westmead,NSW,20-Feb-27,80,male,Community-onset,"Community-onset, healthcare-associated",2,MSSA,0.38,Equivocal,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,0
+BPH3654,ANZCOSS,VSS-473,VSS-473,BPH3654,21-Feb-08,2008,Westmead,NSW,16-Jan-37,71,male,Community-onset,"Community-onset, healthcare-associated",1,MRSA,NA,Pos-low,0,Survived,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3655,ANZCOSS,VSS-474,VSS-474,BPH3655,23-Mar-08,2008,Westmead,NSW,1-Nov-37,70,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MSSA,0.5,Pos-high,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,0
+BPH3656,ANZCOSS,VSS-475,VSS-475,BPH3656,16-Nov-07,2007,Westmead,NSW,4-Dec-32,74,male,Hospital-onset,NA,1.5,MSSA,0.38,Pos-low,0,Survived,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3657,ANZCOSS,VSS-476,VSS-476,BPH3657,26-Nov-07,2007,Westmead,NSW,6-Feb-58,49,male,Community-onset,"Community-onset, healthcare-associated",2,MSSA,0.5,Neg,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,1
+BPH3658,ANZCOSS,VSS-477,VSS-477,BPH3658,10-Dec-07,2007,Westmead,NSW,24-Sep-57,50,male,Community-onset,"Community-onset, healthcare-associated",2,MRSA,NA,Pos-low,0,Survived,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3659,ANZCOSS,VSS-478,VSS-478,BPH3659,1-Jan-08,2008,Westmead,NSW,27-Nov-53,54,female,Community-onset,Community-acquired,1.5,MSSA,0.38,Pos-high,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,0
+BPH3660,ANZCOSS,VSS-479,VSS-479,BPH3660,10-Dec-07,2007,Westmead,NSW,10-Jun-44,63,female,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MRSA,3,Pos-high,0,Survived,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3661,ANZCOSS,VSS-480,VSS-480,BPH3661,26-Jan-08,2008,Westmead,NSW,6-Jan-80,28,female,Community-onset,Community-acquired,1.5,MSSA,0.75,Pos-high,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,1
+BPH3662,ANZCOSS,VSS-481,VSS-481,BPH3662,24-Nov-07,2007,Westmead,NSW,3-Dec-51,55,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MRSA,NA,Pos-low,0,Survived,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3663,ANZCOSS,VSS-482,VSS-482,BPH3663,2-Dec-07,2007,Westmead,NSW,25-Jun-42,65,female,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.5,Neg,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,0
+BPH3664,ANZCOSS,VSS-483,VSS-483,BPH3664,27-Jan-08,2008,Westmead,NSW,8-Sep-50,57,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MRSA,NA,Neg,0,Survived,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3665,ANZCOSS,VSS-484,VSS-484,BPH3665,19-Mar-08,2008,Westmead,NSW,27-Dec-56,51,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,0.25,Pos-low,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,0
+BPH3666,ANZCOSS,VSS-485,VSS-485,BPH3666,19-Sep-07,2007,Westmead,NSW,11-Sep-55,52,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MRSA,NA,Pos-low,0,Survived,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3667,ANZCOSS,VSS-486,VSS-486,BPH3667,19-Sep-07,2007,Westmead,NSW,16-Nov-56,50,male,Community-onset,"Community-onset, healthcare-associated",2,MSSA,0.25,Pos-high,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,0
+BPH3668,ANZCOSS,VSS-487,VSS-487,BPH3668,14-Nov-07,2007,Westmead,NSW,7-Aug-19,88,male,Hospital-onset,NA,2,MRSA,512,Pos-low,0,Survived,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3669,ANZCOSS,VSS-488,VSS-488,BPH3669,26-Nov-07,2007,Westmead,NSW,23-Jun-75,32,female,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.38,Neg,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,0
+BPH3670,ANZCOSS,VSS-489,VSS-489,BPH3670,1-Jan-08,2008,Westmead,NSW,1-Feb-58,49,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MRSA,NA,Pos-low,0,Died,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3671,ANZCOSS,VSS-490,VSS-490,BPH3671,9-Feb-08,2008,Westmead,NSW,4-Feb-08,0,female,Community-onset,"Community-onset, healthcare-associated",2,MSSA,0.38,Neg,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,0
+BPH3672,ANZCOSS,VSS-491,VSS-491,BPH3672,23-Oct-07,2007,Westmead,NSW,30-Jan-54,53,female,Hospital-onset,"Hospital-onset, healthcare-associated",2,MRSA,NA,Pos-low,0,Survived,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3673,ANZCOSS,VSS-492,VSS-492,BPH3673,6-Nov-07,2007,Westmead,NSW,21-Mar-29,78,male,Community-onset,"Community-onset, healthcare-associated",1,MSSA,0.25,Pos-low,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,0
+BPH3674,ANZCOSS,VSS-493,VSS-493,BPH3674,11-Jan-08,2008,Westmead,NSW,9-Jun-56,51,female,Hospital-onset,"Hospital-onset, healthcare-associated",2,MRSA,NA,Pos-low,1,Survived,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3675,ANZCOSS,VSS-494,VSS-494,BPH3675,27-Feb-08,2008,Westmead,NSW,23-Sep-39,68,male,Community-onset,Community-acquired,1.5,MSSA,0.25,Pos-low,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,0
+BPH3676,ANZCOSS,VSS-497,VSS-497,BPH3676,11-Aug-07,2007,Westmead,NSW,4-Dec-29,77,male,Hospital-onset,NA,2,MRSA,NA,Pos-low,0,Died,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3677,ANZCOSS,VSS-498,VSS-498,BPH3677,15-Aug-07,2007,Westmead,NSW,8-Aug-64,43,female,Community-onset,"Community-onset, healthcare-associated",3,MSSA,0.19,Pos-high,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,0
+BPH3678,ANZCOSS,VSS-499,VSS-499,BPH3678,21-Jan-08,2008,Westmead,NSW,3-Jan-45,63,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MRSA,NA,Pos-low,0,Survived,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3679,ANZCOSS,VSS-500,VSS-500,BPH3679,15-Mar-08,2008,Westmead,NSW,16-Apr-47,60,female,Hospital-onset,"Hospital-onset, healthcare-associated",2,MSSA,0.25,Pos-low,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,0
+BPH3680,ANZCOSS,VSS-503,VSS-503,BPH3680,29-Aug-07,2007,Westmead,NSW,7-Dec-59,47,male,Community-onset,"Community-onset, healthcare-associated",1.5,MRSA,NA,Neg,0,Died,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3681,ANZCOSS,VSS-504,VSS-504,BPH3681,29-Aug-07,2007,Westmead,NSW,19-Aug-40,67,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,1,Neg,0,Died,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,0
+BPH3682,ANZCOSS,VSS-505,VSS-505,BPH3682,9-Oct-07,2007,Westmead,NSW,23-Jul-34,73,male,Community-onset,"Community-onset, healthcare-associated",1.5,MRSA,NA,Pos-low,0,Survived,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3683,ANZCOSS,VSS-506,VSS-506,BPH3683,11-Oct-07,2007,Westmead,NSW,7-Jan-07,0,male,Hospital-onset,NA,1.5,MSSA,0.5,Pos-high,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,0
+BPH3684,ANZCOSS,VSS-507,VSS-507,BPH3684,27-Dec-07,2007,Westmead,NSW,20-Jun-68,39,male,Hospital-onset,NA,2,MRSA,NA,Neg,0,Survived,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3685,ANZCOSS,VSS-508,VSS-508,BPH3685,8-Feb-08,2008,Westmead,NSW,9-Jan-40,68,male,Community-onset,Community-acquired,1.5,MSSA,0.75,Pos-high,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,0
+BPH3686,ANZCOSS,VSS-509,VSS-509,BPH3686,20-Mar-08,2008,Westmead,NSW,20-Sep-37,70,female,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MRSA,NA,Pos-low,0,Survived,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3687,ANZCOSS,VSS-510,VSS-510,BPH3687,9-Apr-08,2008,Westmead,NSW,23-Sep-57,50,male,Community-onset,Community-acquired,1.5,MSSA,0.5,Pos-high,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,1
+BPH3688,ANZCOSS,VSS-511,VSS-511,BPH3688,20-Mar-08,2008,Westmead,NSW,26-Jul-35,72,female,Community-onset,NA,2,MRSA,NA,Pos-low,0,Survived,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3689,ANZCOSS,VSS-512,VSS-512,BPH3689,25-Apr-08,2008,Westmead,NSW,15-Mar-46,62,male,Community-onset,"Community-onset, healthcare-associated",1,MSSA,0.38,Pos-high,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,1
+BPH3690,ANZCOSS,VSS-515,VSS-515,BPH3690,19-Aug-07,2007,Westmead,NSW,15-Sep-50,56,male,Community-onset,"Community-onset, healthcare-associated",1,MRSA,NA,Pos-high,1,Died,2,0,Vancomyicin,18,0,NA,0,NA,0
+BPH3691,ANZCOSS,VSS-516,VSS-516,BPH3691,19-Aug-07,2007,Westmead,NSW,2-Nov-16,90,female,Community-onset,NA,1,MSSA,0.38,Equivocal,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,0
+BPH3692,ANZCOSS,VSS-521,VSS-521,BPH3692,17-Dec-07,2007,Westmead,NSW,8-Sep-33,74,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MRSA,NA,Pos-low,0,Survived,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3693,ANZCOSS,VSS-522,VSS-522,BPH3693,30-Jan-08,2008,Westmead,NSW,4-Dec-48,59,male,Community-onset,"Community-onset, healthcare-associated",1,MSSA,0.25,Equivocal,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,0
+BPH3694,ANZCOSS,VSS-525,VSS-525,BPH3694,14-Jul-07,2007,Westmead,NSW,9-May-49,58,male,Community-onset,"Community-onset, healthcare-associated",1.5,MRSA,NA,Pos-low,1,Survived,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3695,ANZCOSS,VSS-526,VSS-526,BPH3695,18-Jul-07,2007,Westmead,NSW,11-Apr-45,62,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,0.38,Pos-low,0,Survived,2,3,Vancomyicin,1,0,NA,0,NA,0
+BPH3696,ANZCOSS,VSS-529,VSS-529,BPH3696,3-Jan-08,2008,Westmead,NSW,12-Nov-76,31,female,Community-onset,Community-acquired,1.5,MRSA,512,Neg,0,Survived,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3697,ANZCOSS,VSS-530,VSS-530,BPH3697,18-Feb-08,2008,Westmead,NSW,1-Jun-84,23,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.5,Pos-low,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,1
+BPH3698,ANZCOSS,VSS-531,VSS-531,BPH3698,23-Feb-08,2008,Westmead,NSW,29-Mar-42,65,male,Community-onset,"Community-onset, healthcare-associated",2,MRSA,NA,Pos-low,0,Died,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3699,ANZCOSS,VSS-532,VSS-532,BPH3699,29-Mar-08,2008,Westmead,NSW,19-Jun-35,72,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,0.38,Pos-low,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,0
+BPH3700,ANZCOSS,VSS-533,VSS-533,BPH3700,16-Aug-07,2007,Westmead,NSW,8-Jan-63,44,female,NA,NA,1.5,MRSA,NA,Pos-low,0,Survived,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3701,ANZCOSS,VSS-534,VSS-534,BPH3701,17-Aug-07,2007,Westmead,NSW,25-Sep-45,61,female,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.38,Pos-high,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,0
+BPH3702,ANZCOSS,VSS-535,VSS-535,BPH3702,7-Sep-07,2007,Westmead,NSW,7-Apr-89,18,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MRSA,NA,Pos-low,0,Survived,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3703,ANZCOSS,VSS-536,VSS-536,BPH3703,13-Sep-07,2007,Westmead,NSW,3-Oct-48,58,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,0.25,Pos-high,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,0
+BPH3704,ANZCOSS,VSS-539,VSS-539,BPH3704,28-Jan-08,2008,Westmead,NSW,18-Nov-46,61,female,Hospital-onset,NA,1.5,MRSA,NA,Neg,0,Survived,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3705,ANZCOSS,VSS-540,VSS-540,BPH3705,22-Mar-08,2008,Westmead,NSW,5-Nov-50,57,male,Community-onset,"Community-onset, healthcare-associated",1.5,MSSA,0.38,Neg,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,0
+BPH3706,ANZCOSS,VSS-541,VSS-541,BPH3706,11-Mar-08,2008,Westmead,NSW,26-Jan-53,55,male,NA,NA,1.5,MRSA,NA,Pos-low,1,Survived,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3707,ANZCOSS,VSS-542,VSS-542,BPH3707,8-Apr-08,2008,Westmead,NSW,4-Jan-25,83,female,Hospital-onset,NA,1.5,MSSA,0.5,Pos-high,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,0
+BPH3708,ANZCOSS,VSS-543,VSS-543,BPH3708,28-Sep-07,2007,Westmead,NSW,8-Dec-46,60,female,Hospital-onset,NA,1.5,MRSA,NA,Equivocal,0,Died,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3709,ANZCOSS,VSS-544,VSS-544,BPH3709,29-Sep-07,2007,Westmead,NSW,6-Oct-57,49,male,Community-onset,"Community-onset, healthcare-associated",2,MSSA,0.38,Pos-high,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,0
+BPH3710,ANZCOSS,VSS-545,VSS-545,BPH3710,6-Mar-08,2008,Westmead,NSW,21-Apr-69,38,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MRSA,NA,Pos-low,0,Survived,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3712,ANZCOSS,VSS-547,VSS-547,BPH3712,6-Sep-07,2007,Westmead,NSW,14-Jul-25,82,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MRSA,NA,Neg,0,Died,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH3713,ANZCOSS,VSS-548,VSS-548,BPH3713,7-Sep-07,2007,Westmead,NSW,1-Jan-68,39,male,Community-onset,Community-acquired,1.5,MSSA,0.25,Pos-low,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,0
+BPH3715,ANZCOSS,VSS-550,VSS-550,BPH3715,3-Nov-07,2007,Westmead,NSW,13-Sep-48,59,male,Community-onset,Community-acquired,1.5,MSSA,0.25,Neg,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,0
+BPH3716,ANZCOSS,VSS-551,VSS-551,BPH3716,18-Sep-07,2007,LabPlus Auckland,NZ,8-Sep-72,35,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MRSA,NA,Neg,0,Survived,3,3,Vancomyicin,1,0,NA,0,NA,0
+BPH3717,ANZCOSS,VSS-552,VSS-552,BPH3717,18-Sep-07,2007,LabPlus Auckland,NZ,30-Jul-72,35,female,Hospital-onset,"Hospital-onset, healthcare-associated",2,MSSA,0.25,Pos-low,0,Survived,1,3,Flucloxacillin,1,0,NA,0,NA,0
+BPH3718,ANZCOSS,VSS-553,VSS-553,BPH3718,12-Aug-07,2007,LabPlus Auckland,NZ,15-Jan-77,30,male,Community-onset,"Community-onset, healthcare-associated",1.5,MRSA,NA,Pos-low,0,Survived,0,3,Vancomyicin,11,0,NA,1,NA,0
+BPH3719,ANZCOSS,VSS-554,VSS-554,BPH3719,14-Aug-07,2007,LabPlus Auckland,NZ,30-Aug-26,80,female,NA,NA,2,MSSA,0.5,Pos-high,0,Survived,1,3,Flucloxacillin,3,0,NA,0,NA,0
+BPH3720,ANZCOSS,VSS-555,VSS-555,BPH3720,22-May-08,2008,LabPlus Auckland,NZ,29-Mar-64,44,male,Hospital-onset,NA,0.75,MSSA,1,Neg,0,Survived,0,0,Flucloxacillin,1,0,NA,0,NA,0
+BPH3721,ANZCOSS,VSS-556,VSS-556,BPH3721,26-May-08,2008,LabPlus Auckland,NZ,6-Dec-25,82,male,Community-onset,NA,2,MSSA,0.38,Equivocal,0,Survived,3,1,Flucloxacillin,1,0,NA,0,NA,0
+BPH3722,ANZCOSS,VSS-557,VSS-557,BPH3722,10-Aug-08,2008,LabPlus Auckland,NZ,23-Jun-81,27,female,Hospital-onset,"Hospital-onset, healthcare-associated",2,MSSA,0.5,Pos-high,0,Survived,2,3,Vancomyicin,1,0,NA,0,NA,0
+BPH3723,ANZCOSS,VSS-558,VSS-558,BPH3723R,11-Aug-08,2008,LabPlus Auckland,NZ,20-Mar-19,89,male,Hospital-onset,NA,2,MSSA,0.5,Neg,0,Died,1,3,Flucloxacillin,1,0,NA,0,NA,0
+BPH3724,ANZCOSS,VSS-559,VSS-559,BPH3724,6-May-08,2008,LabPlus Auckland,NZ,12-Feb-08,0,male,Hospital-onset,"Hospital-onset, healthcare-associated",3,MRSA,NA,Equivocal,0,Survived,NA,NA,Vancomyicin,2,0,NA,0,NA,0
+BPH3725,ANZCOSS,VSS-560,VSS-560,BPH3725,10-May-08,2008,LabPlus Auckland,NZ,13-Jul-31,76,male,Hospital-onset,NA,3,MSSA,0.38,Neg,0,Died,2,3,Flucloxacillin,1,0,NA,0,NA,0
+BPH3726,ANZCOSS,VSS-561,VSS-561,BPH3726,29-Aug-08,2008,LabPlus Auckland,NZ,27-Jul-07,1,male,Hospital-onset,"Hospital-onset, healthcare-associated",2,MSSA,0.38,Pos-low,0,Survived,NA,NA,Vancomyicin,1,0,NA,0,NA,0
+BPH3727,ANZCOSS,VSS-563,VSS-563,BPH3727,25-Jul-07,2007,LabPlus Auckland,NZ,3-Dec-57,49,male,NA,NA,2,MRSA,NA,Pos-low,0,Survived,2,0,Vancomyicin,10,0,NA,0,NA,0
+BPH3728,ANZCOSS,VSS-564,VSS-564,BPH3728,27-Jul-07,2007,LabPlus Auckland,NZ,9-Oct-80,26,male,NA,NA,2,MSSA,0.25,Pos-high,0,Survived,2,1,Flucloxacillin,1,0,NA,0,NA,0
+BPH3729,ANZCOSS,VSS-565,VSS-565,BPH3729,18-Dec-07,2007,LabPlus Auckland,NZ,7-Jun-72,35,female,Community-onset,"Community-onset, healthcare-associated",2,MSSA,0.75,Neg,0,Survived,0,1,Vancomyicin,1,0,NA,0,NA,0
+BPH3730,ANZCOSS,VSS-566,VSS-566,BPH3730,18-Dec-07,2007,LabPlus Auckland,NZ,7-Jan-71,36,female,Community-onset,NA,2,MSSA,0.5,Pos-low,0,Died,2,3,Flucloxacillin,1,0,NA,0,NA,0
+BPH3731,ANZCOSS,VSS-567,VSS-567,BPH3731,21-Feb-08,2008,Ipswich,QLD,10-Jan-36,72,male,Community-onset,"Community-onset, healthcare-associated",1,MRSA,512,Pos-low,0,Survived,3,0,Other,1,NA,NA,0,NA,0
+BPH3732,ANZCOSS,VSS-568,VSS-568,BPH3732,20-Sep-07,2007,Westmead,NSW,15-Jan-49,58,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MSSA,0.25,Pos-high,0,Survived,NA,NA,Flucloxacillin,NA,NA,NA,0,NA,0
+BPH3714,ANZCOSS,VSS-549,VSS-549,BPH3714,20-Oct-07,2007,Westmead,NSW,2-Jan-43,64,male,Community-onset,"Community-onset, healthcare-associated",1.5,MRSA,NA,Pos-low,0,Survived,NA,NA,Vancomyicin,NA,NA,NA,0,NA,0
+BPH2843,VANESSA,VAN-112,VAN-112b,VAN112b-z,17-Jan-12,2012,Liverpool,NSW,10-Apr-49,62,male,Hospital-onset,"Hospital-onset, healthcare-associated",1.5,MRSA,NA,Pos-high,0,Survived,2,3,Vancomyicin,NA,0,1,NA,0,NA
+BPH2858,VANESSA,VAN-126,VAN-126b,VAN126b,12-Feb-12,2012,Austin,VIC,10-Jan-26,86,female,Hospital-onset,"Hospital-onset, healthcare-associated",1,MRSA,NA,Pos-high,0,Survived,2,0,Vancomyicin,1,0,0,NA,0,NA
+BPH2920,VANESSA,VAN-174,VAN-174-MMC,VAN174-MMC,17-May-12,2012,Monash Health,VIC,14-Jun-64,47,female,Community-onset,"Community-onset, healthcare-associated",1,MRSA,NA,Pos-low,0,Survived,8,0,Vancomyicin,2,0,0,NA,0,NA

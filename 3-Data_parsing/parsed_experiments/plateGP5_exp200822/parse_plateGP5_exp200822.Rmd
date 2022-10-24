@@ -1,0 +1,93 @@
+---
+title: 'Parse results: plate GP5 / exp200822'
+author: "Stefano Giulieri"
+date: "12/10/2020"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = here::here())
+msg <- stringr::str_c("My directory is ", here::here())
+message(msg)
+```
+
+```{r}
+library(tidyverse)
+library(magrittr)
+rm(list = ls())
+source("Functions/all_functions.R")
+```
+
+# Set variable and directories
+
+```{r}
+plate <- "plateGP5"
+experiment <- "exp200822"
+raw_dir <- str_c("Raw_data", plate, experiment, "", sep = "/")
+parse_dir <- str_c("Data_parsing/parsed_experiments/", plate, "_", experiment, "/")
+```
+
+# Parse data
+
+```{r}
+# parameters
+PI_data <- parse_kinetics(file = list.files(str_c(raw_dir, "/PI_kinetics"), full.names = T, recursive = T),
+                          exp = experiment,
+                          n_cycles = 235,
+                          n_skip = 13,
+                          plate = str_remove(plate, "plate")) %>%
+  annotate_wells(well_info = "Genetic_pairs_analysis_completed/plate_info/well_info.csv")
+# save PI data
+PI_data %>%
+  write_csv(str_c(parse_dir, "PI_data_", plate, "_", experiment, ".csv"))
+```
+
+# Quick check
+
+```{r}
+PI_data %>%
+  filter(sample_id != "Complete lysis") %>% # mask complete lysis / need to scale because of very high values in these wells
+  ggplot(aes(x = timepoint/60, y = f_signal)) +
+  geom_point(colour = "#045a8d") +
+  facet_wrap(strain_group~sample_id) +
+  theme_bw()
+```
+
+
+# Parse growth data
+
+Note that there was an interruption in the OD reading between 4h and 5h and 4min
+
+```{r}
+# customise duration calculation
+growth_data <- parse_growth(file = list.files(str_c(raw_dir, "/Growth_curves"), full.names = T, recursive = T),
+                            duration = c(21, 0),
+                            interval = 10,
+                            n_skip = 14,
+                            multiple_tranformations = c(1,1),
+                            exp = experiment,
+                            plate = str_remove(plate, "plate"),
+                            normalised = F,
+                            annotate = "none"
+) %>%
+  annotate_wells(well_info = "Genetic_pairs_analysis_completed/plate_info/well_info.csv")
+
+
+# save growth data
+growth_data %>%
+  write_csv(str_c(parse_dir, "growth_data_", plate, "_", experiment, ".csv"))
+```
+
+# Quick check
+
+```{r}
+growth_data %>%
+  ggplot(aes(x = timepoint/60, y = OD)) +
+  geom_point(colour = "#045a8d") +
+  facet_wrap(strain_group~sample_id) +
+  theme_bw()
+```
+

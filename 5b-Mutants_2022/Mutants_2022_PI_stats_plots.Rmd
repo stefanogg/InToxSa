@@ -1,0 +1,90 @@
+---
+title: 'Mutants 2022: PI kinetics statistics and plots'
+author: "Stefano Giulieri"
+date: "29/03/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd(paste0(here::here(), "/Mutants_2022"))
+message(glue::glue("My working directory is {getwd()}"))
+```
+
+Here we perform formal statistics of the processed PI data and plot them.
+
+```{r}
+library(tidyverse)
+library(patchwork)
+rm(list = ls())
+
+source("../Functions/all_functions.R")
+```
+
+# Part 1: explore kinetics data
+
+These data have already been preliminarly explored during processing. Here we reproduce the most important plots.
+
+As a reminder, during processing we removed 4 out of 20 JE outlier wells. Because no experiment had > 2 JE 2 outlier curves, we were able to keep all 4 experiments (although we may want to exclude exp220309, see below).
+
+After standardisation and fitting we removed 4 outlier wells (1.3%). No samples were excluded.
+
+Note that 3 of the JE outlier wells and 3 of the samples outliers wells were *from exp220309*. Anything special with this experiment?
+
+## Load clean kinetics data
+
+```{r}
+PI_kinetics <- readRDS("processed_data/PI_kinetics/PI_kinetics_plateGP-C1.Rda")
+```
+
+## Nice plotting
+
+Plot controls
+
+```{r}
+p1 <- PI_kinetics %>%
+  filter(strain_group == "CONTROL") %>%
+  plot_cell_death(fitted = T, title = "Plate GP-C1: controls", print_plot = F, return_plots = T)
+```
+
+Plot Nebraska mutants
+
+```{r}
+p2 <- PI_kinetics %>%
+  filter(strain_group == "NEBRASKA" | sample_id == "JE2") %>%
+  mutate(strain_description = if_else(sample_id == "JE2", "NEB wildtype", strain_description)) %>%
+  plot_cell_death(fitted = T, title = "Plate GP-C1: Nebraska mutants (comparator: JE2)", print_plot = F, return_plots = T, comparator = "JE2", strain_description = T)
+```
+
+Plot BPH3370 mutants
+
+```{r}
+PI_kinetics %>%
+  .$strain_group %>%
+  unique()
+p3 <- PI_kinetics %>%
+  filter(strain_group == "BPH3370-MUTANTS" | sample_id == "BPH3370") %>%
+  mutate(strain_description = if_else(sample_id == "BPH3370", "BPH3370 wildtype", strain_description)) %>%
+  plot_cell_death(fitted = T, title = "Plate GP-C1: BPH3370 mutants (comparator: BPH3370)", print_plot = F, return_plots = T, comparator = "BPH3370", strain_description = T)
+```
+
+Final composite plot
+
+```{r}
+design <- c(
+  area(1,1,1,4),
+  area(2,1,2,7),
+  area(3,1,3,8)
+)
+p1 / p2 / p3 +
+  plot_layout(design = design)
+# ggsave("figures/plateGP-C1_PI_kinetics_all_replicates.pdf")
+```
+
+# Part 2 perform summary statistics within strain groups
+
+
+
+# Part 3 compare PI parameters within strain groups
+
+# Save processed data

@@ -1,0 +1,163 @@
+---
+title: 'VANANZ dynamic cytotoxicity: parsing PI endpoints and LDH'
+author: "Stefano Giulieri"
+date: "07/10/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(magrittr)
+library(readxl)
+
+rm(list = ls())
+```
+
+### PI endpoints
+
+## exp 190831
+
+```{r}
+# arguments for parsing
+file <- "Preliminary_analysis/Raw_data/exp_190831/PI_endpoints/190831 LD PI Assay VANANZ endpoint  plus fixed permeabilised last well.xlsx"
+n_skip <- 13
+wavelength <- c(493, 535)
+col_names_WL <- str_c("f_signal_endpoint_", wavelength)
+col_names <- c("well", "sample", col_names_WL )
+
+# new variables
+exp <- "exp190831"
+plate <- 2
+
+# parse results
+data <- read_xlsx(file, skip = n_skip, col_names = col_names) %>%
+  pivot_longer(cols = starts_with("f_"), names_to = "wave_length", values_to = "f_signal_endpoint") %>%
+  mutate(wave_length = str_replace(wave_length, "f_signal_endpoint_", "WL")) %>%
+  mutate(experiment = exp, plate = plate)
+data
+
+PI_endpoint_data <- list()
+PI_endpoint_data[[1]] <- data
+```
+
+## exp 190905
+
+```{r}
+# arguments for parsing
+file <- "Preliminary_analysis/Raw_data/exp_190905/PI_endpoints/190830 HeLa 25000 Cell death rate dynamic endpoint.xlsx"
+n_skip <- 13
+wavelength <- c(493, 535)
+col_names_WL <- str_c("f_signal_endpoint_", wavelength)
+col_names <- c("well", "sample", col_names_WL )
+
+# new variables
+exp <- "exp190905"
+plate <- 2
+
+# parse results
+
+data <- read_xlsx(file, skip = n_skip, col_names = col_names) %>%
+  pivot_longer(cols = starts_with("f_"), names_to = "wave_length", values_to = "f_signal_endpoint") %>%
+  mutate(wave_length = str_replace(wave_length, "f_signal_endpoint_", "WL")) %>%
+  mutate(experiment = exp, plate = plate)
+data
+
+PI_endpoint_data[[2]] <- data
+```
+
+## exp 190909
+
+```{r}
+# arguments for parsing
+file <- "Preliminary_analysis/Raw_data/exp_190909/PI_endpoints/190910.plate.Vanaz2.HeLa.20000.cell.death.rate.dynamic.run.3.endpoint.xlsx"
+n_skip <- 13
+wavelength <- c(493, 535)
+col_names_WL <- str_c("f_signal_endpoint_", wavelength)
+col_names <- c("well", "sample", col_names_WL )
+
+# new variables
+exp <- "exp190909"
+plate <- 2
+
+# parse results
+data <- read_xlsx(file, skip = n_skip, col_names = col_names) %>%
+  pivot_longer(cols = starts_with("f_"), names_to = "wave_length", values_to = "f_signal_endpoint") %>%
+  mutate(wave_length = str_replace(wave_length, "f_signal_endpoint_", "WL")) %>%
+  mutate(experiment = exp, plate = plate)
+data
+
+PI_endpoint_data[[3]] <- data
+```
+
+## Merge dataframes
+
+PI endpoint is missing for exp190920 and exp190923
+
+```{r}
+PI_endpoint_data <- bind_rows(PI_endpoint_data)
+file <- "Preliminary_analysis/Analysis/dataframes/all_PI_endpoint.csv"
+write_csv(PI_endpoint_data, file)
+```
+
+### LDH
+
+## exp 190831
+
+```{r}
+source("Functions/parse_results.R")
+# arguments for parsing function
+file <- "Preliminary_analysis/Raw_data/exp_190831/LDH/190831 plate 2 VANANZ HeLa cells infected 24h post PI cell death assay.xlsx"
+exp <- "190831"
+plate <- 2
+
+# parse data
+data <- parse_LDH(file = file, exp = exp, plate = plate)
+data
+LDH_data <- list()
+LDH_data[[1]] <- data
+```
+
+## exp 190920
+
+```{r}
+# arguments for parsing function
+file <- "Preliminary_analysis/Raw_data/exp_190920/LDH/190921 plate 2 VANANZ LDH assay post real time cell death 28h  HeLa 20,000.xlsx"
+exp <- "190920"
+plate <- 2
+
+data <- parse_LDH(file = file, exp = exp, plate = plate)
+data
+
+LDH_data[[2]] <- data 
+```
+
+## exp 190923
+
+```{r}
+# arguments for parsing function
+file <- "Preliminary_analysis/Raw_data/exp_190923/LDH/190924 plate 3 VANANZ LDH assay 24h  HeLa post-PI cell death assay n5.xlsx"
+range <- cell_limits(ul = c(14, NA), lr = c(NA, 5))
+col_names <- c("well_row", "well_col", "sample", "var1", "LDH_assay")
+exp <- "190923"
+plate <- 3
+
+data <- parse_LDH(file = file, range = range, col_names = col_names, exp = exp, plate = plate) %>%
+  select(-var1)
+data
+
+LDH_data[[3]] <- data 
+```
+
+## Merge dataframes
+
+```{r}
+LDH_data <- bind_rows(LDH_data)
+file <- "Preliminary_analysis/Analysis/dataframes/all_LDH.csv"
+LDH_data %>%
+  write_csv(file)
+```
+

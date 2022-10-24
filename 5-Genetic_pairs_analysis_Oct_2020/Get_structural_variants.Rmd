@@ -1,0 +1,243 @@
+---
+title: "Compile list of structural variants for pairs without mutations on snippy denovo"
+author: "Stefano Giulieri"
+date: "11/03/2021"
+output: html_document
+---
+
+```{r setup}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = here::here())
+msg <- glue::glue("My directory is {here::here()}")
+message(msg)
+```
+
+This script focuses on processing the output of snippy run on genetic pairs, where reads were mapped on iso1 (= internal reference)
+
+```{r message=F}
+library(tidyverse)
+rm(list = ls())
+
+source("../Functions/gff_utilities.R")
+```
+
+# Deletions
+
+## Import deletion events
+
+```{r}
+f <- "~/Documents/Transfer_with_server/all_mask.deletions.bedg"
+fname <- basename(f)
+dir <- "Genetic_pairs_analysis_Oct_2020/raw_data/structural_variants/"
+dir.create(dir)
+
+file.copy(f, str_c(dir, fname), overwrite = F)
+colnames <- c("PAIR_ID", "iso2", "CHROM", "START", "END", "COVERAGE", "LENGTH_before", "LENGTH_after")
+deletions_events <- read_tsv(str_c(dir, fname),
+                           col_names = colnames)
+```
+
+attribute unique deletions ID. Sort by relevance (larger and smallest difference between before and after)
+
+```{r}
+deletions_events <- deletions_events %>%
+  arrange(PAIR_ID, CHROM, START) %>%
+  mutate(mutation_id = str_c("DEL-", formatC(row_number(), width = 3, format = "d", flag = "0")),
+         length_difference = LENGTH_before - LENGTH_after) %>%
+  relocate(mutation_id) %>%
+  arrange(length_difference, -LENGTH_after)
+
+```
+
+## Import annotated deletions
+
+```{r}
+f <- "~/Documents/Transfer_with_server/all_mask.deletions.gff"
+fname <- basename(f)
+
+
+file.copy(f, str_c(dir, fname), overwrite = F)
+
+colnames <- c("PAIR_ID", "iso2", "CHROM", "START", "END", "COVERAGE", "LENGTH_before", "LENGTH_after", "CHROM_protein", 
+               "SOURCE", 
+               "TYPE", 
+               "START_feat", 
+               "END_feat", 
+               "SCORE", 
+               "STRAND_feat", 
+               "PHASE", 
+               "ATTRIBUTES")
+deletions_data <- read_tsv(str_c(dir, fname),
+                           col_names = colnames) 
+```
+
+modify file
+
+```{r}
+deletions_annot <- deletions_data %>%
+  filter(TYPE != "gene") %>%
+  mutate(length_feat = END_feat - START_feat)
+
+deletions_annot %>%
+  filter(TYPE == "source") %>%
+  ggplot(aes(x = length_feat)) +
+  geom_histogram()
+
+```
+
+All sources appear to be chromosome. No need to exclude plasmids
+
+```{r}
+deletions_annot <- deletions_annot %>%
+  filter(TYPE != "source")
+```
+
+Extract attributes
+
+```{r}
+deletions_annot <- deletions_annot %>%
+  gff_to_tab() %>%
+  select(PAIR_ID:LENGTH_after, TYPE:END_feat, STRAND_feat, length_feat, LOCUS_TAG = locus_tag, GENE = gene, PRODUCT = product, faa_seq = translation)
+```
+
+Merge in one file. We filter deletions with less than 20 bp length (we would expect that were detected by snippy) and a before-after difference of 10bp or more
+
+```{r}
+df_deletions <- deletions_events %>%
+  left_join(deletions_annot)
+
+df_deletions_all <- df_deletions
+
+df_deletions <- df_deletions %>%
+  filter(LENGTH_after > 20,
+         length_difference < 10)
+
+rm(deletions_events, deletions_data, deletions_annot)
+```
+
+
+# IS insertions
+
+Output of split-break
+
+```{r}
+f <- "~/Documents/Transfer_with_server/all_mask.insertion.pairs.bed"
+fname <- basename(f)
+file.copy(f, str_c(dir, fname), overwrite = F)
+colnames <- c("CHROM_start", "START_start", "END_start", "splitter_depth_start", "splitter_type_start", "break_depth_start", "ratio_start", "CHROM_stop", "START_stop", "END_stop", "splitter_depth_stop", "splitter_type_stop","break_depth_stop", "ratio_stop", "iso2", "PAIR_ID")
+breaks_data <- read_tsv(str_c(dir, fname),
+                           col_names = colnames) %>%
+  mutate(total_ratio = ratio_start + ratio_stop) %>%
+  select(PAIR_ID, iso2, CHROM = CHROM_start, START = START_start, END = END_stop, total_ratio)
+```
+
+The ration breakpoint/total split coverage is very high, which gives us confidence that we have true split reads. Assign id
+
+```{r}
+insertion_events <- breaks_data %>%
+  arrange(PAIR_ID, CHROM, START) %>%
+  mutate(mutation_id = str_c("ISins-", formatC(row_number(), width = 3, format = "d", flag = "0"))) %>%
+  relocate(mutation_id) 
+```
+
+
+```{r}
+f <- "~/Documents/Transfer_with_server/all_insertion.pairs.annotated.tab"
+fname <- basename(f)
+
+
+file.copy(f, str_c(dir, fname), overwrite = F)
+colnames <- c("PAIR_ID", "iso2", "CHROM", "START", "END", "insertion_pair_id", "length", "alignment_type", "TYPE", "PRODUCT", "LOCUS_TAG", "coordinates")
+insertions_data <- read_tsv(str_c(dir, fname),
+                           col_names = colnames)
+```
+
+
+Merge in one file
+
+```{r}
+df_insertions <- insertions_data %>%
+  left_join(insertion_events) %>%
+  group_by(insertion_pair_id) %>%
+  mutate(mutation_id = unique(na.omit(mutation_id)),
+         IS_type = str_c(unique(na.omit(str_extract(PRODUCT, "IS\\d*"))),
+                         collapse = ",")) %>%
+  relocate(mutation_id) %>% ungroup()
+
+df_insertions <- df_insertions %>%
+  filter(alignment_type == "primary")
+
+rm(breaks_data, insertion_events, insertions_data)
+```
+
+# breseq output
+
+```{r}
+f <- "~/Documents/Transfer_with_server/all_subtract.gff"
+fname <- basename(f)
+file.copy(f, str_c(dir, fname), overwrite = F)
+
+colnames <- c("CHROM",
+              "START",
+              "END",
+              "MUTTYPE",
+              "CHROM_feat", 
+               "SOURCE", 
+               "TYPE", 
+               "START_feat", 
+               "END_feat", 
+               "SCORE", 
+               "STRAND_feat", 
+               "PHASE", 
+               "ATTRIBUTES",
+              "PAIR_ID")
+breseq_data <- read_tsv(str_c(dir, fname),
+                           col_names = colnames) 
+```
+
+Extract attributes
+
+```{r}
+breseq_annot <- breseq_data %>%
+  gff_to_tab() %>%
+  select(PAIR_ID, CHROM:MUTTYPE, TYPE, START_feat, END_feat, STRAND_feat, LOCUS_TAG = locus_tag, GENE = gene, PRODUCT = product) %>%
+   arrange(PAIR_ID, CHROM, START) %>%
+  mutate(mutation_id = str_c("breseq-", formatC(row_number(), width = 3, format = "d", flag = "0")),
+         CHROM = str_remove(CHROM, "\\.1")) %>%
+  relocate(mutation_id) 
+```
+
+Create bedfile with all structural variation
+
+```{r}
+df_structural_bed <- bind_rows(
+  df_deletions %>% transmute(CHROM, START, END, dataset = "deletions", mutation_id),
+  df_insertions %>% transmute(CHROM, START, END, dataset = "insertions", mutation_id),
+  breseq_annot %>% transmute(CHROM, START, END, dataset = "breseq", mutation_id)
+)
+```
+
+After inspecting the list of the structural variants (including in Geneious), there is no obvious mutation that can explain the phenotypic difference.
+
+# Export processed data
+
+
+```{r}
+dir <- "Genetic_pairs_analysis_Oct_2020/processed_data/structural_analysis/"
+dir.create(dir)
+subdir <- str_c(dir, "contrasting_phenotype_no_mutations/")
+dir.create(subdir)
+
+df_deletions %>%
+  write_csv(str_c(subdir, "df_deletions.csv"))
+
+df_insertions %>%
+  write_csv(str_c(subdir, "df_IS_insertions.csv"))
+
+breseq_annot %>%
+  write_csv(str_c(subdir, "df_breseq.csv"))
+
+df_structural_bed %>%
+  write_tsv(str_c(subdir, "df_structural.bed"), col_names = F)
+```
+

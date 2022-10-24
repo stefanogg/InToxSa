@@ -1,0 +1,97 @@
+well,sample_id,replicate,plate_number
+A01,Non infected,2,GP11
+A02,Non infected,3,GP11
+A03,BPH3433,1,GP11
+A04,Non infected,1,GP11
+A05,Non infected,3,GP11
+A06,Non infected,1,GP11
+A07,BPH3744,2,GP11
+A08,Non infected,1,GP11
+A09,Non infected,2,GP11
+A10,Non infected,3,GP11
+A11,Non infected,1,GP11
+A12,JE2,3,GP11
+B01,Non infected,3,GP11
+B02,Non infected,2,GP11
+B03,BPH3700,1,GP11
+B04,Non infected,1,GP11
+B05,Non infected,1,GP11
+B06,Non infected,1,GP11
+B07,Non infected,2,GP11
+B08,Non infected,3,GP11
+B09,Non infected,2,GP11
+B10,Non infected,3,GP11
+B11,Non infected,2,GP11
+B12,Non infected,1,GP11
+C01,Non infected,3,GP11
+C02,Non infected,2,GP11
+C03,JE2,2,GP11
+C04,Non infected,1,GP11
+C05,Non infected,3,GP11
+C06,Non infected,1,GP11
+C07,Non infected,1,GP11
+C08,Non infected,1,GP11
+C09,TOX-4,1,GP11
+C10,Non infected,1,GP11
+C11,Non infected,2,GP11
+C12,BPH3643,3,GP11
+D01,Non infected,1,GP11
+D02,Non infected,2,GP11
+D03,Non infected,2,GP11
+D04,Non infected,3,GP11
+D05,Non infected,1,GP11
+D06,Non infected,3,GP11
+D07,Non infected,2,GP11
+D08,Non infected,3,GP11
+D09,BPH3433,2,GP11
+D10,Non infected,3,GP11
+D11,BPH3748,3,GP11
+D12,Non infected,1,GP11
+E01,Non infected,2,GP11
+E02,Non infected,2,GP11
+E03,Non infected,1,GP11
+E04,Non infected,3,GP11
+E05,Non infected,2,GP11
+E06,Non infected,2,GP11
+E07,Non infected,2,GP11
+E08,Non infected,3,GP11
+E09,Non infected,1,GP11
+E10,BPH3742,2,GP11
+E11,BPH3748,2,GP11
+E12,Non infected,3,GP11
+F01,BPH3744,1,GP11
+F02,Non infected,1,GP11
+F03,Non infected,2,GP11
+F04,Non infected,1,GP11
+F05,Non infected,3,GP11
+F06,Non infected,3,GP11
+F07,Non infected,2,GP11
+F08,Non infected,2,GP11
+F09,Non infected,3,GP11
+F10,Non infected,1,GP11
+F11,BPH3742,3,GP11
+F12,BPH3748,1,GP11
+G01,Non infected,1,GP11
+G02,Non infected,3,GP11
+G03,Non infected,2,GP11
+G04,Non infected,3,GP11
+G05,Non infected,2,GP11
+G06,BPH3700,3,GP11
+G07,Non infected,3,GP11
+G08,Non infected,2,GP11
+G09,Non infected,2,GP11
+G10,Non infected,3,GP11
+G11,BPH3742,1,GP11
+G12,Non infected,2,GP11
+H01,TOX-4,2,GP11
+H02,BPH3433,3,GP11
+H03,Non infected,1,GP11
+H04,Non infected,3,GP11
+H05,Non infected,1,GP11
+H06,BPH3700,2,GP11
+H07,BPH3744,3,GP11
+H08,TOX-4,3,GP11
+H09,JE2,1,GP11
+H10,BPH3643,2,GP11
+H11,Non infected,3,GP11
+H12,BPH3643,1,GP11

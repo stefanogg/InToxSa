@@ -1,0 +1,60 @@
+---
+title: "Parsing RG plates"
+author: "Stefano Giulieri"
+date: "11/12/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Parsing RG plates
+
+```{r}
+library(tidyverse)
+library(magrittr)
+
+rm(list = ls())
+```
+
+
+## Plate A
+
+```{r}
+source("Functions/parse_results.R")
+file <- "Raw_data/plateRG/plateA/PI_kinetics/191209 RG plate A infection n1.xlsx"
+duration <- c(19, 30)
+wavelength <- c(493, 535)
+
+# new variables
+exp <- "exp191209"
+cell_number <- 40e3
+plate <- "A"
+
+# parse results
+data <- parse_kinetics(file = file, duration = duration, wavelength = wavelength, exp = exp, cell_number = cell_number, plate = plate)
+ 
+data
+```
+
+### Merge with plate info
+
+```{r}
+file <- "Raw_data/plateRG/plateA/plate_info/plateA_plate_info.csv"
+plate_info <- read_csv(file) %>%
+  pivot_longer(cols = 2:13, names_to = "col", values_to = "sample_id") %>%
+  mutate(well = str_c(row, formatC(as.numeric(col), width = 2, format = "d", flag = "0"))) %>%
+  mutate(sample_id = str_replace(sample_id, "\xc6", "delta-"))
+
+df <- data %>%
+  left_join(plate_info)# %>%
+  # filter(sample_id %in% c("2014-21162", "2014-21163", "2014-21165", "2014-21166", "BPH3835"))
+
+source("Functions/plot_results.R")
+
+plot_toxicity(df = df, plate_number = "A")
+
+
+```
+

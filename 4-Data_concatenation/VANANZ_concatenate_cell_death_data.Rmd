@@ -1,0 +1,134 @@
+---
+title: "Concatenate and check cell death data"
+author: "Stefano Giulieri"
+date: "05/11/2020"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+This is a script to concatenate all cell death dataframes in a single file and then perform data checks. 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = here::here())
+msg <- stringr::str_c("My directory is ", here::here())
+message(msg)
+```
+
+```{r message=FALSE}
+library(tidyverse)
+library(magrittr)
+rm(list = ls())
+source("Functions/all_functions.R")
+```
+
+# Concatenate single parsed dataframes 
+
+As of 24 February 2020, we have now parsed cell death data as single experiments that can now be concatenated.
+We first generate a list of experiments to retain: basically all with 40k cells and after excluding problematic experiments.
+
+## List of available parsed cell death dataframes
+
+```{r}
+c <- list.files("Data_parsing/parsed_experiments", recursive = T, full.names = TRUE) %>% str_subset("PI")
+
+c_files <- file.info(c) %>%
+  rownames_to_column("file") %>%
+  as_tibble() %>%
+  transmute(fname = basename(file), mtime, ctime, atime)
+
+knitr::kable(c_files)
+```
+
+We have a total of `r length(c)` experiments with PI data.
+
+## Concatenate raw data
+
+```{r message=FALSE}
+# all cell death data
+all_c_data_raw <- purrr::map(c, function(c){
+  df <- read_csv(c) %>%
+    mutate(plate = as.character(plate))
+}) %>%
+  bind_rows()
+# experiments with less than 40k cells
+cells_low <- all_c_data_raw %>%
+  filter(cell_number != 4e4) %>%
+  select(plate, experiment) %>%
+  distinct()
+cells_low
+# experiments excluded for other reasons: exp200228 (first experiment for plate M1)
+all_c_data <- all_c_data_raw %>%
+  filter(!experiment %in% c(cells_low$experiment, "exp200228"))
+```
+
+We excluded 5 experiments: four with less than 40k cells and one that failed.
+
+## Check concatenated file
+
+```{r}
+# included plates / experiments
+all_c_data %>%
+  select(plate, experiment) %>%
+  distinct() %>%
+  knitr::kable(row.names = T)
+```
+
+Three experiments (9 replicates) for each of plates GP4 and GP7. Two experiments (6 replicates) for each of plates 1-6, P2 and GP1-GP3 and GP5-GP6 and one experiment (one replicate) for each of plates P1, M1, M2. In total 33 experiments.
+
+```{r}
+# Number of wells per experiment
+all_c_data %>%
+  group_by(plate, experiment) %>%
+  summarise(n_wells = n_distinct(well)) %>%
+  knitr::kable()
+```
+
+We have now confirmed that the concatenated dataframe includes all experiments of interest and the all wells have been parsed.
+
+```{r}
+saveRDS(all_c_data,
+          "Data_concatenation/dataframes/concatenated_checked/all_cell_death_data_parsed.Rda")
+```
+
+## Remove outliers manually
+
+Outliers were identified manually in plates 1-6 and plates M1-M2. No outliers were identified in plates P1 and P2.
+Here, we create a complete dataframe of manually identified outliers
+
+This part of the script is not run anymore, since we now use automatic outliers detection. For documentation only.
+
+```{r eval=FALSE, echo=FALSE}
+# plates 1-6
+JE2.outliers <- tibble(sample_id = "JE2",
+                       well_id = c("exp191121_4_B06", "exp191121_4_D06"))
+df_outliers_plates1_6 <- read_csv("Data_analysis/outliers/PI_kinetics_VANANZ_outliers_plates1_6.csv") %>%
+  bind_rows(JE2.outliers)
+
+# plates M1-M2
+outliers_platesM1_M2 <- tibble(well_id = c(str_c("exp200309_M1_", c("G11", "C04", "B04", "G10", "E12")),
+                               c("exp200313_M2_E04", "exp200313_M2_D12"))) %>%
+  left_join(all_c_data %>% select(well_id, sample_id) %>% distinct())
+
+# all outliers
+df_outliers <- df_outliers_plates1_6 %>%
+  bind_rows(outliers_platesM1_M2)
+df_outliers
+
+# save
+write_csv(df_outliers,
+          "Data_analysis/outliers/PI_data_VANANZ_outliers.csv")
+```
+
+## Concatenated dataframes, outliers removed manually
+
+```{r eval=FALSE, echo=FALSE}
+all_c_data_outliers_removed <- all_c_data %>%
+  filter(!well_id %in% df_outliers$well_id)
+
+# save
+# write_csv(all_c_data_outliers_removed,
+#           "Data_analysis/dataframes/concatenated_checked/all_cell_death_data_outliers_manually_removed.csv")
+```
+

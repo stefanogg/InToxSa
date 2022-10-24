@@ -1,8 +1,0 @@
-THP1 cas9 vs thp1 casp1 (-casp4/5)
-THP1 cas9 vs thp1 casp4/5 (-casp1)
-x = timepoint
-panel = bact strain
-group = cell type
-
-plot nb cellules
-

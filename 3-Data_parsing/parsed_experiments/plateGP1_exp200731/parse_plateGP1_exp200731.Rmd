@@ -1,0 +1,95 @@
+---
+title: 'Parse results: plate GP1 / exp200731'
+author: "Stefano Giulieri"
+date: "03/08/2020"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = here::here())
+msg <- stringr::str_c("My directory is ", here::here())
+print(msg)
+```
+
+```{r}
+library(tidyverse)
+library(magrittr)
+rm(list = ls())
+source("Functions/all_functions.R")
+```
+
+# Parse data
+
+```{r}
+# parameters
+PI_data <- parse_kinetics(file = "Raw_data/plateGP1/exp200731/PI_kinetics/200731 Plate GP1 n2 HeLa 40000 cell death assay 24h.xlsx",
+                          exp = "exp200731",
+                          n_cycles = 240,
+                          n_skip = 14,
+                          plate = "GP1") %>%
+  annotate_wells(well_info = "Genetic_pairs_analysis_completed/plate_info/well_info.csv")
+# save PI data
+PI_data %>%
+  write_csv("Data_parsing/parsed_experiments/plateGP1_exp200731/PI_data_plateGP1_exp200731.csv")
+```
+
+# Quick check
+
+```{r}
+PI_data %>%
+  ggplot(aes(x = timepoint/60, y = f_signal)) +
+  geom_point(colour = "#045a8d") +
+  facet_wrap(strain_group~sample_id) +
+  theme_bw()
+```
+
+
+# Parse growth data
+
+We need to do this manually because of a problem in the file
+
+```{r}
+timepoints <- seq(from = 0, to = 93*10, by = 10)
+col_names <- c("well_row", "well_col", "sample",str_c("OD_", timepoints))
+growth_data <- read_xlsx(path = "Raw_data/plateGP1/exp200731/Growth_curves/200731  Plate GP1 n2 ON growth.xlsx",
+                         skip = 14, col_names = col_names) %>%
+  pivot_longer(cols = contains("OD"), 
+                 names_to = "time", 
+                 values_to = "OD") %>%
+  mutate(well = str_c(well_row, formatC(well_col, width = 2, format = "d", flag = "0")),
+         experiment = "exp200731",
+         plate = "GP1",
+         time = str_remove(time, "OD_"),
+         OD_blank_normalised = T,
+         well_id = paste(experiment, plate, well, sep = "_")) %>% # added a variable that identify unique experimental reading) 
+    mutate(timepoint = as.numeric(time)) %>%
+    select(-c(sample, time)) %>%
+  annotate_wells(well_info = "Genetic_pairs_analysis_completed/plate_info/well_info.csv")
+
+df_plot <- rename(growth_data, f_signal = OD)
+quick_plot(df_plot)
+
+# remove outlier measurment
+growth_data <- growth_data %>%
+  filter(timepoint != 640)
+  
+
+
+# save growth data
+growth_data %>%
+  write_csv("Data_parsing/parsed_experiments/plateGP1_exp200731/growth_data_plateGP1_exp200731.csv")
+```
+
+# Quick check
+
+```{r}
+growth_data %>%
+  ggplot(aes(x = timepoint/60, y = OD)) +
+  geom_point(colour = "#045a8d") +
+  facet_wrap(strain_group~sample_id) +
+  theme_bw()
+```
+

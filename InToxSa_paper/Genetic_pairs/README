@@ -1,7 +1,0 @@
-General concept of the genetic pairs analysis
-
-1. Focus on pairs with contrasting PI
-2. Provide a general description of these pairs: PI uptake (as mean AUC), genetic distance or cophenetic distance. This could be panel A (scatter plot) and B (simplified phylogenetic tree)
-3. Generate a dataset of within-pair mutations, annotated as in the eLife paper: here we need to add the PROVEAN score and structural variants.
-4. Run enrichment analysis
-5. Construct bottom panel of figure 3

@@ -1,0 +1,127 @@
+---
+title: "PCA of PI uptake data"
+author: "Stefano Giulieri"
+date: "27/06/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd(paste0(here::here(), "/InToxSa_paper/Clinical_associations"))
+getwd()
+```
+
+Here we generate repeat the PCA analysis of PI uptake data (already done by Romain). The idea is to show the rationale of chosing the AUC as summary measure for the phenotype.
+
+Here we explore association with clinical variables, first of all mortality.
+
+```{r}
+library(tidyverse)
+library(tidymodels)
+library(skimr)
+library(factoextra)
+library(adegenet)
+library(randomForest)
+library(cluster)
+library(caret)
+library(patchwork)
+library(corrr)
+rm(list = ls())
+
+source("../../Functions/all_functions.R")
+```
+
+# Import summary PI data
+
+```{r}
+PI_parameters <- readRDS("../../Genetic_pairs_analysis_Oct_2020/processed_data/PI/dataframes/parameters/PI_sample_parameters.Rda")
+```
+
+We keep clinical isolates only (BPHXXXX). Also we reformat as tibble 
+
+```{r}
+PI_parameters <- PI_parameters %>%
+  as_tibble() %>%
+  filter(str_detect(sample_id, "BPH"))
+```
+
+Focus on mean and remove non informative variables
+
+```{r}
+PI_parameters <- PI_parameters %>%
+  select(sample_id, ends_with("mean")) %>%
+  select(-c(contains("end_point_timepoint"), 
+            contains("doubling_time")))
+```
+
+Mortality data
+
+```{r}
+clinical <- read_csv("../../plate_info/strain_metadata.csv") %>%
+  select(sample_id, mortality) %>%
+  semi_join(PI_parameters)
+```
+
+
+# PCA
+
+```{r}
+df_pca <- PI_parameters %>%
+  column_to_rownames("sample_id")
+pca1 <- dudi.pca(df = df_pca, scannf = F, nf = 5, scale = T)
+```
+
+\% variance explained
+
+```{r}
+fviz_screeplot(pca1, addlabels = T)
+```
+
+```{r}
+fviz_contrib(pca1, choice = "var", axes = 1:5) +
+  coord_flip()
+```
+
+Try with mean only
+
+```{r}
+df_pca <- PI_parameters %>%
+  select(ends_with("mean"), sample_id) %>%
+  select(-contains("doubling")) %>%
+  column_to_rownames("sample_id")
+pca2 <- dudi.pca(df = df_pca, scannf = F, nf = 5, scale = T)
+fviz_screeplot(pca2, addlabels = T)
+
+fviz_contrib(pca2, choice = "var", axes = 1)
+fviz_contrib(pca2, choice = "var", axes = 2)
+```
+
+
+Plot on PCA axes
+
+```{r}
+pca2$li %>%
+ filter(Axis1 > 5) 
+
+pca2$li %>%
+  rownames_to_column("sample_id") %>%
+  inner_join(clinical) %>%
+  ggplot(aes(x = Axis1, y = Axis2, col = mortality, fill = mortality)) +
+   geom_point() +
+  stat_ellipse(geom = "polygon", alpha = .3) +
+  scale_color_manual(values = c("red", "blue"), na.translate = F) +
+  scale_fill_manual(values = c("red", "blue"), na.translate = F) +
+  theme_bw()
+
+fviz_pca_biplot(pca2,
+             #select.ind = list(contrib = 10),
+             axes = c(1,2),
+             geom = c("point"),
+             alpha.ind = .5,
+             addEllipses = F,
+             ellipse.level = .95,
+             # col.ind = pca_meta.df4$cluster,
+             title = paste("" ),
+             repel = T,
+             pointshape = 16)
+```

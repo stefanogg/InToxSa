@@ -1,0 +1,181 @@
+---
+title: "Generate dataframe of pairs information and summary plots of pairs metadata"
+author: "Stefano Giulieri"
+date: '17/06/2022'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd(stringr::str_c(here::here(), "/InToxSa_paper/Genetic_pairs"))
+msg <- glue::glue("My directory is {getwd()}")
+message(msg)
+```
+
+Here we put together all pairs metadata (phenotype, genetic distance, ST, CC, phylo data). Using these combined dataframe, we try to find plots to summarise metadata for both ~140k pairs with available metadata and 28 pairs with contrasting PI.
+
+```{r}
+library(tidyverse)
+
+rm(list = ls())
+```
+
+# Raw data
+
+Pairs data collected so far
+
+```{r}
+pairs_data <- readRDS("processed_data/PI_pairs_data/pairs_description_with_phylo_dataframe.Rda")
+```
+
+Variables to add: PAIR_ID, ST, CC
+
+# Visualisations
+
+```{r}
+pairs_data %>%
+  ggplot(aes(x = h_ratio, y = delta_auc)) +
+  geom_point() +
+  facet_wrap(~PI_pair)
+
+# Manual downsampling
+df1 <- pairs_data %>%
+  ungroup() %>%
+  filter(!PI_pair) %>%
+  slice_sample(prop = .01)
+df2 <- pairs_data %>%
+  ungroup() %>%
+  filter(PI_pair) 
+df_plot <- bind_rows(df1, df2)
+
+df_plot %>%
+  ggplot(aes(x = delta_auc, y = log_p,  colour = PI_pair)) +
+  geom_point()+
+  stat_ellipse() +
+  facet_wrap(~h_ratio > .5) +
+  scale_colour_manual(values = c("red", "blue")) +
+    theme_bw()
+
+df_plot %>%
+  ggplot(aes(x = delta_auc, y = log_p,  shape = PI_pair )) +
+  geom_point(aes(colour = h_ratio))+
+  stat_ellipse(aes(fill = PI_pair)) +
+  scale_fill_manual(values = c("red", "blue")) +
+  scale_colour_viridis_c() +
+  facet_wrap(~PI_pair) +
+    theme_bw()
+
+df_plot %>%
+  ggplot(aes(x = delta_auc, y = h_ratio,  colour = PI_pair)) +
+  geom_point()+
+  stat_ellipse() +
+  scale_colour_manual(values = c("red", "blue")) +
+    theme_bw()
+```
+
+Now represent genetic distance and pheno distance on main axes
+
+```{r}
+p1 <- df_plot %>%
+  ggplot(aes(x = dist_mash, y = delta_auc, shape = PI_pair, colour = log_p)) +
+  geom_point() +
+  stat_ellipse(aes(alpha = PI_pair), geom = "path", show.legend = T)+
+    scale_alpha_discrete( name = "Gen pair", labels = c("No", "Yes")) +
+  scale_shape_discrete( name = "Gen pair", labels = c("No", "Yes")) +
+   scale_color_gradient(low = "blue", high = "yellow", name = "-log(p)") +
+  labs(x = "Genetic distance", y  = "Difference in PI uptake") +
+  theme_bw(base_size = 16) +
+  theme(text = element_text(face = "bold"))
+p1
+```
+
+Alternative figure after discussing with Tim, Abdou and Calum
+
+```{r}
+p1a <- df_plot %>%
+  ggplot(aes(x = dist_mash, y = delta_auc,  colour = PI_pair)) +
+  geom_point() +
+  stat_ellipse(aes(colour = PI_pair, fill = PI_pair), geom = "polygon", alpha = .3, show.legend = F)+
+    scale_colour_manual( values = c("red", "blue"), name = "Gen pair", labels = c("No", "Yes")) +
+  labs(x = "Genetic distance", y  = "Difference in PI uptake") +
+  theme_bw(base_size = 16) +
+  theme(text = element_text(face = "bold"))
+p1a
+```
+
+
+Focus on PI pairs only
+
+```{r}
+df_plot <- df_plot %>%
+  filter(PI_pair)
+
+df_plot %>%
+  ggplot(aes(x = h_ratio, y = delta_auc)) +
+  geom_point()
+
+df_plot %>%
+  ggplot(aes(x = dist_denovo, y = delta_auc, colour = h_ratio)) +
+  geom_point()
+
+df_plot %>%
+  ggplot(aes(x = dist_denovo, y = path_length)) +
+  geom_point()
+
+df_plot %>%
+  ggplot(aes(x = dist_denovo, y = delta_auc, size = path_length)) +
+  geom_point()
+
+df_plot %>%
+  ggplot(aes(x = dist_denovo, y = delta_auc, colour = path_length)) +
+  geom_point()
+```
+
+Ballon plot
+
+```{r}
+df_plot %>%
+  ggplot(aes(x = fct_reorder(pair_id, delta_auc, .desc = T), y = delta_auc, size = dist_denovo, colour = path_length)) +
+  geom_point() +
+  coord_flip() +
+  theme_bw()
+
+p2 <- df_plot %>%
+  ggplot(aes(x = fct_reorder(pair_id, dist_denovo, .desc = F), y = dist_denovo, size = path_length, colour = delta_auc)) +
+  geom_point() +
+  scale_colour_continuous(high = "#efedf5", 
+                          low = "#3f007d", name = "Delta PI uptake") +
+  scale_size_continuous(name = "Phylo distance") +
+  coord_flip() +
+  labs(y = "# mutations", x = "Pair ") +
+  theme_bw(base_size = 16) +
+  theme(text = element_text(face = "bold"),
+        legend.position = c(.8,.5))
+p2
+```
+
+Changes suggested by Tim, Abdou and Calum
+
+```{r}
+p2a <- df_plot %>%
+  ggplot(aes(x = fct_reorder(pair_id, dist_denovo, .desc = F), y = dist_denovo, colour = delta_auc)) +
+  geom_point(size = 3) +
+  scale_colour_continuous(high = "#efedf5", 
+                          low = "#3f007d", name = "Delta PI uptake") +
+  scale_size_continuous(name = "Phylo distance") +
+  coord_flip() +
+  labs(y = "# mutations", x = "Pair ") +
+  theme_bw(base_size = 16) +
+  theme(text = element_text(face = "bold"),
+        legend.position = c(.8,.5))
+p2a
+```
+
+
+# Save processed data
+
+```{r}
+list(p1, p1a, p2, p2a) %>%
+  saveRDS("processed_data/PI_pairs_data/pairs_metadata_plots.Rda")
+```
+

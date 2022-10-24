@@ -1,0 +1,213 @@
+---
+title: "VANANZ inocula OD"
+author: "Stefano Giulieri"
+date: "09/12/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r message=FALSE}
+library(tidyverse)
+library(magrittr)
+
+rm(list = ls())
+```
+
+```{r}
+# install.packages("here")
+dir <- here::here("Data_parsing")
+setwd(dir)
+source("../Functions/parse_results.R")
+```
+
+### Inocula OD
+
+## exp 190831
+
+```{r}
+# arguments for parsing
+file <- "../Raw_data/plate2/exp_190831/Inocula_OD/190829 plate 2 VANANZ OD600 blank corrected pbs 1 in 10 list.xlsx"
+exp <- "exp190831"
+plate <- 2
+
+# parse results
+data <- parse_inocula_OD(file, normalised = TRUE, exp = exp, plate = plate)
+data
+
+inocula_OD_data <- list()
+inocula_OD_data[[1]] <- data
+```
+
+## exp 190905
+
+```{r}
+# arguments for parsing
+file <- "../Raw_data/plate2/exp_190905/Inocula_OD/190904 plate 2 VANANZ growth for HeLa cells death real time diluted 1 in 10 in PBS.xlsx"
+exp <- "exp190905"
+plate <- 2
+
+# parse results
+data <- parse_inocula_OD(file, normalised = TRUE, exp = exp, plate = plate)
+data
+
+inocula_OD_data[[2]] <- data
+```
+
+## exp 190909
+
+```{r}
+# arguments for parsing
+file <- "../Raw_data/plate2/exp_190909/Inocula_OD/190909 plate 2 VANANZ dilution 1 in  10 for HeLa cells death real time number 3.xlsx"
+exp <- "exp190909"
+plate <- 2
+
+# parse results
+data <- parse_inocula_OD(file, normalised = TRUE, exp = exp, plate = plate)
+data
+
+inocula_OD_data[[3]] <- data
+```
+
+
+## exp 190921: no data
+
+## exp 191107: no data
+
+## exp 190923: no data
+
+## exp 191109
+
+```{r}
+# arguments for parsing
+file <- "../Raw_data/plate3/exp_191109/Inocula_OD/191109 plate vananz 3 diluted 1 in 10 in PBS n1.xlsx"
+exp <- "exp191109"
+plate <- 3
+
+# parse results
+blank <- c("H10", "H11", "H12")
+data <- parse_inocula_OD(file, normalised = FALSE, exp = exp, plate = plate) %>%
+  mutate(inoculum_OD = inoculum_OD - mean(inoculum_OD[which(well %in% blank)])) %>%
+  mutate(inoculum_OD_blank_normalised = TRUE) %>%
+  mutate(inoculum_OD = if_else(well %in% blank, NA_real_, inoculum_OD))
+data
+
+inocula_OD_data[[4]] <- data
+```
+
+# exp 191111
+
+```{r}
+# arguments for parsing
+file <- "../Raw_data/plate3/exp_191111/Inocula_OD/191111 plate vananz 3 diluted 1 in  10 in PBS n2.xlsx"
+exp <- "exp191111"
+plate <- 3
+
+# parse results
+data <- parse_inocula_OD(file, normalised = TRUE, exp = exp, plate = plate)
+data
+
+inocula_OD_data[[5]] <- data
+```
+
+# exp 191115: no data
+
+# exp 191116
+
+```{r}
+file <- "../Raw_data/plate1/exp_191116/Inocula_OD/191116 plate 1 n2 VANANZ diluted 1 in 10 in PBS for HeLa 40000 cells death real time.xlsx"
+exp <- "exp191116"
+plate <- 1
+
+# parse results
+data <- parse_inocula_OD(file, normalised = TRUE, exp = exp, plate = plate)
+data
+
+inocula_OD_data[[6]] <- data
+```
+
+# exp 191120
+
+```{r}
+file <- "../Raw_data/plate4/exp_191120/Inocula_OD/191118 plate 4 diluted 1 in 10 in PBS n1.xlsx"
+exp <- "exp191120"
+plate <- 4
+
+# parse results
+data <- parse_inocula_OD(file, normalised = TRUE, exp = exp, plate = plate)
+data
+
+inocula_OD_data[[7]] <- data
+
+```
+
+# exp 191121
+
+```{r}
+file <- "../Raw_data/plate4/exp_191121/Inocula_OD/191121 plate 4 diluted 1 in 10 in PBS n2.xlsx"
+exp  <- "exp191121"
+plate <- 4
+
+# parse results
+data <- parse_inocula_OD(file, normalised = TRUE, exp = exp, plate = plate)
+data
+
+inocula_OD_data[[8]] <- data
+```
+
+# exp 191129
+
+```{r}
+file <- "../Raw_data/plate5/exp_191129/Inocula_OD/191129 plate 5 n1 diluted 1 in 10 inPBS.xlsx"
+exp <- "exp191129"
+plate <- 5
+
+# parse results
+data <- parse_inocula_OD(file, normalised = TRUE, exp = exp, plate = plate)
+data
+
+inocula_OD_data[[9]] <- data
+
+```
+
+# exp 191130
+
+```{r}
+file <- "../Raw_data/plate5/exp_191130/Inocula_OD/191130 plate 5 n2 diluted 1 in 10 in PBS.xlsx"
+exp  <- "exp191130"
+plate <- 5
+
+# parse results
+data <- parse_inocula_OD(file, normalised = TRUE, exp = exp, plate = plate)
+data
+
+inocula_OD_data[[10]] <- data
+```
+
+## merge dataframes
+
+```{r}
+inocula_OD_dat <- bind_rows(inocula_OD_data) %>%
+  mutate()
+
+# Merge with isolate data
+well_info <- read_csv("../plate_info/well_info_n843.csv") %>%
+  select(well, sample_id, replicate, plate = plate_number) %>%
+  # We no longer use TOX-5 as positive toxicity control
+  mutate(sample_id = if_else(sample_id == "TOX-5",
+                             "JE2", sample_id)) %>%
+  # We use max PI signal (lysis of all cells) instead of total LDH
+  mutate(sample_id = if_else(sample_id == "Total LDH",
+                             "Complete lysis", sample_id)) %>%
+  # Replace "blank" with "non infected"
+  mutate(sample_id = if_else(sample_id == "Blank",
+                             "Non infected", sample_id))
+df_OD <- inocula_OD_dat %>%
+  left_join(well_info)
+df_OD
+file <- "dataframes/all_inoculum_OD_well_info.csv"
+write_csv(df_OD, file)
+```
