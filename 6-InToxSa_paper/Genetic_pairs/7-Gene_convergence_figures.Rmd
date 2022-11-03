@@ -1,5 +1,5 @@
 ---
-title: 'Updated combined annotation with CAMERA2 patient-episode analysis'
+title: 'Generate figures for the convergent evolution analysis'
 author: "Stefano Giulieri"
 date: "17/06/2022"
 output: 
@@ -30,18 +30,15 @@ rm(list = ls())
 # Load data
 
 ```{r}
-df_gsea_neb <- readRDS("processed_data/gene_convergence/df_gsea_neb.Rda") %>%
-  filter(enrich > 1)
-
-df_mutations <- readRDS("../../../VANANZ_phenotypes_local/Genetic_pairs_analysis_Oct_2020/processed_data/convergence/PI/df_PI_convergent_genes.Rda")
+df_mutations <- readRDS("raw_data/df_PI_convergent_genes.Rda")
 ```
 
 NEB kinetics data
 
 ```{r}
-df_PI_NEB <- readRDS("../../../VANANZ_phenotypes_local/Genetic_pairs_analysis_Oct_2020/processed_data/PI/dataframes/parameters/PI_sample_parameters_plateGPV1.Rda")
+df_PI_NEB <- readRDS("raw_data/PI_sample_parameters_plateGPV1.Rda")
 
-df_PI_NEB_wells <- readRDS("../../../VANANZ_phenotypes_local/Genetic_pairs_analysis_Oct_2020/processed_data/PI/dataframes/parameters/PI_parameters_plateGPV1.Rda")
+df_PI_NEB_wells <- readRDS("raw_data/PI_parameters_plateGPV1.Rda")
 ```
 
 # Figure 3: gene enrichment in the entire dataset
@@ -53,51 +50,9 @@ colors <- RColorBrewer::brewer.pal(n = 6, name = "PuOr")
 names(colors) <- rev(c("IS insertion (intragenic)", "IS insertion (intergenic)", "large deletion", "intergenic", "non-synonymous", "truncating"))
 colors_genes <- colors[c(1,2,6)]
 colors_genes
-
-df_gsea_all <- df_gsea_neb 
 ```
 
 ## Panel A 
-
-### p values
-
-```{r}
-bonf <- .05/n_distinct(df_gsea_all$neb_locus_tag)
-n_genes_with_sub <- df_gsea_all %>%
-  filter(nsub > 0) %>%
-  .$neb_locus_tag %>%
-  n_distinct()
-bonf <- .05/n_genes_with_sub
-suggest <- 1/n_genes_with_sub
-
-df_plot <- df_gsea_all %>%
-  filter(enrich > 1) %>%
-  select(neb_gene_symbol, glm.pval, enrich) %>%
-  arrange(glm.pval) %>%
-  mutate(glm.pval = -log10(glm.pval),
-         plot_order = row_number()) 
-
-df_plot <- df_plot %>%
-  filter(plot_order <= 20)
-
-p1 <- df_plot %>%
-  ggplot(aes(x = fct_reorder(neb_gene_symbol, plot_order, .desc = T),
-             y = glm.pval, colour = glm.pval > -log10(bonf))) +
- # geom_point(size = point_sz) +
-  geom_point(aes(size = enrich)) +
-  geom_hline(yintercept = -log10(bonf), linetype = "dashed") +
-  # geom_hline(yintercept = -log10(suggest), colour = "red") +
-  scale_size(name = "Enrichment", breaks = c(10, 20, 40)) +
-  scale_colour_manual(values = c("blue", "red"), labels = c("> Bonf", "< Bonf"), name = "p value", guide = "none") +
-  coord_flip() +
-  labs(x = "",
-       y = "-log10(p)") +
-  theme_bw(base_size = base_sz) +
-  theme(text = element_text(face = "bold"),
-        legend.position = "right",
-        legend.title = element_text(size = 16))
-p1
-```
 
 ### Mutation counts
 
@@ -338,14 +293,10 @@ p3
 # Panel D: Operetta NEB
 
 ```{r}
-f <- "~/OneDrive - The University of Melbourne/R/VANANZ_phenotypes_local/Genetic_pairs_analysis_Oct_2020/raw_data/operetta/Cell_count_corrected.df.Rda"
-
-Cell_count.df <- readRDS(f) %>%
+Cell_count.df <- readRDS("raw_data/Cell_count_corrected.df.Rda") %>%
   mutate(cell_id = str_c(sample_id, plate_number, plate_replicate, replicate, timepoint, well, Field, Object_No, sep = "_"))
 
-f <- "~/OneDrive - The University of Melbourne/R/VANANZ_phenotypes_local/Genetic_pairs_analysis_Oct_2020/raw_data/operetta/Spot_Cell_count.df.Rda"
-
-Spot_Cell_count.df <- readRDS(f)
+Spot_Cell_count.df <- readRDS("raw_data/Spot_Cell_count.df.Rda")
 
 ```
 
