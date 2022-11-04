@@ -7,7 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-setwd(stringr::str_c(here::here(), "/GWAS/pyseer_output"))
+setwd(stringr::str_c("~/Documents/Github/InToxSa", "/GWAS/pyseer_output"))
 msg <- glue::glue("My directory is {getwd()}")
 message(msg)
 ```
@@ -28,7 +28,7 @@ rm(list = ls())
 Here we focus on pyseer-gemma output. This can extended later
 
 ```{r}
-f <- "~/Documents/Transfer_with_server/nomaf.nosyn.core90.mutations.toxicity_norm.pyseer.tab"
+f <- "~/Documents/Github/Transfer_with_server/nomaf.nosyn.core90.mutations.toxicity_norm.pyseer.tab"
 dir <- "raw_data/mutations"
 file.copy(f, dir)
 ```

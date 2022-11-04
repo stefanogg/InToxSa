@@ -7,7 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-setwd(stringr::str_c(here::here(), "/InToxSa_paper/Genetic_pairs"))
+setwd(stringr::str_c("~/Documents/Github/InToxSa", "/6-InToxSa_paper/Genetic_pairs"))
 msg <- glue::glue("My directory is {getwd()}")
 message(msg)
 ```
@@ -50,7 +50,7 @@ ggtree(tree)
 Phylo data
 
 ```{r}
-df_ancestral_path <- readRDS("../../../VANANZ_phenotypes_local/InToxSa_paper/Genetic_pairs/processed_data/PI_pairs_data/get_ancestral_path_dataframe.Rda") 
+df_ancestral_path <- readRDS("../../../VANANZ_phenotypes_local/6-InToxSa_paper/Genetic_pairs/processed_data/PI_pairs_data/get_ancestral_path_dataframe.Rda") 
 ```
 
 # Merge pairs data with phylo data

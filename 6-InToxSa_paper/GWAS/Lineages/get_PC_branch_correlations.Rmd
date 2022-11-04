@@ -8,7 +8,7 @@ output: html_document
 
 ```{r setup, include=F}
 knitr::opts_chunk$set(echo = TRUE)
-setwd(stringr::str_c(here::here(), "/InToxSa_paper/GWAS/Lineages"))
+setwd(stringr::str_c("~/Documents/Github/InToxSa", "/6-InToxSa_paper/GWAS/Lineages"))
 msg <- glue::glue("My directory is {getwd()}")
 message(msg)
 ```

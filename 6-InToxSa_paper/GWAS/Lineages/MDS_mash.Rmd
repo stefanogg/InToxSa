@@ -7,7 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-setwd(stringr::str_c(here::here(), "/InToxSa_paper/GWAS/Lineages"))
+setwd(stringr::str_c("~/Documents/Github/InToxSa", "/6-InToxSa_paper/GWAS/Lineages"))
 msg <- glue::glue("My directory is {getwd()}")
 message(msg)
 ```
@@ -28,7 +28,7 @@ https://www.tidyverse.org/blog/2021/03/workflowsets-0-0-1/
 https://juliasilge.com/blog/cocktail-recipes-umap/
 
 ```{r}
-f <- "~/Documents/Transfer_with_server/mash.dist.tab"
+f <- "~/Documents/Github/Transfer_with_server/mash.dist.tab"
 dir <- "raw_data/"
 file.copy(f, dir)
 mash <- as.matrix(read.delim(str_c(dir, basename(f)),as.is=T,h=T,sep="\t",comment.char='',check.names=FALSE, row.names = 1))

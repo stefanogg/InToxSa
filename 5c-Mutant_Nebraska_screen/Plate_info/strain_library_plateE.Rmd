@@ -18,7 +18,7 @@ Here, we establish a 96-well plate library of all VANANZ isolates in triplicates
 library(tidyverse)
 library(magrittr)
 
-setwd("~/Documents/Travail/Abdou_project/Staph_infection_project/Convergent_SSR_GWAS_mutant_screen/plate_randomisation/")
+setwd("~/Documents/Github/Travail/Abdou_project/Staph_infection_project/Convergent_SSR_GWAS_mutant_screen/plate_randomisation/")
 # Load list of isolates and episodes
 data <- read_csv("isolates_data_plateE.csv")
 ```

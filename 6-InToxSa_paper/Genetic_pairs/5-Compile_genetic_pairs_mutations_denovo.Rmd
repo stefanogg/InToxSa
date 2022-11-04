@@ -7,7 +7,7 @@ output: html_document
 
 ```{r setup}
 knitr::opts_chunk$set(echo = TRUE)
-setwd(str_c(here::here(), "/InToxSa_paper/Genetic_pairs"))
+setwd(str_c("~/Documents/Github/InToxSa", "/6-InToxSa_paper/Genetic_pairs"))
 msg <- glue::glue("My directory is {getwd()}")
 message(msg)
 ```
@@ -20,16 +20,6 @@ rm(list = ls())
 ```
 
 # Raw data
-
-List with all (current) genetic pairs run on snippy (from the server)
-
-```{r}
-df_pairs <- read_tsv("raw_data/genetic_pairs.tab", 
-                     col_names = c("PAIR_ID", 
-                                   "iso1",
-                                   "iso2"))
-
-```
 
 Snippy output
 
@@ -247,7 +237,7 @@ snippy_denovo_modified_proteins <- snippy_denovo_modified_proteins %>%
 # Export processed data
 
 ```{r}
-snippy_denovo_modified_proteins %>%
-  saveRDS("processed_data/variants_combined_annotation/snippy_denovo_annotated.Rda")
+# snippy_denovo_modified_proteins %>%
+#   saveRDS("processed_data/variants_combined_annotation/snippy_denovo_annotated.Rda")
 ```
 

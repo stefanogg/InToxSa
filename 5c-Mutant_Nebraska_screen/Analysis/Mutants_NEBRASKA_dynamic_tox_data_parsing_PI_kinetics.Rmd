@@ -282,7 +282,7 @@ plot_cell_death(df = cell_death_std_df,
 
 # outliers have been identified and well_id saved in the csv file below: 
 ```{r}
-PI_kinetics_outliers_Nebraska <- read.csv("~/Documents/Travail/Abdou_project/Staph_infection_project/github_analysis/VANANZ_phenotypes/Mutant_Nebraska_screen/Raw_data/PI_kinetics_outliers_Nebraska.csv", sep="", stringsAsFactors=FALSE) %>%
+PI_kinetics_outliers_Nebraska <- read.csv("~/Documents/Github/Travail/Abdou_project/Staph_infection_project/github_analysis/VANANZ_phenotypes/Mutant_Nebraska_screen/Raw_data/PI_kinetics_outliers_Nebraska.csv", sep="", stringsAsFactors=FALSE) %>%
   merge(., cell_death_df, by.x = "PI_kinetic_outliers", by.y = "well_id", all.x = T) %>%
   filter(!duplicated(PI_kinetic_outliers))
 

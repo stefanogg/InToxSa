@@ -7,7 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-setwd(paste0(here::here(), "/InToxSa_paper/GWAS/Phenotypes"))
+setwd(paste0(here::here(), "/6-InToxSa_paper/GWAS/Phenotypes"))
 getwd()
 ```
 
@@ -131,11 +131,11 @@ df_pheno_norm <- df_bestnorm %>%
 ```{r}
 pheno <- df_pheno_norm %>%
   select(sample_id, pi_auc = untransformed) %>%
-  write_tsv("~/Documents/Transfer_with_server/toxicity_phenotype.tab")
+  write_tsv("~/Documents/Github/Transfer_with_server/toxicity_phenotype.tab")
 
 pheno_norm <- df_pheno_norm %>%
   select(sample_id, pi_auc = yeo_johnson) %>%
-   write_tsv("~/Documents/Transfer_with_server/toxicity_norm_phenotype.tab")
+   write_tsv("~/Documents/Github/Transfer_with_server/toxicity_norm_phenotype.tab")
 ```
 
 # Save processed phenotype data

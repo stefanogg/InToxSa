@@ -7,7 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-setwd(paste0(here::here(), "/InToxSa_paper/Generate_datasets"))
+setwd(paste0(here::here(), "/6-InToxSa_paper/Generate_datasets"))
 getwd()
 ```
 

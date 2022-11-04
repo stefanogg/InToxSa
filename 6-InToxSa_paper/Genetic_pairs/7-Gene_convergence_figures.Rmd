@@ -9,7 +9,7 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-setwd(stringr::str_c(here::here(), "/InToxSa_paper/Genetic_pairs"))
+setwd(stringr::str_c("~/Documents/Github/InToxSa", "/6-InToxSa_paper/Genetic_pairs"))
 msg <- glue::glue("My directory is {getwd()}")
 message(msg)
 ```
@@ -30,7 +30,13 @@ rm(list = ls())
 # Load data
 
 ```{r}
-df_mutations <- readRDS("raw_data/df_PI_convergent_genes.Rda")
+df_mutations <- readRDS("processed_data/gene_convergence/df_PI_convergent_genes.Rda")
+
+
+# df_mutations <- readRDS("raw_data/df_PI_convergent_genes.Rda")
+unique(df_mutations$cdhit_symbol)
+
+
 ```
 
 NEB kinetics data
@@ -40,6 +46,14 @@ df_PI_NEB <- readRDS("raw_data/PI_sample_parameters_plateGPV1.Rda")
 
 df_PI_NEB_wells <- readRDS("raw_data/PI_parameters_plateGPV1.Rda")
 ```
+
+We will plot only genes that have a cognate Nebrasks mutant that was tested for PI uptake and in the Operetta system
+
+```{r}
+df_mutations  <- df_mutations %>%
+  filter(neb_mutant_id %in% df_PI_NEB$sample_id)
+```
+
 
 # Figure 3: gene enrichment in the entire dataset
 
@@ -378,7 +392,7 @@ p6
 # Save processed data
 
 ```{r}
-list(p1, p2, p3,p4, p5, p6) %>%
-  saveRDS("processed_data/gene_convergence/convergence_plots.Rda")
+# list(p1, p2, p3,p4, p5, p6) %>%
+#   saveRDS("processed_data/gene_convergence/convergence_plots.Rda")
 ```
 
