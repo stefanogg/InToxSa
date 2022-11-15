@@ -7,7 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-setwd(paste0(here::here(), "/6-InToxSa_paper/Generate_datasets"))
+setwd(paste0("~/Documents/Github/InToxSa", "/6-InToxSa_paper/Generate_datasets"))
 getwd()
 ```
 
@@ -32,7 +32,7 @@ supp_table4_prepare <- list(phenotype = pheno)
 # Mutations
 
 ```{r}
-mutations <- readRDS("../Genetic_pairs/processed_data/gene_convergence/df_changes_multi_annot_for_gene_converg.Rda") 
+mutations <- readRDS("../Genetic_pairs/processed_data/variants_combined_annotation/snippy_denovo_annotated_with_pair_data.Rda") 
 mutations <- mutations %>%
   ungroup() %>%
   select(pair_id, iso1, iso2, CHROM, POS, TYPE, EFFTYPE, REF, ALT, NUCLEOTIDE_CHANGE, MUTATION_SHORT, LOCUS_TAG, GENE, PRODUCT, cdhit_group, cdhit_size, cdhit_iden, cdhit_cov, cdhit_rep_id, cdhit_seq, neb_locus_tag, unique_gene_symbol = neb_gene_symbol, neb_product, neb_mutant_id, neb_operon) %>%
@@ -41,11 +41,25 @@ mutations <- mutations %>%
 supp_table4_prepare$mutations <- mutations
 ```
 
+# Convergence
+
+```{r}
+converg <- readRDS("../Genetic_pairs/processed_data/gene_convergence/df_PI_convergent_genes.Rda") %>% 
+  arrange(AA_POS) %>%
+  group_by(neb_gene_symbol, neb_product, neb_mutant_id, cdhit_group) %>%
+  summarise(n_events = n_distinct(pair_id),
+            pairs_with_mutation = str_c(pair_id, collapse = ","),
+            mutations = str_c(unique(MUTATION_SHORT), collapse = ",")) %>%
+  arrange(-n_events, cdhit_group)
+
+supp_table4_prepare$convergence <- converg
+```
+
+
 # List of variables (pyseer output only)
 
 ```{r}
-variables <- unique(c(colnames(pheno), 
-                             colnames(mutations)))
+variables <- unique(c(colnames(pheno), colnames(mutations), colnames(converg)))
 variables <- tibble(variable = variables,
                            comment = NA_character_)
 

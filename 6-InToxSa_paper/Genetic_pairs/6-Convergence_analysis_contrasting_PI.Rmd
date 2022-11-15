@@ -21,8 +21,6 @@ message(msg)
 ```{r message=F}
 library(tidyverse)
 library(glue)
-library(ggtree)
-library(phytools)
 rm(list = ls())
 ```
 
@@ -127,14 +125,13 @@ df_converg_genes <- df_snippy_prot_changes %>%
 
 # check for duplicates
 df_converg_genes %>%
-  group_by(cdhit_symbol, MUTATION_SHORT, pair_id) %>%
-  filter(n() > 1) %>%
-  View()
+  group_by(cdhit_group, MUTATION_SHORT, pair_id) %>%
+  filter(n() > 1)
 
 # NOTE: duplicates are due to the annotation process (multiple lines per gene)
 
 t_converg_genes <- df_snippy_prot_changes %>%
-  group_by(cdhit_group, cdhit_seq,nebraska_aa_seq, neb_gene, neb_product, neb_locus_tag, neb_mutant_id, pan_gene_symbol) %>%
+  group_by(cdhit_group, cdhit_seq,nebraska_aa_seq, neb_gene, neb_product, neb_locus_tag, neb_mutant_id, neb_gene_symbol) %>%
   summarise(n_events = n_distinct(pair_id),
             mutations = str_c(unique(MUTATION_SHORT),
                               collapse = ", "),
@@ -143,12 +140,12 @@ t_converg_genes <- df_snippy_prot_changes %>%
             product_prokka = str_c(unique(PRODUCT),
                                    collapse = ", ")) %>%
   arrange(desc(n_events)) %>%
-  relocate(n_events, cdhit_group, pan_gene_symbol, neb_gene, gene_prokka, neb_locus_tag, neb_mutant_id, neb_product, product_prokka, mutations)
+  relocate(n_events, cdhit_group, neb_gene_symbol, neb_gene, gene_prokka, neb_locus_tag, neb_mutant_id, neb_product, product_prokka, mutations)
 
 t_converg_genes %>%
   ungroup() %>%
   filter(n_events > 1) %>%
-  select(n_events, cdhit_group, pan_gene_symbol, neb_locus_tag, neb_mutant_id, neb_product)%>%
+  select(n_events, cdhit_group, neb_gene_symbol, neb_locus_tag, neb_mutant_id, neb_product)%>%
   knitr::kable(row.names = T)
 ```
 
@@ -188,6 +185,13 @@ print(glue("Number of genes with >=2 recurrent mutations: {n_converg_genes}"))
 
 # Save processed data
 
+Annotated snippy dataframe 
+
+```{r}
+df_snippy_pair_PI %>%
+  saveRDS("processed_data/variants_combined_annotation/snippy_denovo_annotated_with_pair_data.Rda")
+```
+
 Dataframe with all mutations included in the convergence analysis
 
 ```{r}
@@ -200,15 +204,18 @@ Dataframe with genes with >= 2 independent mutations. Exclude genes with no FPR3
 ```{r}
 df_converg_genes <- df_converg_genes %>%
   filter(n_events > 1) %>%
-  filter(cdhit_symbol != "ebh") %>%
+  filter(neb_gene_symbol != "ebh") %>%
   drop_na(neb_locus_tag) %>%
   distinct()
 
+# stats
 df_converg_genes %>%
-   saveRDS("processed_data/gene_convergence/df_PI_convergent_genes.Rda")
+  distinct(neb_gene_symbol, n_events) %>%
+  ungroup() %>%
+  count(n_events)
 
-df_converg_genes %>%
-   write_csv("~/Desktop/df_convergent_genes2.csv")
+# df_converg_genes %>%
+#    saveRDS("processed_data/gene_convergence/df_PI_convergent_genes.Rda")
 
 ```
-
+ 

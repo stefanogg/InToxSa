@@ -195,43 +195,16 @@ snippy_denovo_modified_proteins <- snippy_denovo_modified_proteins %>%
 Add aureowiki
 
 ```{r}
-df_aureowiki <- read_csv("raw_data/aureowiki_USA300_FPR3757.csv", guess_max = 3000) 
-glimpse(df_aureowiki)
-# Fix problematic names and reduce number of variables (for now)
-df_aureowiki <- df_aureowiki %>%
-  select(neb_locus_tag = `locus tag`,
-         neb_locus_tag2 = `new locus tag`,
-         pan_gene_symbol = `pan gene symbol`,
-         pan_locus_tag = `pan locus tag`,
-         neb_product = product,
-         neb_gene = symbol,
-         neb_strand = strand,
-         neb_start = start,
-         neb_end = end,
-         neb_gene_length = `gene length`,
-         MicrobesOnline, BioCyc,
-         neb_operon = operon
-         )
+df_neb <- read_csv("raw_data/df_FPR3757_curated.csv")
 
 # check for duplicates
-df_aureowiki %>%
+df_neb %>%
   group_by(neb_locus_tag) %>%
   filter(n() > 1)
 
 snippy_denovo_modified_proteins <- snippy_denovo_modified_proteins %>%
-  left_join(df_aureowiki)
+  left_join(df_neb)
 
-```
-
-Fix gene names
-
-```{r}
-snippy_denovo_modified_proteins <- snippy_denovo_modified_proteins %>%
-  mutate(cdhit_symbol = case_when(
-    !is.na(pan_gene_symbol) & pan_gene_symbol != "-" ~ pan_gene_symbol,
-    !is.na(neb_locus_tag) ~ neb_locus_tag,
-    TRUE ~ str_c("cdhit-", cdhit_group)
-    ))
 ```
 
 # Export processed data
