@@ -5,24 +5,25 @@ date: "11/12/2020"
 output: html_document
 ---
 
-# Set/check knitR option and working directory
-```{r setup, include=T}
+```{r setup, include=T, message=FALSE}
 library(tidyverse)
 library(here)
-knitr::opts_chunk$set(echo = TRUE)
-knitr::opts_knit$set(root.dir = here())
-print(paste("My working directory is:" ,here()))
+library(patchwork)
+setwd(paste0("~/Documents/Github/InToxSa", "/5-Data_processing"))
+getwd()
 ```
 
 # Source all function
-```{r}
-source("Functions/all_functions.R")
+
+```{r message=FALSE}
+rm(list = ls())
+source("../0-Functions/all_functions.R")
 ```
 
 # Import all VANANZ PI and growth curve data (plate 1-6 + P1-2, M1- GP1-7)
 
 ```{r}
-raw_PI.df <- list.files(path="Data_parsing/parsed_experiments/", pattern="PI", full.names=TRUE, recursive=T) %>% 
+raw_PI.df <- list.files(path="../3-Data_parsing/parsed_experiments/", pattern="PI", full.names=TRUE, recursive=T) %>% 
   map_df(~read_csv(., col_types = cols(well_row = col_factor(),
                                       well_col = col_factor(),
                                       f_signal = col_integer(),
@@ -42,6 +43,7 @@ raw_PI.df <- list.files(path="Data_parsing/parsed_experiments/", pattern="PI", f
 ```
 
 # Count plates
+
 ```{r}
 print(paste("Total number of PI plates:", 
             raw_PI.df %>% select(experiment_id) %>% distinct() %>% nrow()))
@@ -172,7 +174,7 @@ If we want at least 3 non outlier JE2 per plates the folowing plates should be e
 2. remove experiments with < 2 JE2
 3. standardise (with max time cutting)
 4. fit curves
-5. indentify and remove outliers (default parameter with tukey + mad + sd proportion > 0.1 (>10% outlier timepoints))
+5. identify and remove outliers (default parameter with tukey + mad + sd proportion > 0.1 (>10% outlier timepoints))
 6. calculate derivatives
 
 ```{r}
@@ -194,7 +196,6 @@ clean_PI_with_outliers.df <- raw_PI.df %>%
 
 clean_PI.df <- clean_PI_with_outliers.df %>%
   filter(outlier_curve == F)
-
 ```
 
 
@@ -271,255 +272,24 @@ clean_sample_parameters_PI.df <- clean_parameters_PI.df %>%
   merge(., clean_parameters_PI.df %>% select(sample_id, -ends_with("_death")) %>% distinct(), by = "sample_id") 
 ```
 
+# Save processed data
 
-
-# Save data
 ## Create file structure
+
 ```{r}
-dir.create(path = "Genetic_pairs_analysis_Oct_2020/processed_data", showWarnings = F)
-dir.create(path = "Genetic_pairs_analysis_Oct_2020/processed_data/PI/", showWarnings = F)
-dir.create(path = "Genetic_pairs_analysis_Oct_2020/processed_data/PI/QC_plots", showWarnings = F)
-dir.create(path = "Genetic_pairs_analysis_Oct_2020/processed_data/PI/QC_plots/experiment", showWarnings = F)
-dir.create(path = "Genetic_pairs_analysis_Oct_2020/processed_data/PI/QC_plots/plate_replicates", showWarnings = F)
-dir.create(path = "Genetic_pairs_analysis_Oct_2020/processed_data/PI/dataframes/", showWarnings = F)
-dir.create(path = "Genetic_pairs_analysis_Oct_2020/processed_data/PI/dataframes/kinetics", showWarnings = F)
-dir.create(path = "Genetic_pairs_analysis_Oct_2020/processed_data/PI/dataframes/parameters", showWarnings = F)
+dir.create("processed_data/clinical_strains/")
+dir.create("processed_data/clinical_strains/PI_kinetics")
+dir.create("processed_data/clinical_strains/PI_parameters")
 ```
 
 ## Save processed PI data
 ```{r}
-write.csv(x = clean_PI.df, file ="Genetic_pairs_analysis_Oct_2020/processed_data/PI/dataframes/kinetics/PI_kinetics.csv", row.names = F)
-
-# Save data as compressed R object (can be read with readRDS()) 
-# advantage: all variable class are kept + factor order etc... 
-saveRDS(clean_PI.df, file="Genetic_pairs_analysis_Oct_2020/processed_data/PI/dataframes/kinetics/PI_kinetics.Rda", compress = "gzip")
-
+saveRDS(clean_PI.df, file="processed_data/clinical_strains/PI_kinetics/PI_kinetics.Rda", compress = "gzip")
 ```
 
 ## Save PI curves parameters
 ```{r}
-write.csv(x = clean_parameters_PI.df, file ="Genetic_pairs_analysis_Oct_2020/processed_data/PI/dataframes/parameters/PI_parameters.csv", row.names = F)
-saveRDS(clean_parameters_PI.df, file="Genetic_pairs_analysis_Oct_2020/processed_data/PI/dataframes/parameters/PI_parameters.Rda")          
+saveRDS(clean_parameters_PI.df, file="processed_data/clinical_strains/PI_parameters/PI_parameters.Rda")          
 
-write.csv(x = clean_sample_parameters_PI.df, file ="Genetic_pairs_analysis_Oct_2020/processed_data/PI/dataframes/parameters/PI_sample_parameters.csv", row.names = F)
-saveRDS(clean_sample_parameters_PI.df, file="Genetic_pairs_analysis_Oct_2020/processed_data/PI/dataframes/parameters/PI_sample_parameters.Rda")     
+saveRDS(clean_sample_parameters_PI.df, file="processed_data/clinical_strains/PI_parameters/PI_sample_parameters.Rda")     
 ```
-
-
-## Save plots for all experiments
-```{r}
-# 
-# for (exp in unique(clean_PI.df$experiment_id)){
-#   PI.df <- clean_PI.df %>% filter(sample_id != "Complete lysis")
-#   p <- plot_cell_death(PI.df %>% filter(experiment_id == exp), 
-#                        fitted = T,
-#                        #combine_experiments = c("all"),
-#                        all_replicates = T, 
-#                        return_plots = T)
-#   p <- p[[1]] + ylim(min(PI.df$f_signal.fitted), max(PI.df$f_signal.fitted))
-#   ggsave(filename = exp, 
-#          plot = p, 
-#          device = "jpeg", 
-#          path = "Genetic_pairs_analysis_Oct_2020/processed_data/PI/QC_plots/experiment/",
-#         width = 29.7, height = 21, units = "cm")
-#   p
-# }
-```
-
-## Save imported genetic pairs metadata
-```{r}
-gen_pairs_all.df <- read_csv("Ideas_Grant_2020_analysis/Genetic_pairs_analysis_completed/Raw_data/genetic_pairs_pheno_changes_mortality_persist_switches.csv") %>%
-  mutate(pair_id = paste0(pmin(iso1,iso2),"-",pmax(iso1,iso2))) %>%
-  select(pair_id, everything()) %>%
-  arrange(iso2_mortality) %>%
-  select(-ends_with(match = c("_death", "_OD")))
-
-gen_pairs.df <- gen_pairs_all.df %>%
-  distinct(pair_id, .keep_all = T)
-
-dir.create(path = "Genetic_pairs_analysis_Oct_2020/metadata")
-
-write.csv(x = gen_pairs_all.df, file = "Genetic_pairs_analysis_Oct_2020/metadata/genetic_pairs_id_metadata.csv", row.names = F)
-saveRDS(gen_pairs_all.df, file = "Genetic_pairs_analysis_Oct_2020/metadata/genetic_pairs_id_metadata.Rda")
-
-write.csv(x = gen_pairs.df %>% distinct(pair_id, .keep_all = T), file = "Genetic_pairs_analysis_Oct_2020/metadata/distinct_genetic_pairs_id_metadata.csv", row.names = F)
-saveRDS(gen_pairs.df %>% distinct(pair_id, .keep_all = T), file = "Genetic_pairs_analysis_Oct_2020/metadata/distinct_genetic_pairs_id_metadata.Rda")
-```
-
-# QC PI data
-
-## Re-check JE2 standardized curves after removing JE2 outliers
-```{r}
-clean_PI.df %>%
-  filter(sample_id == "JE2") %>%
-  plot_cell_death(fitted = T, 
-                  return_plots = F,
-                  all_replicates = T, 
-                  combine_experiments = c("experiment"), 
-                  ylim = c(min(.$f_signal.fitted), max(.$f_signal.fitted))) 
-
-clean_PI.df %>%
-  filter(sample_id == "JE2") %>%
-  plot_cell_death(fitted = T, 
-                  return_plots = F,
-                  all_replicates = T, 
-                  combine_experiments = c("plate"), 
-                  ylim = c(min(.$f_signal.fitted), max(.$f_signal.fitted))) 
-
-clean_PI.df %>%
-  filter(sample_id == "JE2") %>%
-  plot_cell_death(fitted = T, 
-                  return_plots = T,
-                  all_replicates = T, 
-                  combine_experiments = c("all"), 
-                  ylim = c(min(.$f_signal.fitted), max(.$f_signal.fitted))) %>%
-  .[[1]] +
-  facet_wrap(~experiment_id)
-
-
-```
-
-Note: Seems that there are still JE2 variations/outliers. eg. plate4  
-! Shape of curves varies => max min normalisation might not be sufficient in some cases
-! Might need to detect outliers using curves parameters, AUC, death rate??
-
-## Check AUC variation across plates replicates
-```{r fig.height=6, fig.width=6}
-df <- clean_parameters_PI.df %>% 
-         group_by(plate) %>%
-         filter(max(as.integer(plate_replicate)) != 1)
-for (pl in unique(df$plate)){ 
-  p <- ggplot(df %>% filter(plate == pl), aes(x = sample_id, y = AUC_death, colour = experiment)) +
-    geom_boxplot() +
-    coord_flip() +
-    ggtitle(paste("Plate", pl, "replicates")) +
-    ylim(min(df$AUC_death), max(df$AUC_death)) 
-  print(p)
-  ggsave(filename = pl, 
-       plot = p, 
-       device = "jpeg", 
-       path = "Genetic_pairs_analysis_Oct_2020/processed_data/PI/QC_plots/plate_replicates")
-}
-```
-Variation across plate replicates usually very good 
-No systematic bias such all strain with increase or decrease AUC across plate replicates
-=> Abdou is doing a great job
-=> Normalistion is working and unlikely to further reduce variation
-May be systematic biases in GP3 and GP6:
-AUCs exp200805 > exp200802
-AUCs exp200902 > exp200903
-possibly repeating? 
-
-but few strains have major discrepencies.
-Would be good to repeat those
-e.g. BPH3361 on M1
-BPH2754, BPH2743 on plate 2
-
-
-## Check example of high tox and fluctuating strain across plate replicate
-```{r}
-
-plot_cell_death(clean_PI.df %>% filter(sample_id %in% c("BPH3294", "JE2")), standardized = T, fitted = T, comparator = "JE2", all_replicates = F)
-
-plot_cell_death(clean_PI.df %>% filter(sample_id %in% c("BPH3361", "JE2")), standardized = T, fitted = T)
-        
-```
-
-
-## Plot PI distribution
-```{r}
-ggplot(clean_sample_parameters_PI.df %>%
-         filter(grepl("BPH", sample_id)) , aes(x = AUC_death_mean)) +
-  geom_histogram(binwidth = 2)+
-  geom_density(aes(y=2 * ..count..))
-```
-
-
-## Select PI kinetics and parameter corresponding to paired isolates
-```{r}
-paired_strains <- unique(c(gen_pairs.df$iso1, gen_pairs.df$iso2))
-
-pairs_clean_PI.df <- clean_PI.df %>%
-  filter(sample_id %in% paired_strains)
-```
-
-## Check genetic pairs lacking in the dataset and number of replicates per strain
-```{r}
-length(paired_strains)
-length(unique(pairs_clean_PI.df$sample_id))
-
-paired_strains_not_in_clean <-setdiff(paired_strains, pairs_clean_PI.df$sample_id)
-print(paste0(c("Pairs lacking: ", paired_strains_not_in_clean)))
-
-paired_strains_not_in_clean.df <- data_frame(sample_id = paired_strains_not_in_clean) %>%
-  mutate(number_of_replicates = 0)
-
-pairs_clean_PI_nb_rep.df <- pairs_clean_PI.df %>%
-  distinct(sample_id, well_id) %>%
-  count(sample_id) %>%
-  rename(number_of_replicates = n) %>%
-  rbind(paired_strains_not_in_clean.df, .) %>%
-  arrange(number_of_replicates) %>%
-  write.csv(x = ., file = "Genetic_pairs_analysis_Oct_2020/processed_data/PI/dataframes/genetic_pairs_PI_replicate_per_strain.csv", row.names = F)
-
-pairs_clean_PI_nb_rep.df %>% count(number_of_replicates)
-  
-```
-
-## Print all strains with 0 to 4 replicates only
-```{r}
-pairs_clean_PI_nb_rep.df %>% filter(number_of_replicates <= 4)
-```
-
-## Plot comparison of PI kinetics for all pairs
-```{r}
-
-# filter pairs with members non screened yet
-gen_pairs_done.df <- gen_pairs.df %>%
-  filter(!iso1 %in% paired_strains_not_in_clean) %>%
-  filter(!iso2 %in% paired_strains_not_in_clean) 
-
-# set min max cell death to scale plots
-max_cd <- max(pairs_clean_PI.df$f_signal.fitted)
-min_cd <- min(pairs_clean_PI.df$f_signal.fitted)
-
-
-# create output dir
-dir.create("Genetic_pairs_analysis_Oct_2020/processed_data/PI/QC_plots/genetic_pairs_comparison")
-
-plot_list <- list()
-for(i in 1:nrow(gen_pairs_done.df)) {
-  iso1 <- gen_pairs_done.df$iso1[i]
-  iso2 <- gen_pairs_done.df$iso2[i]
-  iso1_mortality <- gen_pairs_done.df$iso1_mortality[i]
-  iso2_mortality <- gen_pairs_done.df$iso2_mortality[i]
-  pair_id <- gen_pairs_done.df$pair_id[i]
-  dist <- gen_pairs_done.df$dist[i]
-  
-  plot_list[[pair_id]] <- pairs_clean_PI.df %>%
-    filter(sample_id %in% c(iso1, iso2)) %>%
-    ggplot(aes(x = timepoint/60, y = f_signal.fitted, colour = sample_id, group = sample_id, fill = sample_id)) +
-    geom_point(size = .2) +
-    stat_summary(geom = 'ribbon', fun.data = 'mean_sdl', fun.args = list(mult = 1), alpha = 0.2) +
-    stat_summary(geom = "point", fun = "mean", size = 1.5) +
-    labs(title = paste(iso1, iso2, "|", iso1_mortality, iso2_mortality, "|", dist),
-         x = "Time (hour)",
-         y = "Cell death index") +
-    theme_bw() +
-    ylim(min_cd,max_cd)
-
-  ggsave(plot = plot_list[[pair_id]], filename = paste0(dist, "_", pair_id, "_", iso1_mortality, "-", iso2_mortality,".jpeg"), device = "jpeg",  path = "Genetic_pairs_analysis_Oct_2020/processed_data/PI/QC_plots/genetic_pairs_comparison")
-}
-
-#cowplot::plot_grid(plotlist = plot_list)
-```
-
-
-
-
-
-
-
-
-
-

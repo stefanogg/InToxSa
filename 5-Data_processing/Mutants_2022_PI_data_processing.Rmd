@@ -9,21 +9,20 @@ output: html_document
 library(tidyverse)
 library(here)
 library(patchwork)
-knitr::opts_chunk$set(echo = TRUE)
-knitr::opts_knit$set(root.dir = here())
-print(paste("My working directory is:" ,here()))
+setwd(paste0("~/Documents/Github/InToxSa", "/5-Data_processing"))
+getwd()
 ```
 
 # Source all function
 ```{r message=FALSE}
 rm(list = ls())
-source("Functions/all_functions.R")
+source("../0-Functions/all_functions.R")
 ```
 
 # Import all NEB PI data (plate GP-C1 only)
 
 ```{r message=FALSE}
-df_PI_raw <- list.files(path="Data_parsing/parsed_experiments/", pattern="PI_data_plateGP-C1", full.names=TRUE, recursive=T) %>% 
+df_PI_raw <- list.files(path="../3-Data_parsing/parsed_experiments/", pattern="PI_data_plateGP-C1", full.names=TRUE, recursive=T) %>% 
   map_df(~read_csv(., col_types = cols(well_row = col_factor(),
                                       well_col = col_factor(),
                                       f_signal = col_integer(),
@@ -242,7 +241,7 @@ df_PI_raw %>% filter(sample_id %in% excluded_sample) %>%
   distinct() 
 ```
 
-Overall, a very low proportion of outliers and no sample excluded! Good work Abdou!
+Overall, a very low proportion of outliers and no sample excluded! Good work!
 
 ### Asign plate replicate number
 
@@ -315,16 +314,17 @@ df_PI_clean %>%
   filter(sample_id %in% c(neb_samples, controls)) %>%
   filter(sample_id != "Complete lysis") %>%
   plot_cell_death(standardized = T, fitted = T, comparator = "JE2", strain_description = T,
-                  subtitle = "Nebraska mutants (comparator: JE2")
+                  subtitle = "Nebraska mutants (comparator: JE2)")
 
 # BPH3370 mutants and controls
 df_PI_clean %>%
   filter(sample_id %in% c(mutants, controls)) %>%
+  filter(sample_id != "Complete lysis") %>%
   plot_cell_death(standardized = T, fitted = T, comparator = "BPH3370", strain_description = T,
-                  subtitle = "BPH3370 mutants (comparator: BPH3370")
+                  subtitle = "BPH3370 mutants (comparator: BPH3370)")
 ```
 
-# Save data
+# Save processed data
 
 ## Save processed PI data
 
@@ -332,15 +332,15 @@ df_PI_clean %>%
 # Save data as compressed R object (can be read with readRDS()) 
 # advantage: all variable class are kept + factor order etc...
 df_PI_clean %>%
-  saveRDS("Mutants_2022/processed_data/PI_kinetics/PI_kinetics_plateGP-C1.Rda", compress = "gzip")
+  saveRDS("processed_data/allelic_exchange/PI_kinetics/PI_kinetics_plateGP-C1.Rda", compress = "gzip")
 ```
 
 ## Save PI curves parameters
 
 ```{r}
 df_PI_clean_parameters %>%
-  saveRDS("Mutants_2022/processed_data/PI_parameters/PI_parameters_plateGP-C1.Rda")
+  saveRDS("processed_data/allelic_exchange/PI_parameters/PI_parameters_plateGP-C1.Rda")
 
 df_PI_clean_parameters_sample %>%
-  saveRDS("Mutants_2022/processed_data/PI_parameters/PI_sample_parameters_plateGP-C1.Rda")
+  saveRDS("processed_data/allelic_exchange/PI_parameters/PI_sample_parameters_plateGP-C1.Rda")
 ```
