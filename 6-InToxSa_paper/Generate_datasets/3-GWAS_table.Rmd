@@ -11,7 +11,7 @@ setwd(paste0(here::here(), "/6-InToxSa_paper/Generate_datasets"))
 getwd()
 ```
 
-Here we prepare supp table 3 with GWAS output parameters. This will be an Excel spreadsheet with 5 sheets: phenotype. lineages, lineages test, mutations test, gene burden test
+Here we prepare supp table 5 with GWAS output parameters. This will be an Excel spreadsheet with 5 sheets: phenotype. lineages, lineages test, mutations test, gene burden test
 
 ```{r}
 library(tidyverse)
@@ -19,13 +19,19 @@ library(writexl)
 rm(list = ls())
 ```
 
-# Import phentype
+# Assign table name
+
+```{r}
+table_name <- "supp_table_5"
+```
+
+# Import phenotype
 
 ```{r}
 pheno <- readRDS("../GWAS/Phenotypes/processed_data/toxicity_phenotype_with_norm.Rda") %>%
   select(sample_id, pi_auc = untransformed, pi_auc_transformed = yeo_johnson)
 
-supp_table3_prepare <- list(phenotype = pheno)
+supp_table_prepare <- list(phenotype = pheno)
 ```
 
 # Lineages
@@ -33,14 +39,14 @@ supp_table3_prepare <- list(phenotype = pheno)
 ```{r}
 lineages <- readRDS("../GWAS/Lineages/processed_data/MDS/df_mds_mash.Rda")
 
-supp_table3_prepare$lineages <- lineages
+supp_table_prepare$lineages <- lineages
 ```
 
 # Lineage effects
 
 ```{r}
 lineage_eff <- read_csv("../GWAS/Lineages/processed_data/lineage_effects_data.csv")
-supp_table3_prepare$`lineage effects` <- lineage_eff
+supp_table_prepare$`lineage effects` <- lineage_eff
 ```
 
 # Gene burded test
@@ -48,13 +54,14 @@ supp_table3_prepare$`lineage effects` <- lineage_eff
 ```{r}
 pyseer_genes <- readRDS("../GWAS/pyseer_output/processed_data/pyseer_output_toxicity_genes.Rda")
 
-supp_table3_prepare$`gene burden test` <- pyseer_genes
+supp_table_prepare$`gene burden test` <- pyseer_genes
 ```
-
 
 # Export as supplementary table
 
 ```{r}
-supp_table3_prepare %>%
-  write_xlsx("processed_data/supp_table_3/supp_table_3.xlsx")
+dir.create(str_c("processed_data/", table_name))
+
+supp_table_prepare %>%
+  write_xlsx(str_c("processed_data/", table_name, "/", table_name, ".xlsx"))
 ```

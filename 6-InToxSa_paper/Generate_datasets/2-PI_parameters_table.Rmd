@@ -1,0 +1,158 @@
+---
+title: "Generate GWAS output table"
+author: "Stefano Giulieri"
+date: "27/06/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd(paste0(here::here(), "/6-InToxSa_paper/Generate_datasets"))
+getwd()
+```
+
+Here we prepare supp table 4 with PI parameters. 3 excel sheets: clinical + controls, Neb + JE2 control, mutagenesis + BPH3370 control
+
+```{r}
+library(tidyverse)
+library(writexl)
+rm(list = ls())
+```
+
+# Assign table name
+
+```{r}
+table_name <- "supp_table_4"
+```
+
+# Import PI parameters: clinical isolates
+
+```{r}
+clinical <- readRDS("../../5-Data_processing/processed_data/clinical_strains/PI_parameters/PI_sample_parameters.Rda")
+```
+
+We keep clinical isolates (BPHXXXX) *and* controls. Also we reformat as tibble
+
+```{r}
+controls <- c("JE2", "TOX-4")
+clinical <- clinical %>%
+  as_tibble() %>%
+  filter(str_detect(sample_id, "BPH") | sample_id %in% controls)
+```
+
+Check that there are no duplicates. Inspect the dataframe
+
+```{r}
+n_distinct(clinical$sample_id)
+nrow(clinical)
+
+skimr::skim(clinical)
+```
+
+Now we can reduce variables and add to spreadsheet list
+
+```{r}
+clinical <- clinical %>%
+  select(sample_id, ends_with("mean"), ends_with("sd")) %>%
+  select(-c(starts_with("end_point_timepoint_death"),
+            starts_with("doubling_time")))
+
+supp_table_prepare <- list(`clinical isolates` = clinical)
+```
+
+# Import PI parameters: Nebraska transposon mutants
+
+```{r}
+neb <- readRDS("../../5-Data_processing/processed_data/neb_mutants/PI_parameters/PI_sample_parameters_plateGPV1.Rda")
+
+controls <- c("JE2", "TOX-4")
+neb <- neb %>%
+  as_tibble() %>%
+  filter(str_detect(sample_id, "NE") | sample_id %in% controls)
+
+n_distinct(neb$sample_id)
+nrow(neb)
+
+skimr::skim(neb)
+```
+
+Add minimal metadata
+
+```{r}
+neb_metadata <- read_csv("raw_data/df_neb_curated.csv") %>%
+  select(sample_id = neb_mutant_id, unique_gene_symbol = neb_gene_symbol, neb_locus_tag)
+
+neb <- neb %>%
+  left_join(neb_metadata)
+```
+
+Reduce variables and add to spreadsheet list
+
+```{r}
+neb <- neb %>%
+  select(sample_id, unique_gene_symbol, neb_locus_tag, ends_with("mean"), ends_with("sd")) %>%
+   select(-c(starts_with("end_point_timepoint_death"),
+            starts_with("doubling_time")))
+
+supp_table_prepare$`Nebraska transposon mutants` <- neb
+```
+
+# Import PI parameters: allelic exchange 
+
+```{r}
+mutants <- readRDS("../../5-Data_processing/processed_data/allelic_exchange/PI_parameters/PI_sample_parameters_plateGP-C1.Rda") %>%
+  as_tibble()
+
+controls <- c("JE2", "TOX-4", "BPH3370")
+mutants <- mutants %>%
+  as_tibble() %>%
+  filter(str_detect(sample_id, "BPH3370") | sample_id %in% controls)
+
+n_distinct(mutants$sample_id)
+nrow(mutants)
+```
+
+Add minimal metadata
+
+```{r}
+mutants_metadata <- read_csv("raw_data/allelic_exchange_metadata.csv") %>%
+  select(sample_id, mutation = label) %>%
+  filter(str_detect(sample_id, "BPH3370")) %>%
+  mutate(mutation = if_else(sample_id == "BPH3370", "wildtype", mutation)) %>%
+  distinct()
+
+mutants <- mutants %>%
+  left_join(mutants_metadata)
+```
+
+Reduce variables and add to spreadsheet list
+
+```{r}
+mutants <- mutants %>%
+  select(sample_id, mutation, ends_with("mean"), ends_with("sd")) %>%
+  select(-c(starts_with("end_point_timepoint_death"),
+            starts_with("doubling_time")))
+
+supp_table_prepare$`allelic exchange mutants` <- mutants
+```
+
+# List of variables 
+
+```{r}
+variables <- unique(c(colnames(clinical), 
+                      colnames(neb), 
+                      colnames(mutants)))
+variables <- tibble(variable = variables,
+                    comment = NA_character_)
+
+supp_table_prepare$`variables` <- variables
+```
+
+# Export as supplementary table
+
+```{r}
+dir.create(str_c("processed_data/", table_name))
+
+supp_table_prepare %>%
+  write_xlsx(str_c("processed_data/", table_name, "/", table_name, ".xlsx"))
+```

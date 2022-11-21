@@ -11,13 +11,20 @@ setwd(paste0(here::here(), "/6-InToxSa_paper/Generate_datasets"))
 getwd()
 ```
 
-Here we prepare table 1 and supp table 1 with isolates information
+Here we prepare table 1 and supp table 3 with isolates information
 
 ```{r}
 library(tidyverse)
 library(writexl)
 rm(list = ls())
 ```
+
+# Assign table name
+
+```{r}
+table_name <- "supp_table_3"
+```
+
 
 # Import current isolates table
 
@@ -30,37 +37,36 @@ Add some layers of information
 Episode id, mortality
 
 ```{r}
-clinical_data <- read_csv("../../plate_info/strain_metadata.csv") %>%
-  transmute(sample_id, strain_group, mortality, baseline_isolate = if_else(intrahost_index == 1, "Yes", "No", missing = "Yes"))
+clinical_data <- read_csv("../../1-plate_info/strain_metadata.csv") %>%
+  transmute(sample_id, strain_group, baseline_isolate = if_else(intrahost_index == 1, "Yes", "No", missing = "Yes"))
 ```
 
-Duration of bacteraemia, severity
-
-```{r}
-f <- "~/OneDrive - The University of Melbourne/R/Clinical_outcomes_prediction/VANANZ/Clean_clinical_data/raw_data/df_clinical.csv"
-file.copy(f, "raw_data/additional_clinical_data.csv")
-clinical_data2 <- read_csv("raw_data/additional_clinical_data.csv") %>%
-  select(sample_id = mdu_id, sab_duration = durationofsab, severity_score = pitt)
-```
-
-New layered dataset
+New dataset limited to phenotyped strains 
 
 ```{r}
 df_clinical <- data %>%
   left_join(clinical_data) %>%
-  left_join(clinical_data2) %>%
-  mutate(genetic_pair = !is.na(iso_class),
-         mortality = factor(mortality))
+  mutate(genetic_pair = !is.na(iso_class))
 ```
 
-# Generate table 1
+Add patient IDs used in Giulieri, Genome Medicine 2018
+
+```{r}
+patient_id <- read_csv("~/OneDrive - The University of Melbourne/R/VANESSA_ANZCOSS/dataframes/whost_n130_df_new.csv") %>% select(strain_group = studyid, strain_group2 = patient_code_n130) %>%
+  distinct()
+
+df_clinical <- df_clinical %>%
+  left_join(patient_id)
+```
+
+# Generate table 1 
 
 N episodes
 
 ```{r}
 df_clinical %>%
    mutate(n = n_distinct(strain_group)) %>%
-  group_by(genetic_pair, n) %>%
+  group_by(strain_group, n) %>%
   summarise(n_episode = n_distinct(strain_group)) 
 ```
 
@@ -81,12 +87,14 @@ mec
 # Export as supplementary table
 
 ```{r}
-supp_table1_prepare <- df_clinical %>%
+dir.create(str_c("processed_data/", table_name))
+
+supp_table_prepare <- df_clinical %>%
   select(sample_id, episode_id = strain_group, baseline_isolate, iso_class, ST, CC, mecA)
 
-list(supp_table1_prepare, as_tibble(colnames(supp_table1_prepare))) %>%
+list(supp_table_prepare, as_tibble(colnames(supp_table_prepare))) %>%
   set_names(c("dataset", "variables")) %>%
-  write_xlsx("processed_data/supp_table_1/supp_table_1.xlsx")
+  write_xlsx(str_c("processed_data/", table_name, "/", table_name, ".xlsx"))
 ```
 
 
