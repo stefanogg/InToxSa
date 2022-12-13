@@ -14,7 +14,7 @@ Main folders:
 
 4-Data_concatenation: scripts used to generate a concatenated dataframe of raw PI uptake data
 
-5-Genetic_pairs_analysis_Oct_2020: R markdown scripts used to standardise and fit PI uptake data, exclude outlier and plates with low number of JE replicates and selection of genetic pairs with discordand PI uptake phenotype
+5-Data_processing: R markdown scripts used to standardise and fit PI uptake data, exclude outlier and plates with low number of JE replicates and selection of genetic pairs with discordand PI uptake phenotype
 
 6-InToxSa_paper: various scripts for GWAS, processing of convergent evolution and generatio of figures for the paper
 
