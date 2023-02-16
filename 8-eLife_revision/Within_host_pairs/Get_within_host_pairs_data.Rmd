@@ -1,0 +1,306 @@
+---
+title: "Generate datasets of within host pairs"
+author: "Stefano Giulieri"
+date: "30/06/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd(paste0(here::here(), "/6-InToxSa_paper/Within_host_pairs"))
+getwd()
+```
+
+Here we get PI uptake and cytoxicity data for within host pairs that were investigated in Giulieri, Genome Med 2018
+
+```{r}
+library(tidyverse)
+library(patchwork)
+rm(list = ls())
+```
+
+# List of within-host pairs
+
+```{r}
+within_host <- read_csv("../../plate_info/strain_metadata.csv") %>%
+  filter(included)
+```
+
+Add patient IDs used in Giulieri, Genome Medicine 2018
+
+```{r}
+patient_id <- read_csv("~/OneDrive - The University of Melbourne/R/VANESSA_ANZCOSS/dataframes/whost_n130_df_new.csv") %>% select(strain_group = studyid, strain_group2 = patient_code_n130) %>%
+  distinct()
+
+within_host <- within_host %>%
+  inner_join(patient_id)
+```
+
+
+How many have supernatant cytoxicity data?
+
+```{r}
+f <- "~/OneDrive - The University of Melbourne/R/VANESSA_ANZCOSS/data/whost_toxicity.csv"
+file.copy(f, "raw_data")
+cytox_supernat <- read_csv("raw_data/whost_toxicity.csv") %>%
+  rename(sample_id = mdu_id, pct_dead_cells_range = range)
+```
+
+Get PI uptake parameters
+
+```{r}
+PI_data <- readRDS("../../Genetic_pairs_analysis_Oct_2020/processed_data/PI/dataframes/parameters/PI_sample_parameters.Rda") %>%
+  inner_join(within_host)
+```
+
+One merged dataframe
+
+```{r}
+PI_within_host <- within_host %>%
+  inner_join(PI_data) %>%
+  inner_join(cytox_supernat) %>%
+  group_by(strain_group) %>%
+  filter(n_distinct(sample_id) > 1) %>%
+  ungroup()
+```
+
+Prepare for plotting
+
+```{r}
+df_plot <- PI_within_host %>%
+  group_by(strain_group) %>%
+  mutate(strain_group = fct_reorder(strain_group, AUC_death_mean, .desc = T)) %>%
+  mutate(strain_status = if_else(intrahost_index == 1, "Baseline", "Evolved")) 
+```
+
+Change when evolved = colonising
+
+```{r}
+df_plot %>%
+  filter(strain_status == "Evolved" & sample_type == "paired-colonising") %>%
+  select(sample_id, strain_group, strain_status, sample_type, intrahost_sampledelay)
+
+new_status <- df_plot %>%
+  filter(strain_status == "Evolved" & sample_type == "paired-colonising") %>%
+  group_by(strain_group) %>%
+  slice_min(intrahost_sampledelay) %>%
+  select(sample_id, strain_group) %>%
+  mutate(new_status = "Baseline")
+
+df_plot <- df_plot %>%
+  mutate(patient_strain_group = strain_group) %>%
+  mutate(strain_status = case_when(
+    strain_group %in% new_status$strain_group & sample_id %in% new_status$sample_id ~ "Baseline",
+    strain_group %in% new_status$strain_group & !sample_id %in% new_status$sample_id ~ "Evolved",
+    TRUE ~ strain_status
+  )) %>%
+  mutate(sample_id = fct_reorder(sample_id, strain_status))
+```
+
+
+Plot these data
+
+Panel A: PI uptake
+
+```{r}
+p1 <- df_plot %>%
+  ggplot(aes(x = sample_id, y = AUC_death_mean, fill = strain_status)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(aes(ymin = AUC_death_mean - AUC_death_sd, ymax = AUC_death_mean + AUC_death_sd)) +
+  # geom_rect(data = df_plot %>% filter(strain_group %in% c("P02", "P05", "P12", "P17", "P20")), 
+  #           xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf, fill = NA, colour = "red", size = 2) +
+  facet_grid(~strain_group2, scales = "free_x", space = "free_x") +
+  scale_fill_manual(values = c("#fee0d2", "#de2d26"), name = "", labels = c("Baseline", "Evolved")) +
+  labs(x = "", y = "PI uptake AUC") +
+  theme_bw() +
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank())
+ p1 
+```
+
+Panel B: cyotox supernatant
+
+```{r}
+p2 <- df_plot %>%
+  ggplot(aes(x = sample_id, y = pct_dead_cells, fill = strain_status)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(aes(ymin = pct_dead_cells - pct_dead_cells_range, ymax = pct_dead_cells + pct_dead_cells_range)) +
+  # geom_rect(data = df_plot %>% filter(strain_group == "P20"), 
+  #           xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf, fill = NA, colour = "blue", size = 2) +
+  facet_grid(~strain_group2, scales = "free_x", space = "free_x") +
+  scale_fill_manual(values = c("#deebf7", "#3182bd"), name = "", labels = c("Baseline", "Evolved")) +
+  labs(x = "", y = "% dead cells") +
+  theme_bw() +
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank())
+  
+p2
+```
+
+Combine 
+
+```{r}
+p1 / p2 +
+  plot_annotation(tag_levels = "A")
+
+# ggsave("figures/within_host_pairs_toxicity_barplots.pdf")
+```
+
+# Stats
+
+```{r}
+df_stat <- df_plot %>%
+  filter(strain_group == "VSS-541") %>%
+  select(sample_id, pct_dead_cells, pct_dead_cells_range) %>%
+  mutate(xmin = pct_dead_cells - pct_dead_cells_range/2,
+         xmax = pct_dead_cells + pct_dead_cells_range/2) %>%
+  select(sample_id, xmin, xmax) %>%
+  pivot_longer(cols = c(xmin, xmax), names_to = "rank", values_to = "x")
+
+wilcox.test(x ~ sample_id, data = df_stat)
+t.test(x ~ sample_id, data = df_stat)
+oneway.test(x ~ sample_id, data = df_stat)
+
+```
+
+This shows that a non-parametric test can't be used here because of the low number of observations.
+
+T test works, however, normal distribution can't be assessed here! We prefer the one-way analysis of the variance (ANOVA) because some pairs have more than two strains. For ANOVA see https://statsandr.com/blog/anova-in-r/
+
+```{r}
+df_stats <- df_plot %>%
+  mutate(xmin = pct_dead_cells - pct_dead_cells_range/2,
+         xmax = pct_dead_cells + pct_dead_cells_range/2) %>%
+  select(strain_group, strain_group2, sample_id, xmin, xmax) %>%
+  pivot_longer(cols = c(xmin, xmax), names_to = "rank", values_to = "x") 
+
+test_list <- list()
+p_value <- c()
+
+for (i in unique(df_stats$strain_group2)){
+  df <- df_stats %>%
+    filter(strain_group2 == i)
+  out <- oneway.test(x ~ sample_id, data = df)
+  print(out)
+  test_list[[i]] <- out
+  p_value[i] <- out$p.value
+}
+
+# Bonferroni correction
+p_value <- p.adjust(p_value, method = "bonferroni")
+```
+
+List of pairs with significant difference
+<<<<<<< HEAD
+
+```{r}
+supernat_signif <- p_value[p_value < .05]
+```
+
+Note that there is a 'tidier' approach to this using `dplyr` (faster, cleaner, more elegant). If we have time, we will rewrite this code using `dplyr` verbs and the `broom` package.
+
+Now we repeat the test for PI uptake values
+
+First, we need all replicate measurement rather than summary values
+
+```{r}
+PI_replicates <- readRDS("../../Genetic_pairs_analysis_Oct_2020/processed_data/PI/dataframes/parameters/PI_parameters.Rda") %>%
+  inner_join(within_host)
+
+df_stats <- PI_replicates %>%
+  select(sample_id, strain_group, strain_group2, AUC_death) 
+
+test_list <- list()
+p_value <- c()
+
+for (i in unique(df_stats$strain_group2)){
+  df <- df_stats %>%
+    filter(strain_group2 == i)
+  out <- oneway.test(AUC_death ~ sample_id, data = df)
+  print(out)
+  test_list[[i]] <- out
+  p_value[i] <- out$p.value
+}
+
+# Bonferroni correction
+# Bonferroni correction
+p_value <- p.adjust(p_value, method = "bonferroni")
+
+tibble(strain_group = names(p_value),
+       p_value = p_value) %>%
+  ggplot(aes(x = fct_reorder(strain_group, p_value), y = -log10(p_value))) +
+  geom_bar(stat = "identity") +
+  geom_hline(yintercept = -log10(.05)) +
+  coord_flip()
+```
+
+=======
+
+```{r}
+supernat_signif <- p_value[p_value < .05]
+```
+
+Note that there is a 'tidier' approach to this using `dplyr` (faster, cleaner, more elegant). If we have time, we will rewrite this code using `dplyr` verbs and the `broom` package.
+
+Now we repeat the test for PI uptake values
+
+First, we need all replicate measurement rather than summary values
+
+```{r}
+PI_replicates <- readRDS("../../Genetic_pairs_analysis_Oct_2020/processed_data/PI/dataframes/parameters/PI_parameters.Rda") %>%
+  inner_join(within_host)
+
+df_stats <- PI_replicates %>%
+  select(sample_id, strain_group, strain_group2, AUC_death) 
+
+test_list <- list()
+p_value <- c()
+
+for (i in unique(df_stats$strain_group2)){
+  df <- df_stats %>%
+    filter(strain_group2 == i)
+  out <- oneway.test(AUC_death ~ sample_id, data = df)
+  print(out)
+  test_list[[i]] <- out
+  p_value[i] <- out$p.value
+}
+
+# Bonferroni correction
+# Bonferroni correction
+p_value <- p.adjust(p_value, method = "bonferroni")
+
+tibble(strain_group = names(p_value),
+       p_value = p_value) %>%
+  ggplot(aes(x = fct_reorder(strain_group, p_value), y = -log10(p_value))) +
+  geom_bar(stat = "identity") +
+  geom_hline(yintercept = -log10(.05)) +
+  coord_flip()
+```
+
+>>>>>>> b7d90018bba4a5f6b8bc9bc55a272d96fa14f1ee
+List of pairs with significant difference
+
+```{r}
+pi_signif <- p_value[p_value < .05]
+```
+
+New figure
+
+```{r}
+p1 <- p1 +
+  geom_rect(data = df_plot %>% filter(strain_group2 %in% names(pi_signif)),
+            xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf, fill = NA, colour = "red", size = 2)
+<<<<<<< HEAD
+
+p2 <- p2 +
+  geom_rect(data = df_plot %>% filter(strain_group2 %in% names(supernat_signif)),
+            xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf, fill = NA, colour = "blue", size = 2)
+
+p2 / p1 +
+  plot_annotation(tag_levels = "A")
+
+ggsave("figures/within_host_pairs_toxicity_barplots_stats.pdf")
+=======
+>>>>>>> b7d90018bba4a5f6b8bc9bc55a272d96fa14f1ee
+```
+

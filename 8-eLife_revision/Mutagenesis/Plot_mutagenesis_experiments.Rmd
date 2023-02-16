@@ -1,0 +1,151 @@
+---
+title: 'Plot mutagenesis experiments in BPH3370'
+author: "Stefano Giulieri"
+date: "24/06/2022"
+output: 
+  html_document:
+    toc: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd(stringr::str_c("~/Documents/Github/InToxSa", "/6-InToxSa_paper/Mutagenesis"))
+msg <- glue::glue("My directory is {getwd()}")
+message(msg)
+```
+
+
+Here we plot the output of mutagenesis experiments in BPH3370 background
+
+```{r}
+library(tidyverse)
+library(patchwork)
+library(ggrepel)
+# library(cols4all)
+rm(list = ls())
+```
+
+# Raw data
+
+PI kinetics plate GP-C1
+
+```{r}
+PI_kinetics <- readRDS("../../5-Data_processing/processed_data/allelic_exchange/PI_kinetics/PI_kinetics_plateGP-C1.Rda")
+```
+
+PI parameters plate GP-C1
+
+```{r}
+PI_parameters <- readRDS("../../5-Data_processing/processed_data/allelic_exchange/PI_parameters/PI_parameters_plateGP-C1.Rda") %>%
+  as_tibble()
+```
+
+Inspect samples
+
+```{r}
+PI_parameters %>%
+  distinct(sample_id, strain_group, strain_description) %>%
+  arrange(strain_group)
+```
+
+Samples to keep
+
+```{r}
+genes <- c("agrA", "agrC", "ausA")
+df_samples <- tribble(
+  ~sample_id, ~gene, ~mutation,
+  "JE2", genes, NA, 
+  "BPH3370", genes, NA,
+  "BPH3370-A4", "agrA", "E7K", 
+  "BPH3370-C4", "agrA", "E7K",
+  "BPH3370-E2", "agrC", "G310fs",
+  "BPH3370-F3", "ausA", "K2308fs",
+  "NE1532", "agrA", NA,
+  "NE873", "agrC", NA,
+  "NE119", "ausA", NA
+) %>%
+  unnest(gene)
+df_samples <- df_samples %>%
+  group_by(gene) %>%
+  mutate(mutation2 = unique(mutation[which(!is.na(mutation))])) %>%
+  mutate(context = if_else(str_detect(sample_id, "BPH3370"),
+                           str_c(gene, mutation2, sep = "-"),
+                           str_c(gene, "transposon", sep = "-"))) %>%
+  mutate(label = str_c("BPH3370::", gene," ", mutation)) %>%
+  mutate(label = if_else(is.na(label), sample_id, label)) %>%
+  select(-mutation2)
+```
+
+
+# Plot PI parameters
+
+```{r}
+df_plot <- PI_parameters %>%
+ inner_join(df_samples) %>%
+  filter(sample_id != "BPH3370-A4") %>%
+  select(sample_id, strain_description, gene, mutation, context, label, AUC_death) 
+levels <- c("JE2", unique(str_subset(df_plot$sample_id, "NE")))
+df_plot <- df_plot %>%
+  mutate(sample_id = fct_relevel(sample_id, levels))
+
+df_plot %>%
+  ggplot(aes(x = sample_id, y = AUC_death)) +
+  stat_summary(fun.data = "mean_sdl", fun.args = list(mult = 1)) +
+  facet_wrap(~gene, scales = "free_x") +
+  theme_bw()
+
+df_plot %>%
+  ggplot(aes(x = sample_id, y = AUC_death, colour = str_detect(sample_id, "BPH3370"))) +
+  geom_point() +
+  stat_summary(fun.data = "mean_sdl", fun.args = list(mult = 1), geom = "crossbar", width = .5) +
+  facet_wrap(~gene, scales = "free_x") +
+  theme_bw()
+
+df_plot %>%
+  ggplot(aes(x = fct_rev(context), y = AUC_death, colour = !sample_id %in% c("JE2", "BPH3370"))) +
+  geom_point(position = position_dodge(width = .5)) +
+  stat_summary(fun.data = "mean_sdl", fun.args = list(mult = 1), geom = "crossbar", width = .5, position = "dodge") +
+  facet_wrap(~gene, scales = "free_x") +
+  theme_bw()
+
+df_plot %>%
+  ggplot(aes(x = sample_id, y = AUC_death, colour = !sample_id %in% c("JE2", "BPH3370"))) +
+  geom_point(position = position_dodge(width = .5)) +
+  stat_summary(fun.data = "mean_sdl", fun.args = list(mult = 1), geom = "crossbar", width = .5, position = "dodge") +
+  facet_wrap(~gene, scales = "free_x")
+
+
+# df_plot %>%
+#   ggplot(aes(x = sample_id, y = AUC_death, fill = str_detect(sample_id, "BPH3370"))) +
+#   stat_summary(geom = "bar", fun= "mean") +
+#   stat_summary(geom = "errorbar", fun.data = "mean_sdl") +
+#   facet_wrap(~gene, scales = "free_x") +
+#   theme_bw()
+```
+
+Final plot
+
+```{r}
+labels <- df_plot$label
+names(labels) <- df_plot$sample_id
+p <- df_plot %>%
+  ggplot(aes(x = sample_id, y = AUC_death, colour = !sample_id %in% c("JE2", "BPH3370"))) +
+  geom_point(position = position_dodge(width = .5)) +
+  stat_summary(fun.data = "mean_sdl", fun.args = list(mult = 1), geom = "crossbar", width = .5, position = "dodge") +
+  facet_wrap(~gene, scales = "free_x") +
+  scale_colour_manual(values = c("#c994c7", "#980043"), name = "", labels = c("Wildtype", "Mutant")) +
+  scale_x_discrete(labels = labels) +
+  labs(x = "", y = "PI uptake AUC") +
+  theme_bw(base_size = 16) +
+  theme(text = element_text(face = "bold"),
+        axis.text.x = element_text(angle = 45, hjust = 1))
+p
+```
+
+
+# Save processed data
+
+```{r}
+saveRDS(p, "processed_data/mutagenesis_pi_auc_plots.Rda")
+```
+

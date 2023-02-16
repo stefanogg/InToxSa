@@ -1,0 +1,223 @@
+---
+title: "ML phylogenetic tree of all VANANZ strains with PI phenotype available"
+author: "Stefano Giulieri"
+date: "24/05/2022"
+output:
+  html_document:
+    toc: TRUE
+---
+
+```{r setup, include=F}
+knitr::opts_chunk$set(echo = TRUE)
+setwd(stringr::str_c("~/Documents/Github/InToxSa", "/6-InToxSa_paper/Phylogeny"))
+msg <- glue::glue("My directory is {getwd()}")
+message(msg)
+```
+
+Here we visualise the ML tree of all VANANZ strains with PI phenotype (strains included in the GWAS, n = 387).
+
+```{r message=FALSE}
+library(tidyverse)
+library(skimr)
+library(ggtree)
+library(phytools)
+library(ggnewscale)
+rm(list = ls())
+```
+
+# Load raw data: tree and metadata
+
+## Tree in Newick format
+
+Here we load the initial tree. ***Please update when iqtree has finished***
+
+```{r}
+tree <- read.tree("processed_data/clean.core90.aln.tree")
+```
+
+## Metadata
+
+PI uptake AUC
+
+```{r}
+pheno <- readRDS("../GWAS/Phenotypes/processed_data/toxicity_phenotype_with_norm.Rda") %>%
+  select(sample_id, pi_auc = untransformed)
+```
+
+sequence type and mecA
+
+```{r}
+sequence_data <- read_csv("../../plate_info/strain_metadata.csv") %>%
+  transmute(sample_id,
+            ST = as.factor(ST),
+            mecA = factor(if_else(mecA == 1, "present", "absent")))
+```
+
+inferred CC
+
+```{r}
+cc_data <- readRDS("processed_data/cc_phylo_inferred.Rda")
+```
+
+Contrasting PI pairs
+
+```{r}
+PI_pairs <- read_csv("../../Genetic_pairs_analysis_Oct_2020/processed_data/monophyletic_clusters/genetic_pairs_significant_PI_change.csv") %>%
+  pivot_longer(cols = dplyr::everything(), names_to = "iso_class", values_to = "sample_id") %>%
+  mutate(iso_class = as.factor(iso_class))
+```
+
+
+This is the metadata file
+
+```{r}
+df_metadata <- pheno %>%
+  inner_join(sequence_data) %>%
+  inner_join(cc_data) %>%
+  full_join(PI_pairs)
+
+skim(df_metadata)
+```
+
+# Plot the tree
+
+## Basic
+
+Rectangular tree
+
+```{r}
+gg_r <- ggtree(tree, layout = "rectangular") 
+gg_r +
+  geom_treescale(width = 1e4) +
+  theme_bw()
+```
+
+Circular tree
+
+```{r}
+gg_c <- ggtree(tree, layout = "circular") 
+x_scale <- 4e4
+y_scale <- max(ggplot_build(gg_c)$layout$panel_params[[1]]$theta.range)/2
+gg_c +
+  geom_treescale(width = 1e4,
+                 x = x_scale,
+                 y = y_scale)  +
+  theme_bw()
+```
+
+We prefer the rectangular tree (for now)
+
+```{r}
+gg <- gg_r
+```
+
+## Add major CC (>= 15 sequences)
+
+```{r}
+my_offset <- 1e3
+my_fontsize <- 3
+cc <- df_metadata %>%
+  drop_na(CC) %>%
+  count(CC, sort = T) %>%
+  # filter(n >= 20) %>%
+  slice_head(n = 15) %>%
+  .$CC
+p <- gg
+for (my_cc in cc){
+  my_node <- df_metadata %>% filter(CC == my_cc) %>% .$mrca %>% unique()
+  p <- p +
+    geom_cladelab(node = my_node,
+                    label = str_c("CC", my_cc),
+                    align = T,
+                    offset = my_offset,
+                    fontsize = my_fontsize,
+                  fontface = "bold",
+                    family = "Helvetica")
+}
+```
+
+## Add mecA
+
+```{r}
+my_offset <-  .5e4
+width <- .05
+data <- df_metadata %>%
+  select(sample_id, mecA) %>%
+  column_to_rownames("sample_id")
+
+p1 <- gheatmap(p, data, colnames = F, width = width, offset = my_offset, color = NA) +
+  scale_fill_manual(values = c("white", "black"), label = c("MSSA", "MRSA"),name = "MRSA status", guide = guide_legend(order = 2) ,na.translate = F)
+```
+
+## Add PI uptake AUC
+
+```{r}
+width <- .05
+# offset <- max(ggplot_build(p1)$layout$panel_params[[1]]$x.range) -
+#   max(ggplot_build(p)$layout$panel_params[[1]]$x.range) 
+offset <- .5e4 + width*max(ggplot_build(gg)$layout$panel_params[[1]]$x.range) 
+data <- df_metadata %>%
+  select(sample_id, pi_auc) %>%
+  column_to_rownames("sample_id")
+p2 <- p1 + new_scale_fill()
+p2 <- gheatmap(p2, data, colnames = F, width = width, offset = offset, color = NA) +
+  scale_fill_viridis_c(name = "PI uptake (AUC)", guide = guide_legend(order = 3), option = "plasma", na.value = "white")
+```
+
+Add PI pairs
+
+```{r}
+x <- max(ggplot_build(p2)$layout$panel_params[[1]]$x.range) + 1e3
+p3 <- p2 + new_scale_fill()
+p4 <- p3 %<+% df_metadata +
+  geom_tippoint(aes(subset = !is.na(iso_class), fill = iso_class), shape = 21, x = 4.8e4) +
+  scale_fill_manual(values = c("black", "white"), labels = c("reference strain (high toxicity)",
+                                                             "paired strain (low toxicity)"),
+                    name = "Pairs with contrasting PI phenotype") +
+  theme(legend.position = c(.2,.7))
+```
+
+
+## Final changes
+
+```{r}
+p5 <- p4 +
+  geom_treescale(width = 1e4,
+                 x = .2,
+                 y = .1) +
+  theme(text = element_text(face = "bold"))
+p5
+```
+
+# Save processed data
+
+## Tree object
+
+```{r}
+processed_tree <- "tree_with_metadata"
+dir <- "processed_data/"
+saveRDS(p5, str_c(dir, processed_tree, ".Rda" ))
+```
+
+## Curated tree metadata
+
+```{r}
+df_metadata %>%
+  saveRDS(str_c(dir, "curated_metadata_tree.Rda"))
+```
+
+## Tree figure
+
+```{r}
+dir <- "figures/"
+dir.create(dir)
+ggsave(str_c(dir, processed_tree, ".pdf"),
+       width = 10, 
+       height = 7)
+```
+
+TO DO: plot main lineages on the tree. We can look at the code here: 
+https://github.com/sgearle/bugwas/blob/master/bugwas/R/BUGWAS_functions.R#L962
+
+
+

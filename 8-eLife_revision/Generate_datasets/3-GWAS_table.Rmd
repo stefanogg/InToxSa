@@ -1,0 +1,67 @@
+---
+title: "Generate GWAS output table"
+author: "Stefano Giulieri"
+date: "27/06/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd(paste0(here::here(), "/6-InToxSa_paper/Generate_datasets"))
+getwd()
+```
+
+Here we prepare supp table 5 with GWAS output parameters. This will be an Excel spreadsheet with 5 sheets: phenotype. lineages, lineages test, mutations test, gene burden test
+
+```{r}
+library(tidyverse)
+library(writexl)
+rm(list = ls())
+```
+
+# Assign table name
+
+```{r}
+table_name <- "supp_table_5"
+```
+
+# Import phenotype
+
+```{r}
+pheno <- readRDS("../GWAS/Phenotypes/processed_data/toxicity_phenotype_with_norm.Rda") %>%
+  select(sample_id, pi_auc = untransformed, pi_auc_transformed = yeo_johnson)
+
+supp_table_prepare <- list(phenotype = pheno)
+```
+
+# Lineages
+
+```{r}
+lineages <- readRDS("../GWAS/Lineages/processed_data/MDS/df_mds_mash.Rda")
+
+supp_table_prepare$lineages <- lineages
+```
+
+# Lineage effects
+
+```{r}
+lineage_eff <- read_csv("../GWAS/Lineages/processed_data/lineage_effects_data.csv")
+supp_table_prepare$`lineage effects` <- lineage_eff
+```
+
+# Gene burded test
+
+```{r}
+pyseer_genes <- readRDS("../GWAS/pyseer_output/processed_data/pyseer_output_toxicity_genes.Rda")
+
+supp_table_prepare$`gene burden test` <- pyseer_genes
+```
+
+# Export as supplementary table
+
+```{r}
+dir.create(str_c("processed_data/", table_name))
+
+supp_table_prepare %>%
+  write_xlsx(str_c("processed_data/", table_name, "/", table_name, ".xlsx"))
+```

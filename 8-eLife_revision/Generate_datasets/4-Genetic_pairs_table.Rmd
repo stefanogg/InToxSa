@@ -1,0 +1,82 @@
+---
+title: "Generate genetic pairs table"
+author: "Stefano Giulieri"
+date: "27/06/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd(paste0("~/Documents/Github/InToxSa", "/6-InToxSa_paper/Generate_datasets"))
+getwd()
+```
+
+Here we prepare supp table 6 with genetic pairs data: first sheet phenotype, second sheet mutations
+
+```{r}
+library(tidyverse)
+library(writexl)
+rm(list = ls())
+```
+
+# Assign table name
+
+```{r}
+table_name <- "supp_table_6"
+```
+
+# Import phenotype
+
+```{r}
+pheno <- readRDS("../Genetic_pairs/processed_data/PI_pairs_data/pairs_description_dataframe.Rda") %>%
+  filter(PI_pair) %>%
+  select(pair_id, iso1, iso2, dist_denovo, delta_auc, pval, dist_new, dist_mash)
+
+supp_table_prepare <- list(phenotype = pheno)
+```
+
+# Mutations
+
+```{r}
+mutations <- readRDS("../Genetic_pairs/processed_data/variants_combined_annotation/snippy_denovo_annotated_with_pair_data.Rda") 
+mutations <- mutations %>%
+  ungroup() %>%
+  select(pair_id, iso1, iso2, CHROM, POS, TYPE, EFFTYPE, REF, ALT, NUCLEOTIDE_CHANGE, MUTATION_SHORT, LOCUS_TAG, GENE, PRODUCT, cdhit_group, cdhit_size, cdhit_iden, cdhit_cov, cdhit_rep_id, cdhit_seq, neb_locus_tag, unique_gene_symbol = neb_gene_symbol, neb_product, neb_mutant_id, neb_operon) %>%
+  distinct()
+
+supp_table_prepare$mutations <- mutations
+```
+
+# Convergence
+
+```{r}
+converg <- readRDS("../Genetic_pairs/processed_data/gene_convergence/df_PI_convergent_genes.Rda") %>% 
+  arrange(AA_POS) %>%
+  group_by(neb_gene_symbol, neb_product, neb_mutant_id, cdhit_group) %>%
+  summarise(n_events = n_distinct(pair_id),
+            pairs_with_mutation = str_c(pair_id, collapse = ","),
+            mutations = str_c(unique(MUTATION_SHORT), collapse = ",")) %>%
+  arrange(-n_events, cdhit_group)
+
+supp_table_prepare$convergence <- converg
+```
+
+
+# List of variables (pyseer output only)
+
+```{r}
+variables <- unique(c(colnames(pheno), colnames(mutations), colnames(converg)))
+variables <- tibble(variable = variables,
+                           comment = NA_character_)
+
+supp_table_prepare$`variables` <- variables
+```
+
+# Export as supplementary table
+
+```{r}
+dir.create(str_c("processed_data/", table_name))
+
+supp_table_prepare %>%
+  write_xlsx(str_c("processed_data/", table_name, "/", table_name, ".xlsx"))
+```

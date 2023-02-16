@@ -1,0 +1,483 @@
+---
+title: "Prepare figure 1"
+author: "Stefano Giulieri"
+date: "15/04/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd(paste0(here::here(), "/6-InToxSa_paper/Figure1_prepare"))
+getwd()
+```
+
+Here we generate proof of principle figure for the paper with model PI uptake for:
+
+1. JE2
+2. NE1532 (agrA JE2)
+3. Non infected cells
+
+```{r}
+library(tidyverse)
+library(ggridges)
+library(ggh4x)
+library(skimr)
+library(corrr)
+library(psych)
+library(GGally)
+rm(list = ls())
+
+source("../../Functions/all_functions.R")
+```
+
+# Import PI data
+
+```{r}
+PI_data <- readRDS("../../Mutants_2022/processed_data/PI_kinetics/PI_kinetics_plateGP-C1.Rda")
+```
+
+# Plot data of interest
+
+```{r}
+colorscale <- c(JE2 = "#045a8d", NE1532 = "#b30000", `Non infected` = "#009900")
+
+df_plot <- PI_data %>%
+  filter(sample_id %in% c("JE2", "NE1532", "Non infected")) %>%
+  filter(timepoint < 60*20)
+
+plot_cell_death(df_plot, fitted = T)
+
+# Parameters for vline
+PI_parameters <- readRDS("../../Mutants_2022/processed_data/PI_parameters/PI_sample_parameters_plateGP-C1.Rda")
+# slope (b)
+b <- PI_parameters$max_rate_death_mean[which(PI_parameters$sample_id == "JE2")]*60
+
+# intercept (a): a = y - bx
+
+x <- PI_parameters$time_of_max_rate_death_mean[which(PI_parameters$sample_id == "JE2")]/60
+# Alternative way
+# Plot data
+PI_data %>%
+  filter(sample_id == "JE2") %>%
+  group_by(timepoint) %>%
+  summarise(fitted.deriv1 = mean(fitted.deriv1)) %>%
+  ggplot(aes(x = timepoint/60, y= fitted.deriv1)) +
+  geom_point() +
+  geom_vline(aes(xintercept = 1/60*timepoint[which(fitted.deriv1 == max(fitted.deriv1))])) +
+   geom_hline(aes(yintercept = max(fitted.deriv1))) +
+  labs(x = "Time (hour)", y = "PI uptake increase (Death rate)",
+       title = "JE2: change in rate of PI uptake during the experiment",
+       subtitle = "First derivative from local fitting") +
+  theme_bw()
+# Extract data
+x <- PI_data %>%
+  filter(sample_id == "JE2") %>%
+  group_by(timepoint) %>%
+  summarise(fitted.deriv1 = mean(fitted.deriv1)) %>%
+  ungroup() %>%
+  filter(fitted.deriv1 == max(fitted.deriv1)) %>%
+  .$timepoint / 60
+y <- PI_data %>%
+  filter(sample_id == "JE2") %>%
+  group_by(timepoint) %>%
+  summarise(f_signal.fitted = mean(f_signal.fitted),
+            fitted.deriv1 = mean(fitted.deriv1)) %>%
+  ungroup() %>%
+  filter(fitted.deriv1 == max(fitted.deriv1)) %>%
+  .$f_signal.fitted 
+a <- y - b*x
+
+
+
+
+p <- df_plot %>%
+      ggplot(aes(x = timepoint/60, y = f_signal.fitted, fill = sample_id, colour = sample_id)) +
+      #stat_summary(geom = "ribbon", fun.data = mean_cl_normal, fun.args=list(conf.int=0.95), fill = "#045a8d", alpha = 0.2) + # Manually checked and give same results, but 95% CI appear to be too narrow 
+      stat_summary(geom = 'ribbon', fun.data = 'mean_sdl', fun.args = list(mult = 1),  alpha = 0.2) + # Use standard deviation instead
+      stat_summary(geom = "point", fun = "mean", size = 1) +
+  geom_vline(xintercept = 5, linetype = "dashed", alpha = .5) +
+  geom_vline(xintercept = 20, linetype = "dashed", alpha = .5) +
+    geom_abline(intercept = a, slope = b) +
+  scale_fill_manual(values = colorscale) +
+  scale_color_manual(values = colorscale) +
+      labs(title = "",
+           subtitle = "",
+           x = "Time (hour)",
+           y = "PI uptake") +
+      theme_bw() +
+  theme(legend.position = "none",
+        text = element_text(face = "bold"),
+        panel.grid = element_blank())
+p
+
+
+# ggsave("figures/PI_prototype_curve.pdf", width = 2.6, height = 2.4)
+```
+
+# Try to find the best plot
+
+```{r}
+exp <- unique(PI_data$experiment_id)
+
+plot_list <- list()
+
+for (e in exp){
+  df <- df_plot %>%
+  filter(experiment_id == e)
+
+# Parameters for vline
+# slope (b)
+b <- PI_data %>%
+  filter(sample_id == "JE2") %>%
+  filter(experiment_id == e) %>%
+  filter(fitted.deriv1 == max(fitted.deriv1)) %>%
+  .$fitted.deriv1 * 60
+
+# intercept (a): a = y - bx
+x <- PI_data %>%
+  filter(sample_id == "JE2") %>%
+  filter(experiment_id == e) %>%
+  group_by(timepoint) %>%
+  summarise(fitted.deriv1 = mean(fitted.deriv1)) %>%
+  ungroup() %>%
+  filter(fitted.deriv1 == max(fitted.deriv1)) %>%
+  .$timepoint / 60
+y <- PI_data %>%
+  filter(sample_id == "JE2") %>%
+  filter(experiment_id == e) %>%
+  group_by(timepoint) %>%
+  summarise(f_signal.fitted = mean(f_signal.fitted),
+            fitted.deriv1 = mean(fitted.deriv1)) %>%
+  ungroup() %>%
+  filter(fitted.deriv1 == max(fitted.deriv1)) %>%
+  .$f_signal.fitted 
+a <- y - b*x
+
+p <- df %>%
+      ggplot(aes(x = timepoint/60, y = f_signal.fitted, fill = sample_id, colour = sample_id)) +
+      stat_summary(geom = 'ribbon', fun.data = 'mean_sdl', fun.args = list(mult = 1),  alpha = 0.2) + # Use standard deviation instead
+      stat_summary(geom = "point", fun = "mean", size = 1) +
+  geom_vline(xintercept = 5, linetype = "dashed", alpha = .5) +
+  geom_vline(xintercept = 20, linetype = "dashed", alpha = .5) +
+    geom_abline(intercept = a, slope = b) +
+    stat_summary(geom = "area", fun = "mean", size = 1, fill = "#969696", alpha = .1, linetype = "blank") +
+  scale_fill_manual(values = colorscale) +
+  scale_color_manual(values = colorscale) +
+      labs(x = "Time (hour)",
+           y = "PI uptake",
+           title = e) +
+      theme_bw() +
+  theme(legend.position = "none",
+        text = element_text(face = "bold"),
+        panel.grid = element_blank())
+
+plot_list[[e]] <- p
+
+}
+
+plot_list %>%
+  patchwork::wrap_plots()
+```
+
+The last plot (`exp220328_GP-C1`) is probably the most representative
+
+```{r}
+p <- plot_list[[5]]
+p
+
+# ggsave("figures/PI_prototype_curve.pdf", width = 2.6, height = 2.4)
+```
+
+How many replicates
+
+```{r}
+p$data %>%
+  group_by(sample_id) %>%
+  summarise(n_replicates = n_distinct(well_id))
+```
+
+Plot variation across replicates
+
+AUC death only
+
+```{r}
+PI_parameters_with_replicates <- readRDS("../../Mutants_2022/processed_data/PI_parameters/PI_parameters_plateGP-C1.Rda")
+
+PI_parameters_with_replicates %>%
+  filter(sample_id %in% c("JE2", "NE1532", "Non infected")) %>%
+  ggplot(aes(x = sample_id, y = AUC_death)) +
+  geom_violin(aes(fill = sample_id), alpha =.5) +
+  geom_boxplot(outlier.shape = NA, width = .1, alpha = .5, fill = "white") +
+   scale_fill_manual(values = colorscale) +
+  theme_bw()
+
+PI_parameters_with_replicates %>%
+  filter(sample_id %in% c("JE2", "NE1532", "Non infected")) %>%
+  ggplot(aes(x = sample_id, y = AUC_death)) +
+  geom_violin(aes(fill = sample_id), alpha =.5) +
+  geom_boxplot(outlier.shape = NA, width = .1, alpha = .5, fill = "white") +
+  facet_wrap(~experiment_id) +
+   scale_fill_manual(values = colorscale) +
+  theme_bw()
+
+PI_parameters_with_replicates %>%
+  filter(sample_id %in% c("JE2", "NE1532", "Non infected")) %>%
+  ggplot(aes(x = sample_id, y = AUC_death)) +
+  geom_violin( alpha =.5) +
+  geom_boxplot(aes(fill = experiment_id),  width = .5, alpha = .5) +
+  scale_fill_brewer() +
+  theme_bw()
+
+# density plots
+PI_parameters_with_replicates %>%
+  filter(sample_id %in% c("JE2", "NE1532", "Non infected")) %>%
+  ggplot(aes(x = AUC_death)) +
+ geom_density(aes(fill = sample_id), alpha = .5) +
+   scale_fill_manual(values = colorscale) +
+  theme_bw()
+
+PI_parameters_with_replicates %>%
+  filter(sample_id %in% c("JE2", "NE1532", "Non infected")) %>%
+  ggplot(aes(x = AUC_death, fill = experiment_id)) +
+ geom_density(alpha = .5) +
+  facet_wrap(~sample_id, scales = "free_y") +
+   scale_fill_brewer() +
+  theme_bw()
+
+PI_parameters_with_replicates %>%
+  filter(sample_id %in% c("JE2", "NE1532", "Non infected")) %>%
+  ggplot(aes(x = AUC_death, y = sample_id, fill = sample_id)) +
+geom_density_ridges(alpha = .5) +
+   scale_fill_manual(values = colorscale) +
+  theme_bw()
+
+PI_parameters_with_replicates %>%
+  filter(sample_id %in% c("JE2", "NE1532", "Non infected")) %>%
+  ggplot(aes(x = AUC_death, y = sample_id, fill = sample_id)) +
+geom_density_ridges(alpha = .5) +
+  facet_wrap(~experiment_id) +
+ scale_fill_manual(values = colorscale) +
+  theme_bw()
+
+PI_parameters_with_replicates %>%
+  filter(sample_id %in% c("JE2", "NE1532", "Non infected")) %>%
+  ggplot(aes(x = AUC_death, y = sample_id, fill = experiment_id)) +
+geom_density_ridges(alpha = .5) +
+   scale_fill_brewer() +
+  theme_bw()
+```
+
+Now plot multiple parameters
+
+```{r}
+df_plot <- PI_parameters_with_replicates %>%
+  filter(sample_id %in% c("JE2", "NE1532", "Non infected")) %>%
+  select(sample_id, experiment_id,  AUC_death, max_rate_death, max_death, time_of_max_death, min_death, time_of_min_death) %>%
+  pivot_longer(-c(sample_id, experiment_id), names_to = "parameter", values_to = "value") 
+
+df_plot %>%
+  ggplot(aes(x = sample_id, y = value)) +
+  geom_violin(aes(fill = sample_id), alpha =.5) +
+  geom_boxplot(outlier.shape = NA, width = .1, alpha = .5, fill = "white") +
+  facet_wrap(~parameter, scales = "free_y") +
+   scale_fill_manual(values = colorscale) +
+  theme_bw()
+
+df_plot %>%
+  ggplot(aes(x = sample_id, y = value)) +
+  geom_violin(aes(fill = sample_id), alpha =.5) +
+  geom_boxplot(outlier.shape = NA, width = .1, alpha = .5, fill = "white") +
+  facet_grid(parameter~experiment_id, scales = "free_y") +
+   scale_fill_manual(values = colorscale) +
+  theme_bw()
+
+df_plot %>%
+  ggplot(aes(x = sample_id, y = value)) +
+  geom_violin( alpha =.5) +
+  geom_boxplot(aes(fill = experiment_id),  width = .5, alpha = .5) +
+  scale_fill_brewer(guide = "none") +
+  facet_wrap(~parameter, scales = "free_y") +
+  theme_bw()
+```
+
+Density plots
+
+```{r}
+df_plot %>%
+ ggplot(aes(x = value)) +
+ geom_density(aes(fill = sample_id), alpha = .5) +
+  facet_wrap(~parameter, scales = "free") +
+   scale_fill_manual(values = colorscale) +
+  theme_bw()
+
+df_plot %>%
+  ggplot(aes(x = value, fill = experiment_id)) +
+ geom_density(alpha = .5) +
+  facet_wrap(parameter~sample_id, scales = "free") +
+   scale_fill_brewer() +
+  theme_bw()
+
+df_plot %>%
+ ggplot(aes(x = value, y = sample_id, fill = sample_id)) +
+geom_density_ridges(alpha = .5) +
+  facet_wrap(~parameter, scales = "free") +
+   scale_fill_manual(values = colorscale) +
+  theme_bw()
+
+df_plot %>%
+  ggplot(aes(x = value, y = sample_id, fill = experiment_id)) +
+geom_density_ridges(alpha = .5) +
+  facet_wrap(~parameter, scales = "free_x") +
+   scale_fill_brewer(guide = "none") +
+  theme_bw()
+```
+
+Export plots
+
+Figure 1 panel B
+
+```{r}
+p <- df_plot %>%
+  filter(parameter %in% c("AUC_death", "max_death", "max_rate_death")) %>%
+  mutate(sample_id = fct_relevel(sample_id, c("JE2", "NE1532"))) %>%
+  ggplot(aes(x = sample_id, y = value)) +
+  geom_violin(aes(colour = sample_id), alpha =.5, size = 1, width = 1.3) +
+  geom_boxplot(aes(fill = experiment_id),  width = .5, alpha = .5) +
+  scale_x_discrete(labels = c("JE2", "agrA\nmutant", "Non\ninfected")) +
+  scale_fill_brewer(guide = "none") +
+    scale_colour_manual(values = colorscale, guide = "none") +
+  facet_wrap(~parameter, scales = "free_y",
+             labeller = labeller(parameter = c(AUC_death = "AUC", max_death = "Peak", max_rate_death = "Maximum rate"))) +
+  # facetted_pos_scales(y = list(
+  #   parameter == "max_rate_death" ~ scale_y_continuous(limits = c(0,.01)))) +
+  labs(x = "", y = "") +
+  theme_bw()
+p
+
+ggsave("figures/parameters_variation_plate-GP-C1_3cols.pdf")
+
+p +
+  facet_wrap(~parameter, scales = "free_x", ncol = 1,
+             labeller = labeller(parameter = c(AUC_death = "AUC", max_death = "Peak", max_rate_death = "Maximum rate"))) +
+  coord_flip() +
+  theme_bw(base_size = 16) +
+  theme(text = element_text(face = "bold"))
+
+ggsave("figures/parameters_variation_plate-GP-C1_1col.pdf", height = 8, width = 6)
+ggsave("figures/parameters_variation_plate-GP-C1_1col.png", height = 8, width = 6)
+
+p <- df_plot %>%
+  filter(parameter %in% c("AUC_death", "max_death")) %>%
+  mutate(sample_id = fct_relevel(sample_id, c("JE2", "NE1532"))) %>%
+  ggplot(aes(x = sample_id, y = value)) +
+  geom_violin(aes(colour = sample_id), alpha =.5, size = 1, width = 1.3) +
+  geom_boxplot(aes(fill = experiment_id),  width = .5, alpha = .5) +
+  scale_x_discrete(labels = c("JE2", "agrA\nmutant", "Non\ninfected")) +
+  scale_fill_brewer(guide = "none") +
+    scale_colour_manual(values = colorscale, guide = "none") +
+  facet_wrap(~parameter, scales = "free_y",
+             labeller = labeller(parameter = c(AUC_death = "AUC", max_death = "Peak", max_rate_death = "Maximum rate"))) +
+  # facetted_pos_scales(y = list(
+  #   parameter == "max_rate_death" ~ scale_y_continuous(limits = c(0,.01)))) +
+  labs(x = "", y = "") +
+  theme_bw(base_size = 16) +
+  theme(text = element_text(face = "bold"))
+p
+
+# ggsave("figures/parameters_variation_plate-GP-C1_2param_2cols.pdf", height = 5, width = 6)
+# ggsave("figures/parameters_variation_plate-GP-C1_2params_2cols.png", height = 5, width = 6)
+```
+
+All parameters
+
+```{r}
+p <- df_plot %>%
+  mutate(sample_id = fct_relevel(sample_id, c("JE2", "NE1532"))) %>%
+  ggplot(aes(x = sample_id, y = value)) +
+  geom_violin(aes(colour = sample_id), alpha =.5, size = 1, width = 1.3) +
+  geom_boxplot(aes(fill = experiment_id),  width = .5, alpha = .5) +
+  scale_x_discrete(labels = c("JE2", "agrA\nmutant", "Non\ninfected")) +
+  scale_fill_brewer(guide = "none") +
+    scale_colour_manual(values = colorscale, guide = "none") +
+  facet_wrap(~parameter, scales = "free_y",
+             labeller = labeller(parameter = c(AUC_death = "AUC", max_death = "Peak", max_rate_death = "Maximum rate",
+                                               min_death = "Trough", time_of_max_death = "Time of peak", time_of_min_death = "Time of trough"))) +
+  labs(x = "", y = "") +
+  theme_bw(base_size = 16) +
+  theme(text = element_text(face = "bold"))
+p
+
+# ggsave("figures/parameters_variation_plate-GP-C1_all_params.pdf", height = 10, width = 12)
+# ggsave("figures/parameters_variation_plate-GP-C1_all_params.png", height = 10, width = 12)
+```
+
+# Stats
+
+Basic descriptive statistics
+
+```{r}
+df_stats <- PI_parameters_with_replicates %>%
+  select(sample_id, ends_with("death")) %>%
+  filter(sample_id %in% c("JE2", "TOX-4", "Non infected")) %>%
+  as_tibble()
+
+df_stats %>%
+  group_by(sample_id) %>%
+  skim() %>%
+  as_tibble() %>%
+  mutate(coeff_variation = numeric.sd/numeric.mean) %>%
+  select(sample_id, skim_variable, numeric.mean, numeric.sd, coeff_variation) %>%
+  filter(skim_variable %in% c("AUC_death", "max_death"))
+```
+
+Correlation between replicates, Crobach's alpha etc
+
+See tutorial here https://randilgarcia.github.io/datic-intro-to-r/cor_reliability_ttest.html#cronbach%E2%80%99s_alpha
+
+```{r}
+# AUC for JE2
+df <- PI_parameters_with_replicates %>%
+  filter(sample_id == "JE2") %>%
+  select(well_id, AUC_death, experiment_id) %>%
+  group_by(experiment_id) %>%
+  mutate(replicate = row_number()) %>%
+  select(-well_id) %>%
+  pivot_wider(names_from = "experiment_id", values_from = "AUC_death")
+
+alpha(df)
+```
+
+Correlation of *fitted* data
+
+```{r}
+df <- PI_data %>%
+  filter(sample_id == "JE2") %>%
+  ungroup() %>%
+  select(well_id, timepoint, experiment_id, f_signal.fitted, plate_replicate)
+
+df_wide <- df %>%
+  select(timepoint, well_id, f_signal.fitted) %>%
+  pivot_wider(names_from = "well_id", values_from = f_signal.fitted)
+
+alpha(df_wide %>% select(-timepoint))
+
+df_wide %>%
+  select(-timepoint) %>%
+  ggpairs()
+```
+
+By experiment
+
+```{r}
+df_wide <- df %>%
+  group_by(timepoint, experiment_id) %>%
+  summarise(f_signal.fitted = mean(f_signal.fitted, na.rm = T)) %>%
+  pivot_wider(names_from = "experiment_id", values_from = f_signal.fitted)
+
+alpha(df_wide %>% select(-timepoint))
+
+df_wide %>%
+  ggpairs()
+```
+
+Correlation is difficult to interpret for the fitted curves. We could calculate correlations for the entire dataset if we wanted.

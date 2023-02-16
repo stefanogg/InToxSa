@@ -1,0 +1,221 @@
+---
+title: "Convergence analysis among monophyletic pairs with contrasting PI phenotype"
+author: "Stefano Giulieri, Romain Guerillot"
+date: "25/02/2021"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+Here we check for convergent mutations / convergently mutated genes in carefully created monophyletic pairs within the VANANZ dataset. Each cluster consists of a closely related pair with high PI uptake (iso1) and one with low uptake (iso2).
+
+To get mutations arising in low PI isolates (iso2), we ran snippy within the pair, where the de novo assembly of iso1 is the reference.
+
+```{r setup, include=F}
+knitr::opts_chunk$set(echo = TRUE)
+setwd(str_c("~/Documents/Github/InToxSa", "/6-InToxSa_paper/Genetic_pairs"))
+msg <- glue::glue("My directory is {getwd()}")
+message(msg)
+```
+
+```{r message=F}
+library(tidyverse)
+library(glue)
+rm(list = ls())
+```
+
+# Import raw data
+
+Processed snippy output
+
+```{r}
+df_snippy <- readRDS("processed_data/variants_combined_annotation/snippy_denovo_annotated.Rda") %>%
+  mutate(pair_id = paste0(iso1, "--", iso2))
+```
+
+Genetic pairs
+
+```{r}
+df_pair_PI <- readRDS("processed_data/PI_pairs_data/pairs_description_dataframe.Rda") %>% filter(PI_pair)
+```
+
+
+# Filter snippy output based on clusters
+
+Check that all pairs are present in the snippy output file
+
+```{r}
+missing_pairs <- setdiff(df_pair_PI$pair_id, df_snippy$pair_id)
+missing_pairs
+```
+
+These pairs could be missing because 1) no mutations were found or 2) they were not including in the genetic pairs, due to an artifact of the distance measured using the core genome.
+
+```{r}
+df_pair_PI %>%
+  filter(pair_id %in% missing_pairs) %>%
+  select(pair_id,contains("dist"))
+```
+
+Thus, all 4 pairs missing from snippy have 0 mutations. These could be interesting pairs for long reads sequencing or at least they should be checked for structural variants based on short reads data!
+
+# Convergence anaysis on the raw dataset: 28 pairs (24 with mutations detected)
+
+```{r}
+df_snippy_pair_PI <- df_pair_PI %>%
+  left_join(df_snippy) %>%
+  drop_na(CHROM)
+ 
+n_distinct(df_snippy_pair_PI$pair_id) 
+```
+
+First we mask intergenic mutations and synonymous mutations.
+
+```{r}
+df_snippy_pair_PI %>%
+  count(EFFTYPE)
+df_snippy_prot_changes <- df_snippy_pair_PI %>%
+  drop_na(cdhit_group) %>%
+  filter(!is.na(EFFTYPE) & EFFTYPE != "synonymous_variant")
+```
+
+# Convergence analysis on the clean dataset
+
+Check for convergent *mutations*: same gene, same mutation
+
+```{r}
+df_converg_mutations <- df_snippy_prot_changes %>%
+  group_by(cdhit_group, MUTATION_SHORT ) %>%
+  mutate(n_events = n_distinct(pair_id)) %>%
+  relocate(n_events)
+
+df_converg_mutations %>%
+  filter(n_events > 1) %>%
+  distinct(pair_id, cdhit_group, pan_gene_symbol, neb_locus_tag, neb_mutant_id, neb_product, MUTATION_SHORT) %>%
+  arrange(cdhit_group)
+```
+
+We have 0 convergent identical mutations
+
+Check for convergent *positions*: same gene, same position
+
+```{r}
+df_converg_positions <- df_snippy_prot_changes %>%
+  group_by(cdhit_group, AA_POS ) %>%
+  mutate(n_events = n_distinct(pair_id)) %>%
+  relocate(n_events)
+
+df_converg_positions %>%
+  filter(n_events > 1) %>%
+  distinct(pair_id, cdhit_group, pan_gene_symbol, neb_locus_tag, neb_mutant_id, neb_product, MUTATION_SHORT) %>%
+  arrange(cdhit_group)
+```
+
+We have 1 convergent positions in an hypothetical protein with mutant present in Nebraska Tn library NE419. One potential problem is that the mutations are partially symmetric (R25Q <-> Q25del).
+
+## Convergent genes
+
+Now we look at convergent *genes*: same cd hit group
+
+```{r}
+df_converg_genes <- df_snippy_prot_changes %>%
+  group_by(cdhit_group) %>%
+  mutate(n_events = n_distinct(pair_id)) %>%
+  relocate(n_events)
+
+# check for duplicates
+df_converg_genes %>%
+  group_by(cdhit_group, MUTATION_SHORT, pair_id) %>%
+  filter(n() > 1)
+
+# NOTE: duplicates are due to the annotation process (multiple lines per gene)
+
+t_converg_genes <- df_snippy_prot_changes %>%
+  group_by(cdhit_group, cdhit_seq,nebraska_aa_seq, neb_gene, neb_product, neb_locus_tag, neb_mutant_id, neb_gene_symbol) %>%
+  summarise(n_events = n_distinct(pair_id),
+            mutations = str_c(unique(MUTATION_SHORT),
+                              collapse = ", "),
+            gene_prokka = str_c(unique(GENE),
+                                collapse = ", "),
+            product_prokka = str_c(unique(PRODUCT),
+                                   collapse = ", ")) %>%
+  arrange(desc(n_events)) %>%
+  relocate(n_events, cdhit_group, neb_gene_symbol, neb_gene, gene_prokka, neb_locus_tag, neb_mutant_id, neb_product, product_prokka, mutations)
+
+t_converg_genes %>%
+  ungroup() %>%
+  filter(n_events > 1) %>%
+  select(n_events, cdhit_group, neb_gene_symbol, neb_locus_tag, neb_mutant_id, neb_product)%>%
+  knitr::kable(row.names = T)
+```
+
+*Note*
+
+agrA is by far the most convergent gene (9/29), ausA is confirmed. Also interesting: secA, abcA.
+
+## Convergence stats
+
+### Number of unique mutations
+
+```{r}
+n_mutations <- df_snippy_pair_PI %>%
+  distinct(CHROM, POS, REF, ALT) %>%
+  nrow()
+
+df_mut_types_count <- df_snippy_pair_PI %>%
+  distinct(CHROM, POS, REF, ALT, EFFTYPE_SHORT) %>%
+  count(EFFTYPE_SHORT) %>%
+  mutate(frac = scales::percent(n/sum(n))) %>%
+  print()
+
+frac_prot_changing <- scales::percent((df_mut_types_count %>% filter(EFFTYPE_SHORT %in% c("non-synonymous", "truncating")) %>%  pull(n) %>% sum()) /sum(df_mut_types_count$n))
+
+print(glue::glue("{n_mutations} mutations were identified in 28 genetic pairs, of which {frac_prot_changing} were predicted to alter protein sequences"))
+```
+
+### Number of convergent genes
+
+```{r}
+n_converg_genes <- t_converg_genes %>%
+  filter(n_events >= 2) %>%
+  nrow()
+
+print(glue("Number of genes with >=2 recurrent mutations: {n_converg_genes}"))
+```
+
+# Save processed data
+
+Annotated snippy dataframe 
+
+```{r}
+df_snippy_pair_PI %>%
+  saveRDS("processed_data/variants_combined_annotation/snippy_denovo_annotated_with_pair_data.Rda")
+```
+
+Dataframe with all mutations included in the convergence analysis
+
+```{r}
+df_converg_genes %>%
+   saveRDS("processed_data/gene_convergence/df_PI_convergence_analysis.Rda")
+```
+
+Dataframe with genes with >= 2 independent mutations. Exclude genes with no FPR3757 homolog and exclude ebh
+
+```{r}
+df_converg_genes <- df_converg_genes %>%
+  filter(n_events > 1) %>%
+  filter(neb_gene_symbol != "ebh") %>%
+  drop_na(neb_locus_tag) %>%
+  distinct()
+
+# stats
+df_converg_genes %>%
+  distinct(neb_gene_symbol, n_events) %>%
+  ungroup() %>%
+  count(n_events)
+
+# df_converg_genes %>%
+#    saveRDS("processed_data/gene_convergence/df_PI_convergent_genes.Rda")
+
+```
+ 

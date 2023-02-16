@@ -1,0 +1,161 @@
+---
+title: "Review mutations in convergent genes"
+author: "Stefano Giulieri"
+date: "06/02/2023"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+Here we check for convergent mutations / convergently mutated genes in carefully created monophyletic pairs within the VANANZ dataset. Each cluster consists of a closely related pair with high PI uptake (iso1) and one with low uptake (iso2).
+
+To get mutations arising in low PI isolates (iso2), we ran snippy within the pair, where the de novo assembly of iso1 is the reference.
+
+```{r setup, include=F}
+knitr::opts_chunk$set(echo = TRUE)
+setwd(paste0("~/Documents/Github/InToxSa", "/8-eLife_revision"))
+msg <- glue::glue("My directory is {getwd()}")
+message(msg)
+```
+
+```{r message=F}
+library(tidyverse)
+library(glue)
+# if (!require("BiocManager", quietly = TRUE))
+#     install.packages("BiocManager")
+# 
+# BiocManager::install("ggtree")
+library(ggtree)
+rm(list = ls())
+```
+
+# Import raw data
+
+Processed snippy output
+
+```{r}
+df_snippy <- readRDS("../6-InToxSa_paper/Genetic_pairs/processed_data/variants_combined_annotation/snippy_denovo_annotated.Rda") %>%
+  mutate(pair_id = paste0(iso1, "--", iso2))
+```
+
+Genetic pairs with phenotypic data
+
+```{r}
+df_pair_PI <- readRDS("../6-InToxSa_paper/Genetic_pairs/processed_data/PI_pairs_data/pairs_description_dataframe.Rda") 
+```
+
+Phylogenetic tree
+
+```{r}
+# tree <- readRDS("../6-InToxSa_paper/Phylogeny/processed_data/tree_with_metadata.Rda")
+tree <- read.tree("../6-InToxSa_paper/Phylogeny/processed_data/clean.core90.aln.tree")
+```
+
+
+# Extract mutations in 7 genes of interest
+
+```{r}
+(genes <- readRDS("../6-InToxSa_paper/Genetic_pairs/processed_data/gene_convergence/df_PI_convergent_genes.Rda") %>%
+  filter(n_events >=3) %>%
+  arrange(desc(n_events), desc(neb_gene_length)) %>%
+  .$neb_gene_symbol %>%
+  unique())
+```
+
+Filter snippy output and add PI data
+
+```{r}
+df_snippy <- df_snippy %>%
+  filter(neb_gene_symbol %in% genes)
+
+df_pair_PI <- df_pair_PI %>%
+  filter(dist_denovo <= 200)
+
+df_snippy_PI <- df_pair_PI %>%
+  inner_join(df_snippy)
+
+df_snippy_PI <- df_snippy_PI %>%
+  select(pair_id, PAIR_ID, PI_pair, iso1, iso2,neb_gene_symbol, neb_mutant_id, AA_POS, MUTATION, delta_auc, pval)
+
+df_snippy_PI %>%
+ group_by(neb_gene_symbol) %>%
+  summarise(n_pos = n_distinct(AA_POS))
+```
+
+# Check the convergent loci manually
+
+# ausA
+
+```{r}
+df_ausA <- df_snippy_PI %>%
+  filter(neb_gene_symbol == "ausA")
+unique(df_ausA$MUTATION)
+unique(df_ausA$AA_POS) %>% sort()
+```
+
+For each position and each gene, extract pairs with mutations at that position
+
+```{r}
+pos <- 2308
+mutated_pairs <- df_ausA %>%
+  filter(AA_POS == pos)
+```
+
+Fo each pair find mrca, descendent and check if descendent are shared
+
+```{r}
+mrca <- mutated_pairs %>%
+  rowwise() %>%
+  mutate(mrca = MRCA(tree, c(iso1, iso2)),
+         desc = list(tidytree::offspring(tree, mrca, tiponly = T)))
+
+desc <- mrca$desc
+desc_PI <- mrca$desc[[which(mrca$PI_pair)]]
+independent <- map_int(desc, ~length(intersect(.x, desc_PI)))
+
+mrca <-mrca %>%
+  add_column(independent = independent) %>%
+  mutate(independent = independent == 0)
+```
+
+# Now for entire dataset: mutations in PI pairs
+
+```{r}
+df_mrca <- df_snippy_PI %>%
+  rowwise() %>%
+  mutate(mrca = MRCA(tree, c(iso1, iso2)),
+         desc = list(tidytree::offspring(tree, mrca, tiponly = T)))
+
+df_with_PI <- df_mrca %>%
+  group_by(neb_gene_symbol, AA_POS) %>%
+  filter(any(PI_pair)) %>%
+  mutate(desc_PI = desc[which(PI_pair)]) 
+
+df_with_PI <- df_with_PI %>%
+  ungroup() %>%
+  rowwise() %>%
+  mutate(intersect = list(intersect(desc, desc_PI)),
+         independent = length(intersect) == 0)
+
+
+```
+
+# Other mutations
+
+```{r}
+df_all <- df_mrca %>%
+  group_by(neb_gene_symbol) %>%
+  mutate(desc_PI = list((desc[which(PI_pair)])))
+
+df_all <- df_mrca %>%
+  mutate(desc_PI = list(unlist(desc_PI)))
+
+df_all <- df_all %>%
+  ungroup() %>%
+  rowwise() %>%
+  mutate(intersect = list(intersect(desc, desc_PI)),
+         independent = length(intersect) == 0) 
+```
+
+
+

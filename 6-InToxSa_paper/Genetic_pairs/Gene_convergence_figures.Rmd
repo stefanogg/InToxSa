@@ -1,0 +1,398 @@
+---
+title: 'Generate figures for the convergent evolution analysis'
+author: "Stefano Giulieri"
+date: "17/06/2022"
+output: 
+  html_document:
+    toc: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd(stringr::str_c("~/Documents/Github/InToxSa", "/6-InToxSa_paper/Genetic_pairs"))
+msg <- glue::glue("My directory is {getwd()}")
+message(msg)
+```
+
+
+Here we generate figure for the gene enrichment analysis. The whole gene convergence analysis process is described in `Gene_convergence_analysis.Rmd`.
+
+To be consistent with the previous work we use the same dataset generated from the previous analysis
+
+```{r}
+library(tidyverse)
+library(patchwork)
+library(ggrepel)
+library(cols4all)
+rm(list = ls())
+```
+
+# Load data
+
+```{r}
+df_mutations <- readRDS("processed_data/gene_convergence/df_PI_convergent_genes.Rda")
+
+
+# df_mutations <- readRDS("raw_data/df_PI_convergent_genes.Rda")
+unique(df_mutations$cdhit_symbol)
+
+
+```
+
+NEB kinetics data
+
+```{r}
+df_PI_NEB <- readRDS("raw_data/PI_sample_parameters_plateGPV1.Rda")
+
+df_PI_NEB_wells <- readRDS("raw_data/PI_parameters_plateGPV1.Rda")
+```
+
+We will plot only genes that have a cognate Nebrasks mutant that was tested for PI uptake and in the Operetta system
+
+```{r}
+df_mutations  <- df_mutations %>%
+  filter(neb_mutant_id %in% df_PI_NEB$sample_id)
+```
+
+
+# Figure 3: gene enrichment in the entire dataset
+
+```{r}
+base_sz <- 20
+point_sz <- 3
+colors <- RColorBrewer::brewer.pal(n = 6, name = "PuOr")
+names(colors) <- rev(c("IS insertion (intragenic)", "IS insertion (intergenic)", "large deletion", "intergenic", "non-synonymous", "truncating"))
+colors_genes <- colors[c(1,2,6)]
+colors_genes
+```
+
+## Panel A 
+
+### Mutation counts
+
+```{r}
+df_plot <- df_mutations %>%
+   group_by(cdhit_group, cdhit_symbol,EFFTYPE_SHORT) %>%
+  summarise(n_mutations = n_distinct(pair_id)) 
+
+
+# set an order to be consistent across plots
+cluster_order <- df_plot %>%
+  group_by(cdhit_group) %>%
+  summarise(n_mutations = sum(n_mutations)) %>%
+  arrange(desc(n_mutations), cdhit_group) %>%
+  transmute(cdhit_group,
+            cluster_order = row_number())
+
+# Optional filtering
+cluster_order <- cluster_order %>%
+  filter(cluster_order <= 20)
+
+df_plot <- df_plot %>%
+  right_join(cluster_order) 
+
+
+# Plot A
+p1 <- df_plot %>%
+  ggplot(aes(x = fct_reorder(cdhit_symbol, cluster_order, .desc = T),
+             y = n_mutations,
+             fill = EFFTYPE_SHORT)) +
+  geom_bar(stat = "identity") +
+  scale_y_continuous(breaks = c(0,5,10), minor_breaks = c(1:4,6:9)) +
+ scale_fill_manual(values = colors, name = "") +
+  labs(x = "", y = "# mutations") +
+  coord_flip() +
+  theme_bw() +
+  theme(text = element_text(face = "bold"))
+
+p1
+```
+
+Same but with CC
+
+```{r}
+df_plot <- df_mutations %>%
+   group_by(cdhit_group, cdhit_symbol, CC_iso1,EFFTYPE_SHORT) %>%
+  summarise(n_mutations = n_distinct(pair_id)) 
+
+
+# set an order to be consistent across plots
+cluster_order <- df_plot %>%
+  group_by(cdhit_group) %>%
+  summarise(n_mutations = sum(n_mutations)) %>%
+  arrange(desc(n_mutations), cdhit_group) %>%
+  transmute(cdhit_group,
+            cluster_order = row_number())
+
+# Optional filtering
+cluster_order <- cluster_order %>%
+  filter(cluster_order <= 20)
+
+df_plot <- df_plot %>%
+  right_join(cluster_order) 
+
+
+# Plot A
+p1 <- df_plot %>%
+  ggplot(aes(x = fct_reorder(cdhit_symbol, cluster_order, .desc = T),
+             y = n_mutations,
+             fill = as.factor(CC_iso1))) +
+  geom_bar(stat = "identity") +
+  scale_y_continuous(breaks = c(0,5,10), minor_breaks = c(1:4,6:9)) +
+cols4all::scale_fill_discrete_c4a_cat(palette = "tol.muted", name = "CC") +
+  labs(x = "", y = "# mutations") +
+  coord_flip() +
+  theme_bw() +
+  theme(text = element_text(face = "bold"))
+
+p1
+```
+
+
+# Plot B: mutations mini-maps
+
+Here we map the position of the mutation within the coding region. Substitutions, truncations and IS insertions are designed by the position (or start position), large deletions by the start position (if the whole gene is deleted the deletion is shown at the first codon).
+
+Plot B has to follow the same gene order as plot A. 
+
+```{r}
+df_gene_maps <- df_mutations %>%
+  right_join(cluster_order) %>%
+  group_by(cdhit_group, cdhit_symbol, AA_POS, EFFTYPE_SHORT, n_events, cluster_order) %>%
+  summarise(n_events = n_distinct(pair_id)) 
+
+df_rect <- df_mutations %>%
+  right_join(cluster_order) %>%
+  group_by(cdhit_group, n_events, cluster_order) %>%
+  summarise(xmin = cluster_order - 0.25,
+            xmax = cluster_order + 0.25, 
+            ymin = 0,
+            ymax = str_length(cdhit_seq))
+  
+
+p2 <- df_gene_maps %>%
+  ggplot(aes(x = cluster_order, y = AA_POS, colour = EFFTYPE_SHORT)) +
+  geom_point() +
+  geom_rect(data = df_rect, aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax),
+            inherit.aes = F, alpha = 0, color = "black") +
+  scale_y_continuous(limits = c(0,2500), breaks = c(0,1000, 2000)) +
+  scale_x_reverse(expand = c(0, .4)) +
+  scale_color_manual(values = rev(colors), na.translate = F, guide = F) +
+  # scale_size(breaks = 1:3, name = "N independent mutations", guide = F) +
+  coord_flip() +
+  labs(x = "") +
+  theme_bw() +
+  theme(panel.grid = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        legend.position = "bottom") +
+  theme(text = element_text(face = "bold"))
+
+p2
+```
+
+# Panel C: Nebraska
+
+For each mutant, calculate the mean AUC change (+/- SD) as compared to JE2
+
+```{r}
+df_neb_stats <- df_PI_NEB %>%
+  select(sample_id, contains("AUC")) %>%
+  left_join(df_mutations %>% distinct(cdhit_group, neb_mutant_id),
+            by = c("sample_id" = "neb_mutant_id"))
+
+wt_pvalue <- c()
+for (i in unique(df_PI_NEB_wells$sample_id)){
+ x <- df_PI_NEB_wells %>%
+    filter(sample_id == i) %>%
+   .$AUC_death
+ y <- df_PI_NEB_wells %>%
+    filter(sample_id == "JE2") %>%
+   .$AUC_death
+ wt <- wilcox.test(x, y)
+ wt_pvalue[i] <- wt$p.value
+}
+
+df_neb_stats <- df_neb_stats %>%
+  left_join(tibble(sample_id = names(wt_pvalue),
+                   pvalue = wt_pvalue)) %>%
+  mutate(pvalue_corr = p.adjust(pvalue, method = "fdr"))
+
+# p values distribution
+df_neb_stats %>%
+  ggplot(aes(x = -log10(pvalue))) +
+  geom_histogram() +
+  geom_density(aes(y =  ..count..))
+
+# check identical values: this is normal with wilcox test, especially at very low values
+# "All the usual rank based tests have a discrete distribution based on counting of arrangements."
+# https://stats.stackexchange.com/questions/232927/same-p-value-is-it-normal
+
+
+AUC_JE2 <- df_neb_stats %>% filter(sample_id == "JE2") %>% .$AUC_death_mean
+df_neb_stats %>%
+  ggplot(aes(x = fct_reorder(sample_id, AUC_death_mean),
+             y = AUC_death_mean,
+             ymin = AUC_death_mean - AUC_death_sd,
+             ymax = AUC_death_mean + AUC_death_sd,
+             colour = -log10(pvalue_corr))) +
+  geom_point() +
+  geom_linerange() +
+  geom_hline(yintercept = AUC_JE2, linetype = "dashed") +
+  scale_colour_viridis_c() +
+  coord_flip() +
+  theme_bw()
+
+df_neb_stats %>%
+  ggplot(aes(x = fct_reorder(sample_id, AUC_death_mean),
+             y = AUC_death_mean,
+             ymin = AUC_death_mean - AUC_death_sd,
+             ymax = AUC_death_mean + AUC_death_sd,
+             colour = pvalue_corr < .05)) +
+  geom_point() +
+  geom_linerange() +
+  geom_hline(yintercept = AUC_JE2, linetype = "dashed") +
+  scale_colour_manual(values = c("red", "blue")) +
+  coord_flip() +
+  theme_bw()
+
+df_plot <- df_neb_stats %>%
+  right_join(cluster_order)
+
+p3 <-  df_plot %>%
+  ggplot(aes(x = -cluster_order,
+             y = AUC_death_mean,
+             ymin = AUC_death_mean - AUC_death_sd,
+             ymax = AUC_death_mean + AUC_death_sd,
+             colour = pvalue_corr < .05)) +
+  geom_point() +
+  geom_linerange() +
+  geom_hline(yintercept = AUC_JE2, linetype = "dashed") +
+  scale_colour_manual(values = c("red", "blue"), guide = F) +
+  labs(x = "", y = "PI uptake (AUC)") +
+  coord_flip() +
+  theme_bw() +
+  theme(axis.text.y = element_blank(),
+        axis.ticks.y = element_blank())
+
+p3 
+```
+
+Final NEB plot
+
+```{r}
+df_plot <- df_neb_stats %>%
+  right_join(cluster_order)
+
+p3 <-  df_plot %>%
+  ggplot(aes(x = -cluster_order,
+             y = AUC_death_mean,
+             ymin = AUC_death_mean - AUC_death_sd,
+             ymax = AUC_death_mean + AUC_death_sd,
+             colour = pvalue_corr < .05)) +
+  geom_point() +
+  geom_linerange() +
+  geom_hline(yintercept = AUC_JE2, linetype = "dashed") +
+  scale_colour_manual(values = c("blue", "skyblue"), guide = F) +
+  labs(x = "", y = "PI uptake (AUC)") +
+  coord_flip() +
+  theme_bw() +
+  theme(axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.title.x = element_text(face = "bold"))
+
+p3 
+```
+
+# Panel D: Operetta NEB
+
+```{r}
+Cell_count.df <- readRDS("raw_data/Cell_count_corrected.df.Rda") %>%
+  mutate(cell_id = str_c(sample_id, plate_number, plate_replicate, replicate, timepoint, well, Field, Object_No, sep = "_"))
+
+Spot_Cell_count.df <- readRDS("raw_data/Spot_Cell_count.df.Rda")
+
+```
+
+```{r}
+# merge corrected bacteria count with cell count table
+Cell_count_corrected.df <- merge(Cell_count.df, Spot_Cell_count.df, by = "cell_id", all.x = T) %>%
+  select(-cor_nb_bacteria) %>%
+  rename(cor_nb_bacteria = n) %>%
+  mutate(cor_nb_bacteria = ifelse(is.na(cor_nb_bacteria), 0, cor_nb_bacteria)) 
+
+Cell_count_corrected.df <- Cell_count_corrected.df %>%
+  mutate(timepoint = factor(.$timepoint, levels = c("3h", "24h")))
+
+Cell_count_corrected.df <- Cell_count_corrected.df %>%
+  mutate(plate_replicate_id = paste0(plate_number, "_", plate_replicate))
+```
+
+
+```{r}
+df <- Cell_count_corrected.df %>%
+    filter(plate_number == "GPV1")  %>%
+    mutate(sample_id = ifelse(sample_id == "TOX-4", yes = "PAM-agrA", no = sample_id)) %>%
+    filter(sample_id != "Non infected") %>%
+  left_join(df_plot) %>%
+ filter(!is.na(cluster_order) | sample_id == "JE2") %>%
+  replace_na(list(cluster_order = 21))
+
+df_plot4 <- df %>%
+    mutate(Infected = ifelse(Number_of_Spots>0, yes = "yes", no = "no")) %>%
+    group_by(sample_id, cluster_order, timepoint,Infected) %>% 
+    summarise(count = n()) %>% 
+    mutate(perc = count/sum(count)*100)
+
+p4 <- ggplot(df_plot4 , aes(x = fct_reorder(sample_id, cluster_order, .desc = T), y = timepoint,  fill = perc )) +
+    geom_tile(stat = "identity") +
+    xlab("") +
+    ylab("") +
+    #scale_fill_manual(name = "Infected:", labels = c("no" , "yes"), values = c("#4575b4", "#d73027")) +
+    coord_flip() +
+    theme_bw() +
+    theme(panel.border = element_blank(), 
+          panel.grid.major = element_blank(), 
+          axis.text = element_text(size = 12), 
+          plot.title = element_text(size = 16, face = 'bold'), 
+          axis.title = element_text(face = 'bold')) + 
+    scale_fill_gradient(low = "white", high = "steelblue", name = "% infected")
+  p4
+  
+  df_plot5 <- df %>%
+    filter(cor_nb_bacteria > 0) %>%
+    group_by(sample_id, cluster_order, timepoint) %>% 
+    summarise(bacteria_nb_per_cell = mean(cor_nb_bacteria)) 
+  
+  p5 <- ggplot(df_plot5 , aes(x = fct_reorder(sample_id, cluster_order, .desc = T), y = timepoint,  fill = bacteria_nb_per_cell )) +
+    geom_tile(stat = "identity") +
+    xlab("") +
+    ylab("") +
+   # ggtitle(exp) +
+    theme(plot.title = element_text(size = 15)) +
+    #scale_fill_manual(name = "Infected:", labels = c("no" , "yes"), values = c("#4575b4", "#d73027")) +
+    coord_flip() +
+    theme_bw() +
+    theme(panel.border = element_blank(), 
+          panel.grid.major = element_blank(), 
+          axis.text = element_text(size = 12), 
+          plot.title = element_text(size = 16, face = 'bold'), 
+          axis.title = element_text(face = 'bold'),
+          axis.text.y = element_blank(),
+          axis.ticks.y = element_blank() ) + 
+    scale_fill_gradient(low = "white", high = "red", name = "SA/infected cell")
+  p5
+  
+p6 <- p4 + p5 +
+  plot_layout(guides = "collect")
+p6
+```
+
+
+# Save processed data
+
+```{r}
+# list(p1, p2, p3,p4, p5, p6) %>%
+#   saveRDS("processed_data/gene_convergence/convergence_plots.Rda")
+```
+

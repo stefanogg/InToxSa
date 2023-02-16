@@ -1,0 +1,26 @@
+sample_id,gene,mutation,context,label
+JE2,agrA,NA,agrA-transposon,JE2
+JE2,agrC,NA,agrC-transposon,JE2
+JE2,ausA,NA,ausA-transposon,JE2
+BPH3370,agrA,NA,agrA-E7K,BPH3370
+BPH3370,agrC,NA,agrC-G310fs,BPH3370
+BPH3370,ausA,NA,ausA-K2308fs,BPH3370
+BPH3370-A4,agrA,E7K,agrA-E7K,BPH3370::agrA E7K
+BPH3370-C4,agrA,E7K,agrA-E7K,BPH3370::agrA E7K
+BPH3370-E2,agrC,G310fs,agrC-G310fs,BPH3370::agrC G310fs
+BPH3370-F3,ausA,K2308fs,ausA-K2308fs,BPH3370::ausA K2308fs
+NE1532,agrA,NA,agrA-transposon,NE1532
+NE873,agrC,NA,agrC-transposon,NE873
+NE119,ausA,NA,ausA-transposon,NE119
+JE2,mfd,NA,mfd-transposon,JE2
+JE2,lysA,NA,lysA-transposon,JE2
+JE2,cydA,NA,cydA-transposon,JE2
+BPH3370,mfd,NA,mfd-P675S,BPH3370
+BPH3370,lysA,NA,lysA-K354fs,BPH3370
+BPH3370,cydA,NA,cydA-C390R,BPH3370
+BPH3370-D3,mfd,P675S,mfd-P675S,BPH3370::mfd P675S
+BPH3370-G3,lysA,K354fs,lysA-K354fs,BPH3370::lysA K354fs
+BPH3370-D4,cydA,C390R,cydA-C390R,BPH3370::cydA C390R
+NE188,mfd,NA,mfd-transposon,NE188
+NE1140,lysA,NA,lysA-transposon,NE1140
+NE117,cydA,NA,cydA-transposon,NE117

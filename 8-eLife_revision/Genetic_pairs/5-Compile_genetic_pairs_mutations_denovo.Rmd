@@ -1,0 +1,216 @@
+---
+title: "Compile table of genetic_pairs and mutation lists: mapping on the de novo assembly of iso1"
+author: "Stefano Giulieri"
+date: "17/02/2021"
+output: html_document
+---
+
+```{r setup}
+knitr::opts_chunk$set(echo = TRUE)
+setwd(str_c("~/Documents/Github/InToxSa", "/6-InToxSa_paper/Genetic_pairs"))
+msg <- glue::glue("My directory is {getwd()}")
+message(msg)
+```
+
+This script focuses on processing the output of snippy run on genetic pairs, where reads were mapped on iso1 (= internal reference)
+
+```{r message=F}
+library(tidyverse)
+rm(list = ls())
+```
+
+# Raw data
+
+Snippy output
+
+```{r}
+snippy_denovo <- read_tsv("raw_data/all_snps.mask.tab") %>%
+  arrange(PAIR_ID) 
+glimpse(snippy_denovo)
+```
+
+# Edit snippy output
+
+```{r}
+# modify snippy output: 
+# 1) generate iso1 and iso2 for merging with the phenotypic analysis
+# 2) modify CHROM (contig name) to be consistent with the labelling in bed files down the track
+# 3) extract mutation effects for easier interpretation
+
+
+source("../../0-Functions/all_functions.R")
+snippy_denovo_modified <- snippy_denovo %>%
+  mutate(iso1 = str_remove(REFERENCE, ".gbk"),
+         iso2 = ISOLATE,
+         CHROM = str_c(iso1, "_", CHROM)) %>%
+  separate(EFFECT, 
+           into = c("EFFTYPE", "NUCLEOTIDE_CHANGE", "MUTATION"), 
+           sep = "\\s", 
+           remove = T, 
+           extra = "merge") %>%
+  mutate(NUCLEOTIDE_CHANGE = str_remove(NUCLEOTIDE_CHANGE, "c."),
+         MUTATION = str_remove(MUTATION, "p."),
+         MUTATION_SHORT = aa_convert(MUTATION)) %>%
+  separate(AA_POS, 
+           into = c("AA_POS", "AA_LENGTH"), 
+           sep = "/", 
+           remove = T) %>%
+  mutate_at(vars(starts_with("AA")), 
+            as.numeric)
+glimpse(snippy_denovo_modified)
+
+snippy_denovo_modified %>%
+  .$ISOLATE %>%
+  n_distinct()
+
+# classify mutations
+snippy_denovo_modified <- snippy_denovo_modified %>%
+  mutate(MUTTYPE = if_else(TYPE %in% c("snp", "mnp", "complex"), "substitution", "indel")) %>%
+  mutate(EFFTYPE_SHORT = case_when(
+    FTYPE != "CDS"| is.na(FTYPE) | EFFTYPE == "intergenic_region" ~ "intergenic",
+    EFFTYPE == "synonymous_variant" ~ "synonymous",
+    str_detect(EFFTYPE, "missense_variant|inframe") ~ "non-synonymous",
+    str_detect(EFFTYPE, "frameshift|stop") | EFFTYPE %in% c("start_lost", "initiator_codon_variant") ~ "truncating"
+  )) %>%
+  relocate(MUTTYPE, .after = TYPE)
+
+snippy_denovo_modified %>%
+  count(MUTTYPE, EFFTYPE_SHORT, EFFTYPE) %>%
+  knitr::kable(row.names = T)
+
+
+
+rm(snippy_denovo)
+```
+
+# clustering of protein genes (cd-hit)
+
+cd-hit was first run on the amino acid sequences of the mutated genes
+
+cd-hit was run using default parameters
+
+id threshold (`-C`) 0.9, this is defined as number identical amino acids or bases in alignment divided by the full length of the shorter sequence
+the alignment coverage controls (-aL, -AL, -aS, -AS) defaults are 0
+
+```{r}
+protein_clusters_data <- read_tsv("raw_data/mutated_proteins.cd-hit.tab") %>%
+  group_by(clstr) %>%
+  mutate(clstr_rep_id = id[which(clstr_rep == 1)]) %>%
+  select(LOCUS_TAG = id, clstr_group = clstr, clstr_size, LOCUS_TAG_aa_length = length, clstr_iden, clstr_cov, clstr_rep_id) %>%
+  rename_with(~ str_replace(.x, "clstr", "cdhit"))
+glimpse(protein_clusters_data)
+
+
+protein_seq_data <- read_tsv("raw_data/mutated_proteins.cd-hit.representative.tab", col_names = c("cdhit_rep_id", "cdhit_seq")) %>%
+  left_join(protein_clusters_data %>% distinct(cdhit_rep_id, cdhit_group))
+glimpse(protein_seq_data)
+```
+
+Join to snippy output
+
+```{r}
+snippy_denovo_modified_proteins <- snippy_denovo_modified %>%
+  left_join(protein_clusters_data) %>%
+  left_join(protein_seq_data)
+
+# check that each LOCUS TAG has a cd hit group
+snippy_denovo_modified_proteins %>%
+  drop_na(LOCUS_TAG) %>%
+  filter(is.na(cdhit_group)) 
+
+snippy_denovo_modified_proteins %>%
+  drop_na(LOCUS_TAG) %>%
+  filter(is.na(cdhit_group)) %>%
+  distinct(GENE, PRODUCT)
+
+# We have 330 observations with existing LOCUS TAG and missing cd hit group. They are all ribosomal genes
+
+rm(snippy_denovo_modified,
+   protein_clusters_data,
+   protein_seq_data)
+```
+
+# Add FPR3757 annotation
+
+We have used both cd-hit and blastp
+We select the blastp annotation
+
+```{r}
+blastp_data <- read_tsv("raw_data/mutated_proteins_FPR3757_blastp.tab",
+                        col_names = c("QUERY", "SUBJECT", "PIDENT", "ALIGNLEN", "MISMATCH", "GAPS", "QSTART", "QEND", "SSTART", "SEND", "EVALUE", "BITSCORE", "QLEN"))
+glimpse(blastp_data)
+
+df_blastp <- blastp_data %>%
+  mutate(PCOV = ALIGNLEN/QLEN*100) # we need to calculate the coverge here because the qcov* variables in blastp don't represent coverage as calculated here (checked manually looking at local alignments)
+
+df_blastp %>%
+  ggplot(aes(x = PCOV)) +
+  geom_histogram() +
+  theme_bw()
+
+df_blastp %>%
+  ggplot(aes(x = PIDENT)) +
+  geom_histogram() +
+  theme_bw()
+
+df_blastp <- df_blastp %>%
+  filter(PIDENT >=90 & PCOV >= 50) %>%
+  arrange(QUERY, desc(PIDENT, PCOV)) %>%
+  group_by(QUERY) %>%
+  slice_head(n = 1) %>%
+  select(cdhit_rep_id = QUERY, neb_locus_tag = SUBJECT, cdhit_rep_aa_length = QLEN, PIDENT, PCOV)
+
+rm(blastp_data)
+
+snippy_denovo_modified_proteins <- snippy_denovo_modified_proteins %>%
+  left_join(df_blastp)
+
+```
+
+Add  NEB mutants id
+
+```{r}
+df_neb <- read_csv("raw_data/nebraska_all_proteins.csv") %>%
+  rename(neb_mutant_id = `Strain Name`) %>%
+  select(-c(`Gene name`, `gene discription`))
+glimpse(df_neb)
+
+# check for duplicates
+df_neb %>%
+  group_by(nebraska_locus_tag) %>%
+  filter(n() > 1)
+
+# fix this
+df_neb <- df_neb %>%
+  group_by(nebraska_locus_tag) %>%
+  mutate(neb_comment = if_else(n() > 1,
+                               str_c("There are more than one NEB mutants for ", unique(nebraska_locus_tag), ": ", str_c(neb_mutant_id, collapse = ", ")),
+                               NA_character_)) %>%
+  filter(row_number() == 1)
+
+snippy_denovo_modified_proteins <- snippy_denovo_modified_proteins %>%
+  left_join(df_neb, by = c("neb_locus_tag" = "nebraska_locus_tag"))
+```
+
+Add aureowiki
+
+```{r}
+df_neb <- read_csv("raw_data/df_FPR3757_curated.csv")
+
+# check for duplicates
+df_neb %>%
+  group_by(neb_locus_tag) %>%
+  filter(n() > 1)
+
+snippy_denovo_modified_proteins <- snippy_denovo_modified_proteins %>%
+  left_join(df_neb)
+
+```
+
+# Export processed data
+
+```{r}
+# snippy_denovo_modified_proteins %>%
+#   saveRDS("processed_data/variants_combined_annotation/snippy_denovo_annotated.Rda")
+```
+

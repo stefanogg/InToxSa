@@ -1,0 +1,100 @@
+---
+title: "Generate isolates table"
+author: "Stefano Giulieri"
+date: "27/06/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd(paste0(here::here(), "/6-InToxSa_paper/Generate_datasets"))
+getwd()
+```
+
+Here we prepare table 1 and supp table 3 with isolates information
+
+```{r}
+library(tidyverse)
+library(writexl)
+rm(list = ls())
+```
+
+# Assign table name
+
+```{r}
+table_name <- "supp_table_3"
+```
+
+
+# Import current isolates table
+
+```{r}
+data <- readRDS("../Phylogeny/processed_data/curated_metadata_tree.Rda")
+```
+
+Add some layers of information
+
+Episode id, mortality
+
+```{r}
+clinical_data <- read_csv("../../1-plate_info/strain_metadata.csv") %>%
+  transmute(sample_id, strain_group, baseline_isolate = if_else(intrahost_index == 1, "Yes", "No", missing = "Yes"))
+```
+
+New dataset limited to phenotyped strains 
+
+```{r}
+df_clinical <- data %>%
+  left_join(clinical_data) %>%
+  mutate(genetic_pair = !is.na(iso_class))
+```
+
+Add patient IDs used in Giulieri, Genome Medicine 2018
+
+```{r}
+patient_id <- read_csv("~/OneDrive - The University of Melbourne/R/VANESSA_ANZCOSS/dataframes/whost_n130_df_new.csv") %>% select(strain_group = studyid, strain_group2 = patient_code_n130) %>%
+  distinct()
+
+df_clinical <- df_clinical %>%
+  left_join(patient_id)
+```
+
+# Generate table 1 
+
+N episodes
+
+```{r}
+df_clinical %>%
+   mutate(n = n_distinct(strain_group)) %>%
+  group_by(strain_group, n) %>%
+  summarise(n_episode = n_distinct(strain_group)) 
+```
+
+Table 1 all isolates
+
+```{r}
+# CC
+cc <- df_clinical %>%
+  count(CC, sort = T) %>%
+  mutate(frac = scales::percent(n/sum(n)))
+# mec
+mec <- df_clinical %>%
+  count(mecA, sort = T) %>%
+  mutate(frac = scales::percent(n/sum(n)))
+mec
+```
+
+# Export as supplementary table
+
+```{r}
+dir.create(str_c("processed_data/", table_name))
+
+supp_table_prepare <- df_clinical %>%
+  select(sample_id, episode_id = strain_group, baseline_isolate, iso_class, ST, CC, mecA)
+
+list(supp_table_prepare, as_tibble(colnames(supp_table_prepare))) %>%
+  set_names(c("dataset", "variables")) %>%
+  write_xlsx(str_c("processed_data/", table_name, "/", table_name, ".xlsx"))
+```
+
+
