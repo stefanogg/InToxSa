@@ -9,7 +9,7 @@ output: html_document
 library(tidyverse)
 library(here)
 library(patchwork)
-setwd(paste0("~/Documents/Github/InToxSa", "/5-Data_processing"))
+setwd(paste0(here(), "/5-Data_processing"))
 getwd()
 ```
 
@@ -42,18 +42,21 @@ raw_PI.df <- list.files(path="../3-Data_parsing/parsed_experiments/", pattern="P
 
 ```
 
-# Count plates
+# Check plates and replicates
 
 ```{r}
 print(paste("Total number of PI plates:", 
             raw_PI.df %>% select(experiment_id) %>% distinct() %>% nrow()))
 
 nb_replicate_plate.df <- raw_PI.df %>% select(experiment, plate) %>% distinct() %>% count(plate,name = "number of plate replicate") %>% print()
+
+sum(nb_replicate_plate.df$`number of plate replicate`)
+
+t <- distinct(raw_PI.df, sample_id, )
+
 ```
 
-
-nb experiment PI kinetics with 40.000 cellules = 37
-
+nb experiment PI kinetics with 40.000 cellules = 40
 
 # Check timepoints interval
 ```{r}
@@ -221,7 +224,7 @@ ratio_outlier.df <- clean_PI_with_outliers.df %>%
   separate(col = ratio_outlier, sep = "/", into = c("outlier", "non_outlier")) %>%
   mutate(proportion_outlier = as.numeric(outlier)/as.numeric(non_outlier)) %>%
   arrange(-proportion_outlier) %>%
-  print()
+  print(n = 40)
 
 ```
 
@@ -282,14 +285,27 @@ dir.create("processed_data/clinical_strains/PI_kinetics")
 dir.create("processed_data/clinical_strains/PI_parameters")
 ```
 
-## Save processed PI data
+## Save processed clinical strain PI data
 ```{r}
-saveRDS(clean_PI.df, file="processed_data/clinical_strains/PI_kinetics/PI_kinetics.Rda", compress = "gzip")
+# remove empty columns with only NA
+clean_PI.df <- clean_PI.df[,colSums(is.na(clean_PI.df))<nrow(clean_PI.df)] %>%
+  # keep only clinical strains in saved file,
+  filter(strain_group != "NEBRASKA")
+
+# save file
+saveRDS(clean_PI.df, 
+        file="processed_data/clinical_strains/PI_kinetics/PI_kinetics.Rds", 
+        compress = "gzip")
 ```
 
 ## Save PI curves parameters
 ```{r}
-saveRDS(clean_parameters_PI.df, file="processed_data/clinical_strains/PI_parameters/PI_parameters.Rda")          
+# remove empty columns with only NA
+clean_parameters_PI.df <- clean_parameters_PI.df[,colSums(is.na(clean_parameters_PI.df))<nrow(clean_parameters_PI.df)] %>%
+  # keep only clinical strains in saved file,
+  filter(strain_group != "NEBRASKA")
 
-saveRDS(clean_sample_parameters_PI.df, file="processed_data/clinical_strains/PI_parameters/PI_sample_parameters.Rda")     
+# save file
+saveRDS(clean_parameters_PI.df,
+          file="processed_data/clinical_strains/PI_parameters/PI_parameters.Rds")          
 ```
