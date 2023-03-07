@@ -1,0 +1,50 @@
+---
+title: "InToxSa_throughput"
+author: "R Guerillot"
+date: "2023-03-06"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(here)
+library(patchwork)
+#setwd(here())
+print(getwd())
+```
+
+Checking experiment throughput from plate dates
+
+```{r}
+
+d <- read.csv("2-Raw_data/dates", header = F, col.names = "expdate") 
+
+d$date <- as.Date(as.character(d$expdate), format='%y%m%d')
+d$next_date <- c(d$date[2:length(d$date)], "2019-09-05")
+d$nb_days_between_plates <- d$next_date - d$date
+d$year <- strftime(d$date, format = "%Y")
+d$week_number <- strftime(d$date, format = "%V")
+
+knitr::kable(d)
+
+# number of exp/plate per week
+nb_plate_per_week <- d %>% group_by(year, week_number) %>%
+  count()
+
+mean(nb_plate_per_week$n)  
+
+day_count <- count(d, nb_days_between_plates) %>%
+  filter(nb_days_between_plates >= 0) %>%
+  print()
+
+ggplot(day_count, aes( x = nb_days_between_plates, y = n)) +
+  geom_bar(stat = "identity") +
+  xlim(-1, 14) 
+  
+```

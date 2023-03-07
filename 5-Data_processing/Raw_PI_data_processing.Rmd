@@ -52,8 +52,6 @@ nb_replicate_plate.df <- raw_PI.df %>% select(experiment, plate) %>% distinct() 
 
 sum(nb_replicate_plate.df$`number of plate replicate`)
 
-t <- distinct(raw_PI.df, sample_id, )
-
 ```
 
 nb experiment PI kinetics with 40.000 cellules = 40
