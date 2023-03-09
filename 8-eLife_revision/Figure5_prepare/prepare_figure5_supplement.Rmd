@@ -1,0 +1,41 @@
+---
+title: "Prepare figure 5 - figure supplements"
+author: "Stefano Giulieri"
+date: "08/03/2023"
+output:
+  html_document:
+    toc: TRUE
+---
+
+```{r setup, include=F}
+knitr::opts_chunk$set(echo = TRUE)
+setwd(stringr::str_c("~/Documents/Github/InToxSa", "/8-eLife_revision/Figure5_prepare"))
+msg <- glue::glue("My directory is {getwd()}")
+message(msg)
+```
+
+Here we prepare the figures supplements for figure 5
+
+
+```{r message=FALSE}
+library(tidyverse)
+library(patchwork)
+library(cols4all)
+rm(list = ls())
+```
+
+# Pairs with no / minimal PI change
+
+```{r}
+plot_list <- readRDS("../Genetic_pairs/processed_data/gene_convergence/PI_similar/convergence_plots_eqPI.Rda")
+wrap_plots(plot_list) +
+  plot_annotation(tag_levels = "A")
+
+```
+
+```{r}
+ggsave("figures/Figure5_figure_supplement1.pdf")
+```
+
+
+

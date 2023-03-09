@@ -1,13 +1,13 @@
 ---
 title: "Create mutations minimaps for convergent genes"
 author: "Stefano Giulieri"
-date: '24/06/2022'
+date: '17/02/2023'
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-setwd(stringr::str_c("~/Documents/Github/InToxSa", "/6-InToxSa_paper/Genetic_pairs"))
+setwd(stringr::str_c("~/Documents/Github/InToxSa", "/8-eLife_revision/Genetic_pairs"))
 msg <- glue::glue("My directory is {getwd()}")
 message(msg)
 ```
@@ -26,9 +26,7 @@ rm(list = ls())
 Mutations
 
 ```{r}
-df_mutations <- df_mutations <- readRDS("../../../VANANZ_phenotypes_local/Genetic_pairs_analysis_Oct_2020/processed_data/convergence/PI/df_PI_convergent_genes.Rda")
-
-df_mutations <- readRDS("../../../VANANZ_phenotypes_local/6-InToxSa_paper/Genetic_pairs/processed_data/variants_combined_annotation/df_changes_multi_annotated.Rda")
+df_mutations <- readRDS("processed_data/gene_convergence/df_PI_convergent_genes.Rda")
 ```
 
 Pairs data
@@ -71,14 +69,14 @@ df_plot <- df_agrA %>%
   mutate(pair_number = cur_group_id()) 
 
 df_plot %>%
-  ggplot(aes(x = AA_POS, label = label, y = .5)) +
+  ggplot(aes(x = AA_POS, label = MUTATION_SHORT, y = .5)) +
   geom_segment(aes(x = AA_POS, xend = AA_POS, y = 0, yend = .5), colour = "red", size = 1) +
   geom_label_repel(min.segment.length = 0, direction = "x", position = position_nudge_repel(x = 0, y = 1)) +
   scale_y_continuous(limits = c(NA, 3)) +
   theme_bw()
 
 df_plot %>%
-  ggplot(aes(x = AA_POS, label = label, y = .5,  fill = EFFTYPE_SHORT)) +
+  ggplot(aes(x = AA_POS, label = MUTATION_SHORT, y = .5,  fill = EFFTYPE_SHORT)) +
   geom_segment(aes(x = AA_POS, xend = AA_POS, y = 0, yend = .5),  size = 1, colour = "black") +
   geom_label_repel(colour = "black", min.segment.length = 0, segment.size = .5, segment.linetype = 2,  position = position_nudge_repel(x = 0, y = df_plot$pair_number)) +
   scale_y_continuous(limits = c(0, 10), expand = c(0,0), breaks =  NULL) +
@@ -90,7 +88,7 @@ df_plot %>%
         text = element_text(face = "bold"))
 ```
 
-Now for all 3 genes
+Now for all 3 genes. 
 
 ```{r}
 df_genes <- df_mutations %>%
@@ -100,15 +98,17 @@ df_genes <- df_mutations %>%
   distinct()
 ```
 
-Plot multipanel
+Plot multipanel. Note that we want to highlight mutations that were reconstructed
 
 ```{r}
+allexc <- c("E7K", "G310fs", "K2308fs")
 df_plot <- df_genes %>%
   ungroup() %>%
   arrange(pan_gene_symbol, AA_POS) %>%
   mutate(row = row_number()) %>%
   group_by(pair_id) %>%
-  mutate(pair_number = min(row)) 
+  mutate(pair_number = min(row),
+         text_size = MUTATION_SHORT %in% allexc) 
 
 # df_plot %>%
 #   ggplot(aes(x = AA_POS, label = label, y = .5)) +
@@ -118,10 +118,11 @@ df_plot <- df_genes %>%
 #   theme_bw()
 
 p1 <- df_plot %>%
-  ggplot(aes(x = AA_POS, label = MUTATION_SHORT, y = .5,  fill = EFFTYPE_SHORT)) +
+  ggplot(aes(x = AA_POS, label = MUTATION_SHORT, y = .5,  fill = EFFTYPE_SHORT, size = text_size)) +
   geom_segment(aes(x = AA_POS, xend = AA_POS, y = 0, yend = .5),  size = 1, colour = "black") +
   geom_label_repel(colour = "black", min.segment.length = 0, segment.size = .5, segment.linetype = 2,  position = position_nudge_repel(x = 0, y = df_plot$pair_number), direction = "x") +
-  scale_y_continuous(limits = c(0, 15), expand = c(0,0), breaks =  NULL) +
+  scale_y_continuous(limits = c(0, 20), expand = c(0,0), breaks =  NULL) +
+  scale_size_discrete(guide = "none", range = c(4,6)) +
  scale_fill_manual(values = colors_genes, name = "Mutation effect", guide = guide_legend(override.aes = aes(label = ""))) +
   facet_wrap(~pan_gene_symbol, scales = "free_x") +
   labs(x = "Amino acid position", y = "Genetic pair") +

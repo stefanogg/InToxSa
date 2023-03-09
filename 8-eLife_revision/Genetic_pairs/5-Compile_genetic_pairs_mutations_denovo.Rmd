@@ -1,216 +1,357 @@
 ---
-title: "Compile table of genetic_pairs and mutation lists: mapping on the de novo assembly of iso1"
+title: "Compare PI uptake between independent pairs"
 author: "Stefano Giulieri"
-date: "17/02/2021"
+date: "08/03/2023"
 output: html_document
 ---
 
 ```{r setup}
 knitr::opts_chunk$set(echo = TRUE)
-setwd(str_c("~/Documents/Github/InToxSa", "/6-InToxSa_paper/Genetic_pairs"))
+setwd(str_c("~/Documents/Github/InToxSa", "/8-eLife_revision/Genetic_pairs"))
 msg <- glue::glue("My directory is {getwd()}")
 message(msg)
 ```
 
-This script focuses on processing the output of snippy run on genetic pairs, where reads were mapped on iso1 (= internal reference)
+Here we try a different approach to the genetic pairs analysis. Instead of looking at convergent within pairs with a definite phenotype, we look at phenotical differences between independent pairs *with* or *without* homoplasic mutations
 
 ```{r message=F}
 library(tidyverse)
 rm(list = ls())
 ```
 
+
 # Raw data
 
-Snippy output
+Pairs data collected so far
 
 ```{r}
-snippy_denovo <- read_tsv("raw_data/all_snps.mask.tab") %>%
-  arrange(PAIR_ID) 
-glimpse(snippy_denovo)
+pairs_data <- readRDS("processed_data/PI_pairs_data/pairs_description_with_phylo_dataframe.Rda")
+
+mutations <- readRDS("processed_data/variants_combined_annotation/snippy_denovo_annotated.Rda")
 ```
 
-# Edit snippy output
+Each observation is a pair and for each pair we define presence / absence of mutations in certain genes.
+
+First define list of pairs
 
 ```{r}
-# modify snippy output: 
-# 1) generate iso1 and iso2 for merging with the phenotypic analysis
-# 2) modify CHROM (contig name) to be consistent with the labelling in bed files down the track
-# 3) extract mutation effects for easier interpretation
-
-
-source("../../0-Functions/all_functions.R")
-snippy_denovo_modified <- snippy_denovo %>%
-  mutate(iso1 = str_remove(REFERENCE, ".gbk"),
-         iso2 = ISOLATE,
-         CHROM = str_c(iso1, "_", CHROM)) %>%
-  separate(EFFECT, 
-           into = c("EFFTYPE", "NUCLEOTIDE_CHANGE", "MUTATION"), 
-           sep = "\\s", 
-           remove = T, 
-           extra = "merge") %>%
-  mutate(NUCLEOTIDE_CHANGE = str_remove(NUCLEOTIDE_CHANGE, "c."),
-         MUTATION = str_remove(MUTATION, "p."),
-         MUTATION_SHORT = aa_convert(MUTATION)) %>%
-  separate(AA_POS, 
-           into = c("AA_POS", "AA_LENGTH"), 
-           sep = "/", 
-           remove = T) %>%
-  mutate_at(vars(starts_with("AA")), 
-            as.numeric)
-glimpse(snippy_denovo_modified)
-
-snippy_denovo_modified %>%
-  .$ISOLATE %>%
-  n_distinct()
-
-# classify mutations
-snippy_denovo_modified <- snippy_denovo_modified %>%
-  mutate(MUTTYPE = if_else(TYPE %in% c("snp", "mnp", "complex"), "substitution", "indel")) %>%
-  mutate(EFFTYPE_SHORT = case_when(
-    FTYPE != "CDS"| is.na(FTYPE) | EFFTYPE == "intergenic_region" ~ "intergenic",
-    EFFTYPE == "synonymous_variant" ~ "synonymous",
-    str_detect(EFFTYPE, "missense_variant|inframe") ~ "non-synonymous",
-    str_detect(EFFTYPE, "frameshift|stop") | EFFTYPE %in% c("start_lost", "initiator_codon_variant") ~ "truncating"
-  )) %>%
-  relocate(MUTTYPE, .after = TYPE)
-
-snippy_denovo_modified %>%
-  count(MUTTYPE, EFFTYPE_SHORT, EFFTYPE) %>%
-  knitr::kable(row.names = T)
-
-
-
-rm(snippy_denovo)
+df_pairs <- pairs_data %>%
+  filter(dist_denovo <= 200)
 ```
 
-# clustering of protein genes (cd-hit)
-
-cd-hit was first run on the amino acid sequences of the mutated genes
-
-cd-hit was run using default parameters
-
-id threshold (`-C`) 0.9, this is defined as number identical amino acids or bases in alignment divided by the full length of the shorter sequence
-the alignment coverage controls (-aL, -AL, -aS, -AS) defaults are 0
+Now combine with mutations to create a matrix of mutated / non mutated gene
 
 ```{r}
-protein_clusters_data <- read_tsv("raw_data/mutated_proteins.cd-hit.tab") %>%
-  group_by(clstr) %>%
-  mutate(clstr_rep_id = id[which(clstr_rep == 1)]) %>%
-  select(LOCUS_TAG = id, clstr_group = clstr, clstr_size, LOCUS_TAG_aa_length = length, clstr_iden, clstr_cov, clstr_rep_id) %>%
-  rename_with(~ str_replace(.x, "clstr", "cdhit"))
-glimpse(protein_clusters_data)
-
-
-protein_seq_data <- read_tsv("raw_data/mutated_proteins.cd-hit.representative.tab", col_names = c("cdhit_rep_id", "cdhit_seq")) %>%
-  left_join(protein_clusters_data %>% distinct(cdhit_rep_id, cdhit_group))
-glimpse(protein_seq_data)
+df_mutated_genes <- df_pairs %>%
+  inner_join(mutations) %>%
+  drop_na(neb_mutant_id) %>%
+  filter(EFFTYPE_SHORT %in% c("truncating", "non-synonymous")) %>%
+  select(pair_id, PI_pair, delta_auc, neb_gene_symbol, EFFTYPE_SHORT) %>%
+  distinct() %>%
+  mutate(is_mutated = T,
+         is_truncated = EFFTYPE_SHORT == "truncating")
 ```
 
-Join to snippy output
+Now complete missing combinations (this might be complicated)
 
 ```{r}
-snippy_denovo_modified_proteins <- snippy_denovo_modified %>%
-  left_join(protein_clusters_data) %>%
-  left_join(protein_seq_data)
+df_mutated_genes_complete <- df_mutated_genes %>%
+  select(pair_id, neb_gene_symbol, is_mutated) %>%
+  complete(pair_id, neb_gene_symbol, fill = list(is_mutated = F))
 
-# check that each LOCUS TAG has a cd hit group
-snippy_denovo_modified_proteins %>%
-  drop_na(LOCUS_TAG) %>%
-  filter(is.na(cdhit_group)) 
 
-snippy_denovo_modified_proteins %>%
-  drop_na(LOCUS_TAG) %>%
-  filter(is.na(cdhit_group)) %>%
-  distinct(GENE, PRODUCT)
-
-# We have 330 observations with existing LOCUS TAG and missing cd hit group. They are all ribosomal genes
-
-rm(snippy_denovo_modified,
-   protein_clusters_data,
-   protein_seq_data)
+df_mutated_genes_complete <- df_mutated_genes %>%
+  select(-EFFTYPE_SHORT) %>%
+  complete(neb_gene_symbol, nesting(pair_id, PI_pair, delta_auc), explicit = T, fill = list(is_mutated = F, is_truncated = F))
 ```
 
-# Add FPR3757 annotation
-
-We have used both cd-hit and blastp
-We select the blastp annotation
+Try plot
 
 ```{r}
-blastp_data <- read_tsv("raw_data/mutated_proteins_FPR3757_blastp.tab",
-                        col_names = c("QUERY", "SUBJECT", "PIDENT", "ALIGNLEN", "MISMATCH", "GAPS", "QSTART", "QEND", "SSTART", "SEND", "EVALUE", "BITSCORE", "QLEN"))
-glimpse(blastp_data)
+theme_set(theme_bw(base_size = 16))
 
-df_blastp <- blastp_data %>%
-  mutate(PCOV = ALIGNLEN/QLEN*100) # we need to calculate the coverge here because the qcov* variables in blastp don't represent coverage as calculated here (checked manually looking at local alignments)
+(genes <- readRDS("../../6-InToxSa_paper/Genetic_pairs/processed_data/gene_convergence/convergence_plots.Rda")[[1]][[1]] %>%
+    arrange(cluster_order) %>%
+    pull(cdhit_symbol) %>%
+  unique())
 
-df_blastp %>%
-  ggplot(aes(x = PCOV)) +
-  geom_histogram() +
-  theme_bw()
+df_mutated_genes_complete %>%
+  filter(neb_gene_symbol %in% genes) %>%
+  ggplot(aes(x = is_mutated, y = abs(delta_auc))) +
+  geom_boxplot() +
+  facet_wrap(~neb_gene_symbol)
 
-df_blastp %>%
-  ggplot(aes(x = PIDENT)) +
-  geom_histogram() +
-  theme_bw()
+df_mutated_genes_complete %>%
+  filter(neb_gene_symbol %in% genes) %>%
+  ggplot(aes(x = is_truncated, y = abs(delta_auc))) +
+  geom_boxplot() +
+  facet_wrap(~neb_gene_symbol)
+```
 
-df_blastp <- df_blastp %>%
-  filter(PIDENT >=90 & PCOV >= 50) %>%
-  arrange(QUERY, desc(PIDENT, PCOV)) %>%
-  group_by(QUERY) %>%
-  slice_head(n = 1) %>%
-  select(cdhit_rep_id = QUERY, neb_locus_tag = SUBJECT, cdhit_rep_aa_length = QLEN, PIDENT, PCOV)
+# Limit to independent pairs
 
-rm(blastp_data)
+Generate a database of independent pairs
 
-snippy_denovo_modified_proteins <- snippy_denovo_modified_proteins %>%
-  left_join(df_blastp)
+```{r}
+data_list <- list()
+nodes <- c()
+# i = 1
+data_list[[1]] <- df_pairs[1,]
+nodes <- unlist(c(df_pairs[1,]$mrca, df_pairs[1,]$path_nodes))
+# i > 1
+for (i in seq_along(df_pairs$pair_id)){
+  if (i == 1) next
+  else {
+    df <- df_pairs[i,]
+    my_nodes <- unlist(c(df_pairs[i,]$mrca, df_pairs[i,]$path_nodes))
+    if (length(intersect(my_nodes, nodes)) == 0){
+      data_list[[length(data_list) + 1]] <- df
+      nodes <- c(nodes, my_nodes)
+    } else {
+      next
+    }
+  }
+}
+
+df_gp <- bind_rows(data_list)
+```
+
+
+Now combine with mutations to create a matrix of mutated / non mutated gene
+
+```{r}
+df_mutated_genes <- df_gp %>%
+  inner_join(mutations) %>%
+  drop_na(neb_mutant_id) %>%
+  filter(EFFTYPE_SHORT %in% c("truncating", "non-synonymous")) %>%
+  select(pair_id, PI_pair, delta_auc, neb_gene_symbol, EFFTYPE_SHORT) %>%
+  distinct() %>%
+  mutate(is_mutated = T,
+         is_truncated = EFFTYPE_SHORT == "truncating")
+```
+
+Now complete missing combinations (this might be complicated)
+
+```{r}
+df_mutated_genes_complete <- df_mutated_genes %>%
+  select(pair_id, neb_gene_symbol, is_mutated) %>%
+  complete(pair_id, neb_gene_symbol, fill = list(is_mutated = F))
+
+
+df_mutated_genes_complete <- df_mutated_genes %>%
+  select(-EFFTYPE_SHORT) %>%
+  complete(neb_gene_symbol, nesting(pair_id, PI_pair, delta_auc), explicit = T, fill = list(is_mutated = F, is_truncated = F))
+```
+
+Try plot
+
+```{r}
+df_mutated_genes_complete %>%
+  filter(neb_gene_symbol %in% genes) %>%
+  ggplot(aes(x = is_mutated, y = abs(delta_auc))) +
+  geom_boxplot() +
+  facet_wrap(~neb_gene_symbol)
+
+df_mutated_genes_complete %>%
+  filter(neb_gene_symbol %in% genes) %>%
+  ggplot(aes(x = is_truncated, y = abs(delta_auc))) +
+  geom_boxplot() +
+  facet_wrap(~neb_gene_symbol)
+```
+
+Summary dataset
+
+```{r}
+df_auc <- df_mutated_genes_complete %>%
+  mutate(delta_auc = abs(delta_auc)) %>%
+  group_by(neb_gene_symbol, is_mutated) %>%
+  summarise(mean_delta = mean(delta_auc))
+```
+
+# Write as function
+
+```{r}
+generate_gp_replicates <- function(rep, df){
+  set.seed(rep)
+  df <- df %>%
+    ungroup() %>%
+    slice_sample(prop = 1)
+  data_list <- list()
+  nodes <- c()
+  # j = 1
+  data_list[[1]] <- df[1, ]
+  nodes <- unlist(c(df[1, ]$mrca, df[1, ]$path_nodes))
+  # j > 1
+  for (j in seq_along(df$pair_id)) {
+    if (j == 1)
+      next
+    else {
+      my_df <- df[j, ]
+      my_nodes <-
+        unlist(c(df[j, ]$mrca, df[j, ]$path_nodes))
+      if (length(intersect(my_nodes, nodes)) == 0) {
+        data_list[[length(data_list) + 1]] <- my_df
+        nodes <- c(nodes, my_nodes)
+      } else {
+        next
+      }
+    }
+  }
+  df_gp <- bind_rows(data_list)
+  
+  
+  return(df_gp)
+}
+
+df1 <- generate_gp_replicates(1, df_pairs)
+df2 <- generate_gp_replicates(2, df_pairs)
+setdiff(df1, df2)
+```
+
+Now add mutations and summarise auc
+
+```{r}
+compare_auc <- function(df_gp, df_mutations){
+  df_mutated_genes <- df_gp %>%
+  inner_join(df_mutations) %>%
+  drop_na(neb_mutant_id) %>%
+  filter(EFFTYPE_SHORT %in% c("truncating", "non-synonymous")) %>%
+  select(pair_id, PI_pair, delta_auc, neb_gene_symbol, EFFTYPE_SHORT, replicate) %>%
+  distinct() %>%
+  mutate(is_mutated = T,
+         is_truncated = EFFTYPE_SHORT == "truncating")
+  
+  df_mutated_genes_complete <- df_mutated_genes %>%
+  select(pair_id, neb_gene_symbol, is_mutated) %>%
+  complete(pair_id, neb_gene_symbol, fill = list(is_mutated = F))
+
+
+df_mutated_genes_complete <- df_mutated_genes %>%
+  select(-EFFTYPE_SHORT) %>%
+  complete(neb_gene_symbol, nesting(pair_id, PI_pair, delta_auc, replicate), explicit = T, fill = list(is_mutated = F, is_truncated = F))
+
+df_auc <- df_mutated_genes_complete %>%
+  mutate(delta_auc = abs(delta_auc)) %>%
+  group_by(neb_gene_symbol, is_mutated, replicate) %>%
+  summarise(mean_delta = mean(delta_auc),
+            median_delta = median(delta_auc))
+
+return(list(df_auc, df_mutated_genes_complete))
+}
 
 ```
 
-Add  NEB mutants id
+Now apply (100 replicates)
 
 ```{r}
-df_neb <- read_csv("raw_data/nebraska_all_proteins.csv") %>%
-  rename(neb_mutant_id = `Strain Name`) %>%
-  select(-c(`Gene name`, `gene discription`))
-glimpse(df_neb)
+df_gp <- map_df(1:100, generate_gp_replicates, df = df_pairs, .id = "replicate")
 
-# check for duplicates
-df_neb %>%
-  group_by(nebraska_locus_tag) %>%
-  filter(n() > 1)
+test <- df_gp %>%
+  count(pair_id)
 
-# fix this
-df_neb <- df_neb %>%
-  group_by(nebraska_locus_tag) %>%
-  mutate(neb_comment = if_else(n() > 1,
-                               str_c("There are more than one NEB mutants for ", unique(nebraska_locus_tag), ": ", str_c(neb_mutant_id, collapse = ", ")),
-                               NA_character_)) %>%
-  filter(row_number() == 1)
+auc_list <- compare_auc(df_gp, mutations)
+df_auc <- auc_list[[1]]
+df_complete <- auc_list[[2]]
 
-snippy_denovo_modified_proteins <- snippy_denovo_modified_proteins %>%
-  left_join(df_neb, by = c("neb_locus_tag" = "nebraska_locus_tag"))
+df <- df_complete %>%
+  mutate(delta_auc = abs(delta_auc)) %>%
+ select(-c(is_truncated, pair_id, PI_pair, replicate)) %>%
+  group_by(neb_gene_symbol, is_mutated) %>%
+  mutate(n_values = n_distinct(delta_auc)) %>%
+  group_by(neb_gene_symbol) %>%
+  filter(all(n_values >= 3 )) %>%
+  distinct() %>%
+  group_by(neb_gene_symbol) %>%
+  nest() 
 ```
 
-Add aureowiki
+Stats
+https://broom.tidymodels.org/articles/broom_and_dplyr.html 
+
 
 ```{r}
-df_neb <- read_csv("raw_data/df_FPR3757_curated.csv")
+df_lm <- df %>%
+  mutate(lm = map(data, function(df) lm(delta_auc ~ is_mutated, data = df)),
+         tidied = map(lm, broom::tidy) ) %>%
+  unnest(tidied) %>%
+  ungroup() %>%
+  filter(term == "is_mutatedTRUE") %>%
+  arrange(p.value)
 
-# check for duplicates
-df_neb %>%
-  group_by(neb_locus_tag) %>%
-  filter(n() > 1)
+df_lm <- df_auc %>%
+  group_by(neb_gene_symbol) %>%
+  nest() 
 
-snippy_denovo_modified_proteins <- snippy_denovo_modified_proteins %>%
-  left_join(df_neb)
-
+df_lm <- df_lm %>%
+  mutate(lm = map(data, function(df) lm(mean_delta ~ is_mutated, data = df)),
+         tidied = map(lm, broom::tidy) ) %>%
+  unnest(tidied)
 ```
 
-# Export processed data
+Plot
 
 ```{r}
-# snippy_denovo_modified_proteins %>%
-#   saveRDS("processed_data/variants_combined_annotation/snippy_denovo_annotated.Rda")
+df_auc %>%
+  filter(neb_gene_symbol %in% genes[1:20]) %>%
+  ggplot(aes(x = is_mutated, y = mean_delta)) +
+  geom_boxplot() +
+  facet_wrap(~neb_gene_symbol)
+
+df_auc %>%
+  filter(neb_gene_symbol %in% genes[1:20]) %>%
+  ggplot(aes(x = is_mutated, y = median_delta)) +
+  geom_boxplot() +
+  facet_wrap(~neb_gene_symbol)
+
+df_auc %>%
+  filter(neb_gene_symbol %in% genes[1:20]) %>%
+  ggplot(aes(x = is_mutated, y = median_delta)) +
+  geom_boxplot() +
+  facet_wrap(~neb_gene_symbol, scales = "free")
+```
+
+Final figure
+
+```{r}
+theme_update( text = element_text(face = "bold"))
+genes <- factor(genes, levels = genes)
+(p1 <- df_auc %>%
+  inner_join(tibble(neb_gene_symbol = genes, gene_level = factor(genes))) %>%
+  distinct() %>%
+  ggplot(aes(x = fct_rev(gene_level), y = median_delta, fill = is_mutated)) +
+  geom_boxplot(alpha = .5, outlier.shape = NA) +
+  scale_fill_manual(values = c("red", "blue"), labels = c("pairs without mutations", "pairs with mutations"), name = "") +
+  labs(x = "", y = "Median delta PI uptake") +
+  coord_flip() )
+```
+
+Multipanel
+
+```{r}
+df_complete %>%
+  inner_join(tibble(neb_gene_symbol = genes, gene_level = factor(genes))) %>%
+  ggplot(aes(x = fct_rev(gene_level), y = abs(delta_auc), fill = is_mutated)) +
+  geom_boxplot(alpha = .5) +
+  scale_fill_manual(values = c("red", "blue"), labels = c("pairs without mutations", "pairs with mutations"), name = "") +
+  facet_wrap(~replicate, nrow = 1) +
+  labs(x = "", y = "absolute delta PI uptake") +
+  coord_flip() 
+```
+
+With stats
+
+```{r}
+p2 <- df_lm %>%
+  inner_join(tibble(neb_gene_symbol = genes, gene_level = factor(genes))) %>%
+ ggplot(aes(x = fct_rev(gene_level), y = -log10( p.value),  colour = estimate)) +
+  geom_point(size = 5) +
+  scale_colour_viridis_c() +
+   labs(x = "") +
+  coord_flip() +
+  theme(axis.text.y = element_blank(),
+        axis.ticks.y = element_blank() )
+p1 + p2 +
+  plot_layout(guides = "collect")
+
 ```
 

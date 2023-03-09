@@ -26,9 +26,9 @@ rm(list = ls())
 Mutations
 
 ```{r}
-df_mutations <- df_mutations <- readRDS("../../../VANANZ_phenotypes_local/Genetic_pairs_analysis_Oct_2020/processed_data/convergence/PI/df_PI_convergent_genes.Rda")
+# df_mutations <- readRDS("~/OneDrive - The University of Melbourne/R/VANANZ_phenotypes_local/Genetic_pairs_analysis_Oct_2020/processed_data/convergence/PI/df_PI_convergent_genes.Rda")
 
-df_mutations <- readRDS("../../../VANANZ_phenotypes_local/6-InToxSa_paper/Genetic_pairs/processed_data/variants_combined_annotation/df_changes_multi_annotated.Rda")
+df_mutations <- readRDS("~/OneDrive - The University of Melbourne/R/VANANZ_phenotypes_local/InToxSa_paper/Genetic_pairs/processed_data/variants_combined_annotation/df_changes_multi_annotated.Rda")
 ```
 
 Pairs data

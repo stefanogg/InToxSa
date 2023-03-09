@@ -7,7 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-setwd(stringr::str_c("~/Documents/Github/InToxSa", "/6-InToxSa_paper/Genetic_pairs"))
+setwd(stringr::str_c("~/Documents/Github/InToxSa", "/8-eLife_revision/Genetic_pairs"))
 msg <- glue::glue("My directory is {getwd()}")
 message(msg)
 ```
@@ -175,7 +175,7 @@ p2a
 # Save processed data
 
 ```{r}
-list(p1, p1a, p2, p2a) %>%
-  saveRDS("processed_data/PI_pairs_data/pairs_metadata_plots.Rda")
+# list(p1, p1a, p2, p2a) %>%
+#   saveRDS("processed_data/PI_pairs_data/pairs_metadata_plots.Rda")
 ```
 

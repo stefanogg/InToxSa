@@ -7,7 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-setwd(stringr::str_c("~/Documents/Github/InToxSa", "/6-InToxSa_paper/Genetic_pairs"))
+setwd(stringr::str_c("~/Documents/Github/InToxSa", "/8-eLife_revision/Genetic_pairs"))
 msg <- glue::glue("My directory is {getwd()}")
 message(msg)
 ```
@@ -27,18 +27,18 @@ rm(list = ls())
 ## Dataset of genetic pairs 
 
 ```{r}
-pairs <- readRDS("../../5-Data_processing/processed_data/snippy/df_all_pairs_distances_metadata.Rda") %>%
+pairs <- readRDS("processed_data/PI_pairs_data/pairs_description_dataframe.Rda") %>%
   as_tibble() 
 ```
 
 Add PI uptake AUC mean
 
 ```{r}
-PI_parameters <- readRDS("../../5-Data_processing/processed_data/PI/dataframes/parameters/PI_parameters.Rda") %>%
+PI_parameters <- readRDS("../../5-Data_processing/processed_data/clinical_strains/PI_parameters/PI_parameters.Rda") %>%
   as_tibble() %>%
   select(sample_id, pi_auc = AUC_death)
 
-PI_mean <- readRDS("../../5-Data_processing/processed_data/PI/dataframes/parameters/PI_sample_parameters.Rda") %>%
+PI_mean <- readRDS("../../5-Data_processing/processed_data/clinical_strains/PI_parameters/PI_sample_parameters.Rda") %>%
   as_tibble() %>%
   select(sample_id, pi_auc = AUC_death_mean)
 
@@ -60,7 +60,8 @@ df_wt <- df_pairs_with_pi_auc %>%
 
 df_wt %>%
   ggplot(aes(x = -log10(pval))) +
-  geom_density()
+  geom_density() +
+  geom_rug()
 
 df_wt %>%
   ggplot(aes(x = -log10(pval))) +
@@ -71,7 +72,7 @@ df_wt %>%
 ## Final dataset of genetic pairs with contrasting PI
 
 ```{r}
-PI_pairs <- readRDS("../../5-Data_processing/processed_data/convergence/PI/df_cleaned_pair_PI.Rda")
+PI_pairs <- readRDS("raw_data/df_cleaned_pair_PI.Rda")
 ```
 
 # Scatterplot of PI pairs
@@ -86,6 +87,8 @@ df_plot <- df_wt %>%
   rename(iso2_pi_auc = pi_auc) %>%
   mutate(delta_auc = iso2_pi_auc - iso1_pi_auc) %>%
   mutate(PI_pair = pair_id %in% PI_pairs$pair_id)
+
+df_plot <- df_wt
 
 df_plot %>%
   filter(PI_pair) %>%

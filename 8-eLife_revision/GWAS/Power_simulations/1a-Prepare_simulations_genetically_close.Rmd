@@ -1,0 +1,76 @@
+---
+title: "Generate configuration files for BacGWASim simulations: simulate dataset of genetically closed isolates"
+author: "Stefano Giulieri"
+date: '28/02/2023'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd(stringr::str_c("~/Documents/Github/InToxSa", "/8-eLife_revision/GWAS/Power_simulations"))
+msg <- glue::glue("My directory is {getwd()}")
+message(msg)
+```
+
+Here we generate configuration files for BacGWASim in yaml format
+https://github.com/Morteza-M-Saber/BacGWASim
+https://www.microbiologyresearch.org/content/journal/mgen/10.1099/mgen.0.000337#tab2
+
+We try with a dataset of genetically closed isolates
+
+
+```{r}
+library(tidyverse)
+library(yaml)
+rm(list = ls())
+```
+
+# Model file
+
+```{r}
+config <- read_yaml("config/genetically_distant/sim1_size300.configfile.yaml")
+str(config)
+```
+
+# Modify fix parameters for all simulations
+
+Note that we use the same parameters as in 
+https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1010112#sec019
+
+Because we use the model file already created for the genetically distant dataset we change the number of mutations only
+
+Estimate based on the genetic pairs
+
+```{r}
+df_mutations <- readRDS("../../Genetic_pairs/processed_data/variants_combined_annotation/snippy_denovo_annotated_with_pair_data.Rda") 
+nrow(df_mutations)
+```
+
+
+```{r}
+config$num_var <- as.integer(1000)
+```
+
+# Generate new files for each sample size
+
+```{r}
+samples <- 300*2^(seq(0,10))
+samples <- samples[which(samples < 1e4)]
+samples <- as.integer(samples)
+
+config_list <- list()
+
+for (i in seq_along(samples)){
+ sample <- samples[i]
+ my_config <- config
+ my_config$output_dir <- str_c("sim", i, "_size", sample)
+ my_config$num_species <- sample
+ config_list[[i]] <- my_config
+ 
+ config_file <- str_c("config/genetically_close/", my_config$output_dir, ".configfile.yaml")
+ write_yaml(my_config, config_file)
+}
+
+file.copy("config/", "~/Documents/Transfer_with_server/", recursive = T)
+```
+

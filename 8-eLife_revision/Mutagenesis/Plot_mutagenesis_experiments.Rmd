@@ -1,7 +1,7 @@
 ---
 title: 'Plot mutagenesis experiments in BPH3370'
 author: "Stefano Giulieri"
-date: "24/06/2022"
+date: "17/02/2023"
 output: 
   html_document:
     toc: TRUE
@@ -9,7 +9,7 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-setwd(stringr::str_c("~/Documents/Github/InToxSa", "/6-InToxSa_paper/Mutagenesis"))
+setwd(stringr::str_c("~/Documents/Github/InToxSa", "/8-eLife_revision/Mutagenesis"))
 msg <- glue::glue("My directory is {getwd()}")
 message(msg)
 ```

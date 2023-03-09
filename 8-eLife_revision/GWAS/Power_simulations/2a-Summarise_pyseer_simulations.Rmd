@@ -1,0 +1,117 @@
+---
+title: "Summarise pyseer runs on simulated datasets"
+author: "Stefano Giulieri"
+date: '03/03/2023'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd(stringr::str_c("~/Documents/Github/InToxSa", "/8-eLife_revision/GWAS/Power_simulations"))
+msg <- glue::glue("My directory is {getwd()}")
+message(msg)
+```
+
+Here we parse the output files for all pyseer runs on BacGWASim simulations, and compare the results with the 'truth'.
+
+See https://doi.org/10.1371/journal.pgen.1010112
+
+As compared to companion script `2-Summarise_pyseer_simulations.Rmd` here we look at both genetically close and genetically distant simulations
+
+
+```{r}
+library(tidyverse)
+
+rm(list = ls())
+```
+
+# Pyseer output 
+
+Copy files from the server
+
+```{r}
+# file.copy("~/Documents/Transfer_with_server/pyseer_output/",  "raw_data/pyseer_output/", recursive = T)
+```
+
+List of pyseer output files
+
+```{r}
+f <- list.files("raw_data/pyseer_output/", recursive = T, pattern = "*pyseer.tab", full.names = T)
+
+df_files <- tibble(path = f) %>%
+  separate(path, into = c(NA, NA, NA, "genetic_distance", "simulation", "replicate", NA), sep = "/", remove = F) %>%
+  mutate(across(genetic_distance:replicate, as.factor))
+
+```
+
+Concatenate pyseer output
+
+```{r}
+names(f) <- f
+df_pyseer <- map_df(f, read_tsv, .id = "path")
+
+df_pyseer <- df_pyseer %>%
+  inner_join(df_files) %>%
+  select(-path) %>%
+  rename(p_value = `lrt-pvalue`) %>%
+  group_by(genetic_distance, simulation, replicate) %>%
+  mutate(bonf = .05/n(),
+         p_bonf = p_value < bonf)
+```
+
+# Truth data
+
+```{r}
+f <- list.files("raw_data/pyseer_output", recursive = T, pattern = "*phenSim.par", full.names = T)
+names(f) <- f
+
+df_files <- tibble(path = f) %>%
+  separate(path, into = c(NA, NA, "genetic_distance", "simulation", "replicate", NA), sep = "/", remove = F) %>%
+  mutate(across(genetic_distance:replicate, as.factor))
+
+df_truth <- map_df(f, read_tsv, .id = "path") 
+
+df_truth <- df_truth %>%
+  inner_join(df_files) %>%
+  mutate(variant = str_replace_all(QTL, ":", "_")) %>%
+  select(-c(path, QTL)) 
+```
+
+# Merge data
+
+```{r}
+# df_pyseer_truth <- df_pyseer %>%
+#   left_join(df_truth)
+
+df_pyseer_truth <- df_pyseer %>%
+  inner_join(df_truth) 
+```
+
+# Analyse data
+
+For each simulation and replicate how many true mutations were identified
+
+```{r}
+df_gwas_power <- df_pyseer_truth %>%
+  group_by(genetic_distance, simulation, replicate) %>%
+  summarise(power = length(which(p_bonf))/n())
+```
+
+Visualise as in the PLoS Genetics paper
+
+```{r}
+df_gwas_power %>%
+  ggplot(aes(x = simulation, y = power, colour = genetic_distance)) +
+  # geom_point(alpha = .3) +
+ stat_summary() +
+  scale_x_discrete(labels = ~str_remove(., "sim\\d_size")) +
+  scale_y_continuous(labels = scales::label_percent()) +
+  scale_colour_manual(values = c("blue", "red"), 
+                      labels = ~if_else(str_detect(. ,"distant"), 
+                                        str_c(., " (150,000 variants)"), 
+                                        str_c(., " (1,000 variants)"))) +
+  labs(x = "Size of simulated dataset") +
+  coord_flip() +
+  theme_bw()
+```
+

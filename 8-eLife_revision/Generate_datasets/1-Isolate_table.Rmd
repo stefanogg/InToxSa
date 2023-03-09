@@ -7,7 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-setwd(paste0(here::here(), "/6-InToxSa_paper/Generate_datasets"))
+setwd(paste0(here::here(), "/8-eLife_revision/Generate_datasets"))
 getwd()
 ```
 
@@ -47,6 +47,17 @@ New dataset limited to phenotyped strains
 df_clinical <- data %>%
   left_join(clinical_data) %>%
   mutate(genetic_pair = !is.na(iso_class))
+```
+
+Add pair_id
+
+```{r}
+PI_pairs <- readRDS("../Genetic_pairs/raw_data/df_cleaned_pair_PI.Rda") %>%
+  select(iso1, iso2, pair_id) %>%
+  pivot_longer(cols = c(iso1, iso2), names_to = "iso_class", values_to = "sample_id")
+
+df_clinical <- df_clinical %>%
+  left_join(PI_pairs)
 ```
 
 Add patient IDs used in Giulieri, Genome Medicine 2018
@@ -90,7 +101,7 @@ mec
 dir.create(str_c("processed_data/", table_name))
 
 supp_table_prepare <- df_clinical %>%
-  select(sample_id, episode_id = strain_group, baseline_isolate, iso_class, ST, CC, mecA)
+  select(sample_id, episode_id = strain_group, episode_id2 = strain_group2, baseline_isolate, pair_id, iso_class, ST,  mecA)
 
 list(supp_table_prepare, as_tibble(colnames(supp_table_prepare))) %>%
   set_names(c("dataset", "variables")) %>%

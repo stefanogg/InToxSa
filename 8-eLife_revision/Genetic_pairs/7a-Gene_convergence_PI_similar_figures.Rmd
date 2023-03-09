@@ -1,0 +1,169 @@
+---
+title: 'Generate figures for the convergent evolution analysis: pairs with no / minimal PI change'
+author: "Stefano Giulieri"
+date: "08/03/2023"
+output: 
+  html_document:
+    toc: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd(stringr::str_c("~/Documents/Github/InToxSa", "/8-eLife_revision/Genetic_pairs"))
+msg <- glue::glue("My directory is {getwd()}")
+message(msg)
+```
+
+Here we generate figure for the gene enrichment analysis. We focus on pairs with no /minimal PI difference. The whole gene convergence analysis process is described in `4b-Summarise pairs_info_with_no_PI_change.Rmd`.
+
+```{r}
+library(tidyverse)
+library(patchwork)
+library(ggrepel)
+library(cols4all)
+rm(list = ls())
+```
+
+# Load data
+
+```{r}
+df_mutations <- readRDS("processed_data/gene_convergence/PI_similar/df_PI_convergent_genes_eqPI.Rda")
+```
+
+# Figure: gene enrichment 
+
+```{r}
+theme_set(theme_bw(base_size = 20))
+point_sz <- 3
+colors <- RColorBrewer::brewer.pal(n = 6, name = "PuOr")
+names(colors) <- rev(c("IS insertion (intragenic)", "IS insertion (intergenic)", "large deletion", "intergenic", "non-synonymous", "truncating"))
+colors_genes <- colors[c(1,2,6)]
+colors_genes
+```
+
+## Panel A 
+
+### Mutation counts
+
+```{r}
+df_plot <- df_mutations %>%
+   group_by(neb_gene_symbol,cdhit_group, EFFTYPE_SHORT) %>%
+  summarise(n_mutations = n_distinct(pair_id)) 
+
+
+# set an order to be consistent across plots
+cluster_order <- df_plot %>%
+  group_by(neb_gene_symbol, cdhit_group) %>%
+  summarise(n_mutations = sum(n_mutations)) %>%
+  arrange(desc(n_mutations), cdhit_group, neb_gene_symbol) %>%
+  ungroup() %>%
+  transmute(neb_gene_symbol,
+            cluster_order = row_number())
+
+# Optional filtering
+cluster_order <- cluster_order %>%
+  filter(cluster_order <= 20)
+
+df_plot <- df_plot %>%
+  right_join(cluster_order) 
+
+
+# Plot A
+(p1 <- df_plot %>%
+  ggplot(aes(x = fct_reorder(neb_gene_symbol, cluster_order, .desc = T),
+             y = n_mutations,
+             fill = EFFTYPE_SHORT)) +
+  geom_bar(stat = "identity") +
+  scale_y_continuous(breaks = c(0,5,10), minor_breaks = c(1:4,6:9)) +
+ scale_fill_manual(values = colors, name = "") +
+  labs(x = "", y = "# mutations") +
+  coord_flip() +
+  theme_bw() +
+  theme(text = element_text(face = "bold")))
+```
+
+Same but with CC
+
+```{r}
+df_pairs <- readRDS("processed_data/PI_pairs_data/pairs_description_dataframe.Rda") %>%
+  select(pair_id, CC_iso1)
+
+df_plot <- df_mutations %>%
+  inner_join(df_pairs) %>%
+   group_by(cdhit_group, neb_gene_symbol, CC_iso1,EFFTYPE_SHORT) %>%
+  summarise(n_mutations = n_distinct(pair_id)) 
+
+df_plot <- df_plot %>%
+  right_join(cluster_order) 
+
+g <- ggplot_build(readRDS("processed_data/gene_convergence/PI_discordant/convergence_plots.Rda")[[1]])
+colours1 <- unique(g$data[[1]]$fill)
+names(colours1) <- g$plot$scales$scales[[2]]$get_labels()
+
+colours2 <- setdiff(cols4all::c4a_info("tol.muted")$palette, colours1)
+names(colours2) <- setdiff(df_plot$CC_iso1, names(colours1))
+
+colours <- c(colours1, colours2)
+
+# Plot A
+(p1 <- df_plot %>%
+  ggplot(aes(x = fct_reorder(neb_gene_symbol, cluster_order, .desc = T),
+             y = n_mutations,
+             fill = factor(CC_iso1, levels = names(colours)))) +
+  geom_bar(stat = "identity") +
+  scale_y_continuous(breaks = c(0,5,10), minor_breaks = c(1:4,6:9), limits = c(0,9)) +
+    cols4all::scale_fill_discrete_c4a_cat(palette = "tol.muted", name = "CC", drop = F) +
+  labs(x = "", y = "# mutations") +
+  coord_flip() +
+  theme_bw() +
+  theme(text = element_text(face = "bold")))
+```
+
+
+# Plot B: mutations mini-maps
+
+Here we map the position of the mutation within the coding region. Substitutions, truncations and IS insertions are designed by the position (or start position), large deletions by the start position (if the whole gene is deleted the deletion is shown at the first codon).
+
+Plot B has to follow the same gene order as plot A. 
+
+```{r}
+df_gene_maps <- df_mutations %>%
+  right_join(cluster_order) %>%
+  group_by(cdhit_group, neb_gene_symbol, AA_POS, EFFTYPE_SHORT, n_events, cluster_order) %>%
+  summarise(n_events = n_distinct(pair_id)) 
+
+df_rect <- df_mutations %>%
+  right_join(cluster_order) %>%
+  group_by(cdhit_group, n_events, cluster_order) %>%
+  summarise(xmin = cluster_order - 0.25,
+            xmax = cluster_order + 0.25, 
+            ymin = 0,
+            ymax = str_length(cdhit_seq))
+  
+
+(p2 <- df_gene_maps %>%
+  ggplot(aes(x = cluster_order, y = AA_POS, colour = EFFTYPE_SHORT)) +
+  geom_point() +
+  geom_rect(data = df_rect, aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax),
+            inherit.aes = F, alpha = 0, color = "black") +
+  scale_y_continuous(limits = c(0,2500), breaks = c(0,1000, 2000)) +
+  scale_x_reverse(expand = c(0, .4)) +
+  scale_color_manual(values = rev(colors), na.translate = F, guide = F) +
+  # scale_size(breaks = 1:3, name = "N independent mutations", guide = F) +
+  coord_flip() +
+  labs(x = "") +
+  theme_bw() +
+  theme(panel.grid = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        legend.position = "bottom") +
+  theme(text = element_text(face = "bold")))
+```
+
+# Save processed data
+
+```{r}
+# list(p1, p2) %>%
+#   saveRDS("processed_data/gene_convergence/PI_similar/convergence_plots_eqPI.Rda")
+```
+

@@ -1,0 +1,155 @@
+---
+title: 'Summarise GWAS: PI AUC (mutations)'
+author: "Stefano Giulieri"
+date: "28/02/2023"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd(stringr::str_c("~/Documents/Github/InToxSa", "/8-eLife_revision/Genetic_pairs"))
+msg <- glue::glue("My directory is {getwd()}")
+message(msg)
+```
+
+Here we summarise gene-burden GWAS results for PI uptake (and generate plots), however we limit the analysis to isolates in the 28 genetic pairs (variants called by mapping to BPH2947)
+
+```{r message=FALSE}
+library(tidyverse)
+library(patchwork)
+library(ggrepel)
+rm(list = ls())
+```
+
+# Phenotype file
+
+```{r}
+df_pheno <- readRDS("../GWAS/Phenotypes/processed_data/toxicity_phenotype_with_norm.Rda")
+
+genetic_pairs <- readRDS("raw_data/df_cleaned_pair_PI.Rda")
+
+df_pheno <- df_pheno %>%
+  filter(sample_id %in% c(genetic_pairs$iso1, genetic_pairs$iso2))
+
+df_pheno %>%
+  saveRDS("processed_data/GWAS/df_pheno.Rda")
+
+pheno <- df_pheno %>%
+  select(sample_id, pi_auc = yeo_johnson) %>%
+   write_tsv("~/Documents/Transfer_with_server/toxicity_norm_phenotype.tab")
+```
+
+
+
+# Load raw data
+
+# Pyseer output directories
+
+Here we focus on pyseer-gemma output. This can extended later
+
+```{r}
+files <- list.files("~/Documents/Transfer_with_server/", pattern = "genes.toxicity.*pyseer.tab", full.names = T)
+dir <- "raw_data/pyseer_output/snippy_BPH2947/"
+for (f in files) file.copy(f, dir)
+```
+
+Generate a df of pyseer files
+
+```{r}
+files <- list.files(dir, recursive = T, full.names = T, pattern = "genes.toxicity.*pyseer.tab")
+df_files <- tibble(path = files,
+                   dataset = "Genetic pairs",
+                   phenotype = str_remove(basename(files), ".pyseer.tab"),
+                    truncations = str_detect(path, "trunc"),
+                   rare_mutations = str_detect(path, "rare")) %>%
+  mutate(phenotype = str_remove(phenotype, ".*mutations.|.*genes."))
+
+df_files <- drop_na(df_files, dataset) %>%
+  mutate(across(where(~ !is.logical(.)), as.factor)) 
+```
+
+Parse files and concatenate them
+
+```{r}
+names(files) <- files
+df_pyseer <- purrr::map_df(.x = files, .f = read_tsv, col_types = cols(.default = "c"), .id = "path") %>%
+  mutate(across(af:variant_h2, as.numeric))
+
+df_pyseer <- df_pyseer %>%
+  left_join(df_files)
+```
+
+## Annotation files (genes)
+
+```{r}
+df_annotation_simple <- readRDS("~/OneDrive - The University of Melbourne/R/SAUREUS-GENERAL/ref_genomes/processed_data/BPH2947/df_blastp_BPH2947_neb_curated.Rda")
+```
+
+## Annotate output
+
+```{r}
+df_pyseer_annotated <- df_pyseer %>%
+  dplyr::rename(LOCUS_TAG = variant,
+         p_value = `lrt-pvalue`) %>%
+  left_join(df_annotation_simple) %>%
+  arrange(p_value)
+
+df_pyseer_annotated <- df_pyseer %>%
+  dplyr::rename(LOCUS_TAG = variant,
+         p_value = `filter-pvalue`) %>%
+  left_join(df_annotation_simple) %>%
+  arrange(p_value)
+```
+
+# Plot 
+
+```{r}
+df_plot <- df_pyseer_annotated %>%
+  mutate(bonf = .05/n_distinct(LOCUS_TAG)) %>%
+  mutate(label_gene_symbol = if_else(p_value < bonf, unique_gene_symbol, NA_character_)) %>%
+  mutate(beta_colour = beta)%>%
+  select(LOCUS_TAG, truncations, unique_gene_symbol, label_gene_symbol, af, p_value, bonf, beta_colour, start)
+
+(p6 <- df_plot %>%
+  ggplot(aes(x = start/1e6, y = -log10(p_value))) +
+  geom_point(aes(colour = beta_colour)) +
+  geom_label_repel(aes(label = label_gene_symbol), fontface = "bold") +
+    geom_hline(aes(yintercept = -log10(bonf)), linetype = "dotted") +
+  scale_color_steps2(low = "blue", high = "red",
+                     na.value = "grey90", name = "Effect size (transformed)") +
+  scale_size_continuous(name = "Fraction with\nmutated gene", range = c(3,10)) +
+    facet_wrap(~truncations) +
+  labs(title = "",
+       x = "Gene position on BPH2947 chromosome (Mb)",
+       y = "-log10(p value)") +
+  theme_bw(base_size = 16) +
+  theme(text = element_text(face = "bold")))
+
+(p7 <- df_plot %>%
+    filter(!truncations) %>%
+  ggplot(aes(x = start/1e6, y = -log10(p_value))) +
+  geom_point(aes(colour = beta_colour)) +
+  geom_label_repel(aes(label = label_gene_symbol), fontface = "bold") +
+    geom_hline(aes(yintercept = -log10(bonf)), linetype = "dotted") +
+  scale_color_steps2(low = "blue", high = "red",
+                     na.value = "grey90", name = "Effect size (transformed)") +
+  scale_size_continuous(name = "Fraction with\nmutated gene", range = c(3,10)) +
+  labs(title = "",
+       x = "Gene position on BPH2947 chromosome (Mb)",
+       y = "-log10(p value)") +
+  theme_bw(base_size = 16) +
+  theme(text = element_text(face = "bold")))
+```
+
+
+
+# Save processed output
+
+```{r}
+df_pyseer_annotated %>%
+  saveRDS("processed_data/pyseer_output_toxicity_genes.Rda")
+
+plot_list <- list(p1,p2,p3,p4,p5, p6, p7)
+
+# saveRDS(plot_list, "processed_data/pyseer_output_toxicity_genes_all_plots.Rda")
+```

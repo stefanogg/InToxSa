@@ -1,0 +1,174 @@
+---
+title: "Generate dataframe of pairs information and summary plots of pairs metadata"
+author: "Stefano Giulieri"
+date: '20/02/2023'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd(stringr::str_c("~/Documents/Github/InToxSa", "/8-eLife_revision/Genetic_pairs"))
+msg <- glue::glue("My directory is {getwd()}")
+message(msg)
+```
+
+Here we extract pairs with increase of PI uptake from iso1 to iso2 that are 1) *not already included in the 28 genetic pairs* ; 2) phylogenetically independent.
+
+```{r}
+library(tidyverse)
+
+rm(list = ls())
+```
+
+# Raw data
+
+Pairs data collected so far
+
+```{r}
+pairs_data <- readRDS("processed_data/PI_pairs_data/pairs_description_with_phylo_dataframe.Rda")
+
+mutations <- readRDS("processed_data/variants_combined_annotation/snippy_denovo_annotated.Rda")
+```
+
+Variables to add: PAIR_ID, ST, CC
+
+# Visualisations
+
+```{r}
+pairs_data %>%
+  ggplot(aes(x = h_ratio, y = delta_auc)) +
+  geom_point() +
+  facet_wrap(~PI_pair)
+
+# Manual downsampling
+df1 <- pairs_data %>%
+  ungroup() %>%
+  filter(!PI_pair) %>%
+  slice_sample(prop = .01)
+df2 <- pairs_data %>%
+  ungroup() %>%
+  filter(PI_pair) 
+df_plot <- bind_rows(df1, df2)
+
+
+# Now represent genetic distance and pheno distance on main axes
+
+p1 <- df_plot %>%
+  ggplot(aes(x = dist_mash, y = delta_auc, shape = PI_pair, colour = log_p)) +
+  geom_point() +
+  stat_ellipse(aes(alpha = PI_pair), geom = "path", show.legend = T)+
+    scale_alpha_discrete( name = "Gen pair", labels = c("No", "Yes")) +
+  scale_shape_discrete( name = "Gen pair", labels = c("No", "Yes")) +
+   scale_color_gradient(low = "blue", high = "yellow", name = "-log(p)") +
+  labs(x = "Genetic distance", y  = "Difference in PI uptake") +
+  theme_bw(base_size = 16) +
+  theme(text = element_text(face = "bold"))
+p1
+```
+
+The pairs of interest are in the top left corner of the plot
+
+```{r}
+p2 <- pairs_data %>%
+  filter(dist_denovo <= 200 & pval < .05) %>%
+  ggplot(aes(x = dist_mash, y = delta_auc, shape = PI_pair, colour = log_p)) +
+  geom_point() +
+   scale_color_gradient(low = "blue", high = "yellow", name = "-log(p)") +
+  labs(x = "Genetic distance", y  = "Difference in PI uptake") +
+  theme_bw(base_size = 16) +
+  theme(text = element_text(face = "bold"))
+p2
+```
+
+Now we try to define 
+
+```{r}
+df_gp_lp <- pairs_data %>%
+  filter(dist_denovo <= 200 & pval < .05)
+```
+
+Exclude all pairs that share common ancestors with with 28 genetic pairs
+
+```{r}
+all_nodes <- pairs_data %>%
+  filter(PI_pair) %>%
+  mutate(all_nodes = list(c(mrca, path_nodes))) %>%
+  .$all_nodes %>%
+  unlist() %>%
+  unique()
+df_gp_lp <- df_gp_lp %>%
+  filter(!mrca %in% all_nodes) %>%
+  rowwise() %>%
+  filter(!any(path_nodes %in% all_nodes))
+```
+
+Keep only positive pairs
+
+```{r}
+df_gp_lp_highPI <- df_gp_lp %>%
+  filter(delta_auc > 30) %>%
+  mutate(pheno_geno_score = delta_auc/dist_denovo) %>%
+  arrange(-pheno_geno_score)
+```
+
+Now select pairs that are independent from each other
+
+```{r}
+data_list <- list()
+highPI_nodes <- c()
+# i = 1
+data_list[[1]] <- df_gp_lp_highPI[1,]
+highPI_nodes <- unlist(c(df_gp_lp_highPI[1,]$mrca, df_gp_lp_highPI[1,]$path_nodes))
+# i > 1
+for (i in seq_along(df_gp_lp_highPI$pair_id)){
+  if (i == 1) next
+  else {
+    df <- df_gp_lp_highPI[i,]
+    nodes <- unlist(c(df_gp_lp_highPI[i,]$mrca, df_gp_lp_highPI[i,]$path_nodes))
+    if (length(intersect(nodes, highPI_nodes)) == 0){
+      data_list[[length(data_list) + 1]] <- df
+      highPI_nodes <- c(highPI_nodes, nodes)
+    } else {
+      next
+    }
+  }
+}
+
+df_highPI <- bind_rows(data_list)
+
+```
+
+Which mutations
+
+```{r}
+df_highPI_mutations <- df_highPI %>%
+  inner_join(mutations) %>%
+  relocate(neb_gene_symbol, MUTATION_SHORT)
+```
+
+Quick look at convergence
+
+```{r}
+df_converg <- df_highPI_mutations %>%
+  drop_na(cdhit_group) %>%
+  filter(EFFTYPE_SHORT %in% c("truncating", "non-synonymous")) %>%
+  group_by(cdhit_group, neb_gene_symbol, neb_product, neb_locus_tag) %>%
+  summarise(n_events = n_distinct(pair_id)) %>%
+  arrange(-n_events)
+```
+
+Now including the old pairs
+
+```{r}
+df_converg2 <- mutations %>%
+  filter(str_c(iso1, "--", iso2) %in% (pairs_data %>% filter(PI_pair) %>% .$pair_id) | 
+           str_c(iso1, "--", iso2) %in% df_highPI$pair_id) %>% 
+  drop_na(cdhit_group) %>%
+  drop_na(neb_mutant_id) %>%
+  filter(EFFTYPE_SHORT %in% c("truncating", "non-synonymous")) %>%
+  group_by(cdhit_group, neb_gene_symbol, neb_product, neb_locus_tag, neb_mutant_id, neb_gene_length) %>%
+  summarise(n_events = n_distinct(PAIR_ID)) %>%
+  arrange(-n_events)
+
+```
+

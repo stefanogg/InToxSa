@@ -1,0 +1,109 @@
+---
+title: "Summarise pyseer runs on simulated datasets"
+author: "Stefano Giulieri"
+date: '27/02/2023'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd(stringr::str_c("~/Documents/Github/InToxSa", "/8-eLife_revision/GWAS/Power_simulations"))
+msg <- glue::glue("My directory is {getwd()}")
+message(msg)
+```
+
+Here we parse the output files for all pyseer runs on BacGWASim simulations, and compare the results with the 'truth'.
+
+See https://doi.org/10.1371/journal.pgen.1010112
+
+
+```{r}
+library(tidyverse)
+
+rm(list = ls())
+```
+
+# Pyseer output 
+
+Copy files from the server
+
+```{r}
+# file.copy("~/Documents/Transfer_with_server/pyseer_output/", "raw_data/", recursive = T)
+```
+
+List of pyseer output files
+
+```{r}
+f <- list.files("raw_data/pyseer_output", recursive = T, pattern = "*pyseer.tab", full.names = T)
+
+df_files <- tibble(path = f) %>%
+  separate(path, into = c(NA, NA, "simulation", "replicate", NA), sep = "/", remove = F)
+
+```
+
+Concatenate pyseer output
+
+```{r}
+names(f) <- f
+df_pyseer <- map_df(f, read_tsv, .id = "path")
+
+df_pyseer <- df_pyseer %>%
+  inner_join(df_files) %>%
+  select(-path) %>%
+  rename(p_value = `lrt-pvalue`) %>%
+  group_by(simulation, replicate) %>%
+  mutate(bonf = .05/n(),
+         p_bonf = p_value < bonf)
+```
+
+# Truth data
+
+```{r}
+f <- list.files("raw_data/pyseer_output", recursive = T, pattern = "*phenSim.par", full.names = T)
+names(f) <- f
+
+df_files <- tibble(path = f) %>%
+  separate(path, into = c(NA, NA, "simulation", "replicate", NA), sep = "/", remove = F)
+
+df_truth <- map_df(f, read_tsv, .id = "path") 
+
+df_truth <- df_truth %>%
+  inner_join(df_files) %>%
+  mutate(variant = str_replace_all(QTL, ":", "_")) %>%
+  select(-c(path, QTL)) 
+```
+
+# Merge data
+
+```{r}
+# df_pyseer_truth <- df_pyseer %>%
+#   left_join(df_truth)
+
+df_pyseer_truth <- df_pyseer %>%
+  inner_join(df_truth) 
+```
+
+# Analyse data
+
+For each simulation and replicate how many true mutations were identified
+
+```{r}
+df_gwas_power <- df_pyseer_truth %>%
+  group_by(simulation, replicate) %>%
+  summarise(power = length(which(p_bonf))/n())
+```
+
+Visualise as in the PLoS Genetics paper
+
+```{r}
+df_gwas_power %>%
+  ggplot(aes(x = simulation, y = power)) +
+  # geom_point(alpha = .3) +
+ stat_summary() +
+  scale_x_discrete(labels = ~str_remove(., "sim\\d_size")) +
+  scale_y_continuous(labels = scales::label_percent()) +
+  labs(x = "Size of simulated dataset") +
+  coord_flip() +
+  theme_bw()
+```
+

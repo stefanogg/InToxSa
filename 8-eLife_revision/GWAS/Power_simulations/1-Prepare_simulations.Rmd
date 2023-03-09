@@ -1,0 +1,74 @@
+---
+title: "Generate configuration files for BacGWASim simulations"
+author: "Stefano Giulieri"
+date: '23/02/2023'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd(stringr::str_c("~/Documents/Github/InToxSa", "/8-eLife_revision/GWAS/Power_simulations"))
+msg <- glue::glue("My directory is {getwd()}")
+message(msg)
+```
+
+Here we generate configuration files for BacGWASim in yaml format
+https://github.com/Morteza-M-Saber/BacGWASim
+https://www.microbiologyresearch.org/content/journal/mgen/10.1099/mgen.0.000337#tab2
+
+
+```{r}
+library(tidyverse)
+library(yaml)
+rm(list = ls())
+```
+
+# Model file
+
+Pairs data collected so far
+
+```{r}
+config <- read_yaml("https://raw.githubusercontent.com/Morteza-M-Saber/BacGWASim/master/BacGWASim/configfile.yaml")
+str(config)
+```
+
+Correct missing parameter effect size 
+```{r}
+config$effect_size_odr <- "2,3,4,7,10,11,15,20"
+```
+
+# Modify fix parameters for all simulations
+
+Note that we use the same parameters as in 
+https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1010112#sec019
+
+```{r}
+config$genome_length <- as.integer(1e6)
+config$num_var <- as.integer(1.5e5)
+config$heritability <- 0.5
+config$cores <- as.integer(8)
+```
+
+# Generate new files for each sample size
+
+```{r}
+samples <- 300*2^(seq(0,10))
+samples <- samples[which(samples < 1e4)]
+samples <- as.integer(samples)
+
+config_list <- list()
+
+for (i in seq_along(samples)){
+ sample <- samples[i]
+ my_config <- config
+ my_config$output_dir <- str_c("sim", i, "_size", sample)
+ my_config$num_species <- sample
+ config_list[[i]] <- my_config
+ 
+ config_file <- str_c("config/genetically_distant/", my_config$output_dir, ".configfile.yaml")
+ write_yaml(my_config, config_file)
+}
+
+file.copy("config/", "~/Documents/Transfer_with_server/", recursive = T)
+```
+
