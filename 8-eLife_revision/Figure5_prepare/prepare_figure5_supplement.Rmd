@@ -34,8 +34,29 @@ wrap_plots(plot_list) +
 ```
 
 ```{r}
-ggsave("figures/Figure5_figure_supplement1.pdf")
+ggsave("figures/Figure5_figure_supplement2.pdf")
 ```
 
+# Compare PI uptake
 
+```{r}
+plot_list <- readRDS("../Genetic_pairs/processed_data/gene_convergence/compare_PI_uptake_between_independent_pairs/comparison_plots.Rda")
+(p1 <- plot_list[[1]] +
+    labs(y = "Median\ndelta PI") +
+    scale_fill_manual(values = c("red", "blue"), labels = c("pairs without\nmutations", "pairs with\nmutations"),
+                      name = ""))
+(p2 <- plot_list[[3]] +
+    labs(y = "Regression\ncoefficient beta") +
+    scale_colour_brewer(palette = "YlGnBu") +
+  theme(axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.title.y = element_blank(),
+        legend.position = "none"))
+wrap_plots(p1, p2) +
+  plot_annotation(tag_levels = "A") +
+  plot_layout(guides = "collect")
+```
 
+```{r}
+ggsave("figures/Figure5_figure_supplement1.pdf")
+```

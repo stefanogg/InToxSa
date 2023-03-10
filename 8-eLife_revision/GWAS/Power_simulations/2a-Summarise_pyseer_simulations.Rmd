@@ -103,7 +103,8 @@ Visualise as in the PLoS Genetics paper
 df_gwas_power %>%
   ggplot(aes(x = simulation, y = power, colour = genetic_distance)) +
   # geom_point(alpha = .3) +
- stat_summary() +
+ # stat_summary(fun.data = mean_sdl, fun.args = list(mult = 1)) +
+  stat_summary(fun.data = "mean_cl_boot") +
   scale_x_discrete(labels = ~str_remove(., "sim\\d_size")) +
   scale_y_continuous(labels = scales::label_percent()) +
   scale_colour_manual(values = c("blue", "red"), 
@@ -113,5 +114,11 @@ df_gwas_power %>%
   labs(x = "Size of simulated dataset") +
   coord_flip() +
   theme_bw()
+```
+
+# Export and save
+
+```{r}
+ggsave("figures/GWAS_power_simulations_errobar_plot.pdf")
 ```
 

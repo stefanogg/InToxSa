@@ -7,7 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-setwd(paste0("~/Documents/Github/InToxSa", "/6-InToxSa_paper/Generate_datasets"))
+setwd(paste0("~/Documents/Github/InToxSa", "/8-eLife_revision/Generate_datasets"))
 getwd()
 ```
 
@@ -27,10 +27,24 @@ table_name <- "supp_table_6"
 
 # Import phenotype
 
+Add `episode_id` (supp file 3) as requested by the eLife reviewer
+
 ```{r}
 pheno <- readRDS("../Genetic_pairs/processed_data/PI_pairs_data/pairs_description_dataframe.Rda") %>%
   filter(PI_pair) %>%
   select(pair_id, iso1, iso2, dist_denovo, delta_auc, pval, dist_new, dist_mash)
+
+within_host <- readxl::read_xlsx("processed_data/supp_table_3/supp_table_3.xlsx") %>%
+  select(sample_id:episode_id2) 
+
+pheno <- pheno %>%
+  left_join(within_host, by = c("iso1" = "sample_id")) %>%
+  rename_with(~str_c("iso1_", .),
+              starts_with("episode")) %>%
+  left_join(within_host, by = c("iso2" = "sample_id")) %>%
+  rename_with(~str_c("iso2_", .),
+              starts_with("episode")) %>%
+  mutate(same_patient_pair = if_else(iso1_episode_id == iso2_episode_id, "Yes", "No"))
 
 supp_table_prepare <- list(phenotype = pheno)
 ```
@@ -50,7 +64,7 @@ supp_table_prepare$mutations <- mutations
 # Convergence
 
 ```{r}
-converg <- readRDS("../Genetic_pairs/processed_data/gene_convergence/df_PI_convergent_genes.Rda") %>% 
+converg <- readRDS("../Genetic_pairs/processed_data/gene_convergence/PI_discordant/df_PI_convergent_genes.Rda") %>% 
   arrange(AA_POS) %>%
   group_by(neb_gene_symbol, neb_product, neb_mutant_id, cdhit_group) %>%
   summarise(n_events = n_distinct(pair_id),
