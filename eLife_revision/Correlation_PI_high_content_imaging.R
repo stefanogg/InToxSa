@@ -1,20 +1,16 @@
 library(tidyverse)
-library(ggsci)
-library(ggridges)
+library(ggpubr)
 
-setwd(paste0(here(),"/7-Operetta/"))
+# set working directory
+setwd(here())
 
-
-# Cell_count_corrected.df <- readRDS(file = "Cell_count_corrected.df.Rda") %>%
-#   filter(experiment_id %in% c("GPV1 HeLa 3h n1", "GPV1 HeLa 24h n1"))
-
-#saveRDS(Cell_count_corrected.df, "Cell_count_corrected.df.Rds")
-
-Cell_count_corrected.df <- readRDS(file = "Cell_count_corrected.df.Rds") %>%
+# import nebraska tn mutant high content imaging results 
+Cell_count_corrected.df <- readRDS(file = "7-Operetta/Cell_count_corrected.df.Rds") %>%
   mutate(cell_id = str_c(sample_id, plate_number, plate_replicate, replicate, timepoint, well, Field, Object_No, sep = "_")) %>%
   mutate(timepoint = factor(.$timepoint, levels = c("3h", "24h"))) %>%
   mutate(plate_replicate_id = paste0(plate_number, "_", plate_replicate)) 
 
+# get %cell infected 24h
 perc_infected_24h.df <- Cell_count_corrected.df %>%
   #filter(sample_id != "Non infected") %>%
     # set % infected
@@ -26,77 +22,60 @@ perc_infected_24h.df <- Cell_count_corrected.df %>%
   filter(timepoint == "24h" & Infected == "yes")
 
 # merge with PI AUC
+neb_PI.df <- read.csv("7-Operetta/PI_nebraska.csv")
+signif_PI_str <- c("NE1532", "NE119", "NE188", "NE873", "NE1140", "NE117")
+perc_infected_24h_PI.df <- merge(perc_infected_24h.df, neb_PI.df, by = "sample_id") %>%
+  mutate(label = ifelse(sample_id %in% signif_PI_str, paste0(sample_id,"-", unique_gene_symbol), ""))
+  
+# get mean number bacteria / infected cells
 
-read.csv("neb_tn_insertions.csv
+bact_per_infected_cell_24h.df <- Cell_count_corrected.df %>%
+  filter(cor_nb_bacteria > 0) %>%
+  group_by(sample_id, timepoint) %>%
+  summarise(bacteria_nb_per_cell = mean(cor_nb_bacteria)) %>%
+  filter(timepoint == "24h")
+  
+# merge with PI AUC
+bact_per_infected_cell_24h_PI.df <- merge(bact_per_infected_cell_24h.df, neb_PI.df, by = "sample_id") %>%
+  mutate(label = ifelse(sample_id %in% signif_PI_str, paste0(sample_id,"-", unique_gene_symbol), ""))
 
+# check correlations
 
+p1 <- ggscatter(perc_infected_24h_PI.df,
+                x = "AUC_death_mean", 
+                y = "perc",
+                color = "steelblue",
+                #fill = "lightgray",
+                conf.int = T,
+                add = "reg.line")+
+  geom_point() +
+  stat_cor(label.x = 140, label.y = 55, label.sep = "\n") +
+  xlab("PI uptake (AUC)") +
+  ylab("% Cells infected at 24h") +
+  ggrepel::geom_label_repel(data = perc_infected_24h_PI.df, aes(label = label))
+p1
 
-# o cell count infected/non-infected + violin bacteria/cell ----
-for (exp in unique(Cell_count_corrected.df$plate_replicate_id)) {
-  
-  df <- Cell_count_corrected.df %>%
-    filter(plate_replicate_id == exp)  %>%
-    mutate(sample_id = ifelse(sample_id == "TOX-4", yes = "PAM-agrA", no = sample_id)) %>%
-    filter(sample_id != "Non infected")
-  
-  p1 <-  ggplot(df, aes(y = sample_id, x= Number_of_Spots, fill = "red")) +
-    geom_violin(scale = "width", adjust = .5) +
-    ylab("") +
-    xlab("bacteria per infected cells") +
-    theme_bw()+
-    theme(legend.position = "none")
-  p1
-  
-  df2 <- df %>%
-    mutate(Infected = ifelse(Number_of_Spots>0, yes = "yes", no = "no")) %>%
-    group_by(sample_id, timepoint,Infected) %>% 
-    summarise(count = n()) %>% 
-    mutate(perc = count/sum(count)*100)
-  
-  p2 <- ggplot(df2 , aes(x = sample_id, y = timepoint,  fill = perc )) +
-    geom_tile(stat = "identity") +
-    xlab("") +
-    ylab("") +
-    ggtitle(exp) +
-    theme(plot.title = element_text(size = 15)) +
-    #scale_fill_manual(name = "Infected:", labels = c("no" , "yes"), values = c("#4575b4", "#d73027")) +
-    coord_flip() +
-    theme_bw() +
-    theme(panel.border = element_blank(), 
-          panel.grid.major = element_blank(), 
-          axis.text = element_text(size = 12), 
-          plot.title = element_text(size = 16, face = 'bold'), 
-          axis.title = element_text(face = 'bold')) + 
-    scale_fill_gradient(low = "white", high = "steelblue", name = "% infected")
-  p2
-  
-  df3 <- df %>%
-    filter(cor_nb_bacteria > 0) %>%
-    group_by(sample_id, timepoint) %>% 
-    summarise(bacteria_nb_per_cell = mean(cor_nb_bacteria)) 
-  
-  p3 <- ggplot(df3 , aes(x = sample_id, y = timepoint,  fill = bacteria_nb_per_cell )) +
-    geom_tile(stat = "identity") +
-    xlab("") +
-    ylab("") +
-   # ggtitle(exp) +
-    theme(plot.title = element_text(size = 15)) +
-    #scale_fill_manual(name = "Infected:", labels = c("no" , "yes"), values = c("#4575b4", "#d73027")) +
-    coord_flip() +
-    theme_bw() +
-    theme(panel.border = element_blank(), 
-          panel.grid.major = element_blank(), 
-          axis.text = element_text(size = 12), 
-          plot.title = element_text(size = 16, face = 'bold'), 
-          axis.title = element_text(face = 'bold')) + 
-    scale_fill_gradient(low = "white", high = "red", name = "SA/infected cell")
-  p3
-  
-  
-  p21 <- cowplot::plot_grid(p2,p3, align = "vh", ncol = 2)
-  print(p21)
-  ggsave(path = "plots", filename = paste0(exp, "_heatmap.eps"), plot = p21, device = "eps" , width = 6.5, height = 6)
-}
+p2 <- ggscatter(bact_per_infected_cell_24h_PI.df,
+                x = "AUC_death_mean", 
+                y = "bacteria_nb_per_cell",
+                color = "red",
+                #fill = "lightgray",
+                conf.int = T,
+                add = "reg.line")+
+  geom_point() +
+  stat_cor(label.x = 140, label.y = 2.5, label.sep = "\n") +
+  xlab("PI uptake (AUC)") +
+  ylab("*S. aureus* infected/cell at 24h ") +
+  ggrepel::geom_label_repel(data = bact_per_infected_cell_24h_PI.df, aes(label = label))+
+  theme(axis.title.y = ggtext::element_markdown())
+p2
 
+p <- cowplot::plot_grid(p1, p2, ncol = 1)
+p
 
-
+ggsave(file = "Figure5_figure_supplement5.pdf",
+       path = "8-eLife_revision/Figure5_prepare/figures/",
+       device = "pdf", 
+       plot = p, 
+       width = 5, 
+       height = 8)
