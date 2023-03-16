@@ -16,6 +16,6 @@ Main folders:
 
 5-Data_processing: R markdown scripts used to standardise and fit PI uptake data, exclude outlier and plates with low number of JE replicates and selection of genetic pairs with discordand PI uptake phenotype
 
-6-InToxSa_paper: various scripts for GWAS, processing of convergent evolution and generatio of figures for the paper
+6-InToxSa_paper: various scripts for GWAS, processing of convergent evolution and generation of figures for the paper
 
 7-Operetta: scripts to process Operetta data
