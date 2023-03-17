@@ -103,8 +103,6 @@ nb_plate_replicate_plate_per_strain.df <- raw_PI_pairs_str.df %>% select(sample_
 
 ```
 
-
-
 # Count number of strains per plate
 
 ```{r}

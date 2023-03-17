@@ -27,13 +27,13 @@ library(psych)
 library(GGally)
 rm(list = ls())
 
-source("../../Functions/all_functions.R")
+source("../../0-Functions/all_functions.R")
 ```
 
 # Import PI data
 
 ```{r}
-PI_data <- readRDS("../../Mutants_2022/processed_data/PI_kinetics/PI_kinetics_plateGP-C1.Rda")
+PI_data <- readRDS("../../5-Data_processing/processed_data/allelic_exchange/PI_kinetics/PI_kinetics_plateGP-C1.Rda")
 ```
 
 # Plot data of interest
@@ -48,7 +48,7 @@ df_plot <- PI_data %>%
 plot_cell_death(df_plot, fitted = T)
 
 # Parameters for vline
-PI_parameters <- readRDS("../../Mutants_2022/processed_data/PI_parameters/PI_sample_parameters_plateGP-C1.Rda")
+PI_parameters <- readRDS("../../5-Data_processing/processed_data/allelic_exchange/PI_parameters/PI_sample_parameters_plateGP-C1.Rda")
 # slope (b)
 b <- PI_parameters$max_rate_death_mean[which(PI_parameters$sample_id == "JE2")]*60
 
