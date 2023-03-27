@@ -24,14 +24,44 @@ library(cols4all)
 rm(list = ls())
 ```
 
-# Pairs with no / minimal PI change
+# Set theme
 
 ```{r}
-plot_list <- readRDS("../Genetic_pairs/processed_data/gene_convergence/PI_similar/convergence_plots_eqPI.Rda")
+theme_set(theme_bw(base_size = 16))
+theme_update( text = element_text(face = "bold"))
+```
+
+# GWAS on 28 genetic pairs
+
+```{r}
+(p1 <- readRDS("../Genetic_pairs/processed_data/GWAS/pyseer_output/all_variants/pyseer_output_toxicity_genes_all_plots.Rda")[[2]] +
+   labs(title = "All variants"))
+(
+  p2 <- readRDS("../Genetic_pairs/processed_data/GWAS/pyseer_output/internal_variants/pyseer_output_toxicity_genes_all_plots.Rda") +
+    labs(title = "Internal variants only") +
+    scale_color_steps2(low = "blue", high = "red",
+                     na.value = "grey90", name = "Effect size (transformed)",
+                     breaks = seq(-1,1, .5), guide = "none")
+  )
+p1 + p2 +
+  plot_annotation(tag_levels = "A") +
+  plot_layout(guides = "collect")
+```
+
+
+```{r}
+ggsave("figures/Figure5_figure_supplement1.pdf", width = 12)
+```
+
+
+# Pair with PI decreease *and* increase
+
+```{r}
+plot_list <- readRDS("../Genetic_pairs/processed_data/gene_convergence/PI_discordant_with_PI_increase/convergence_plots_diffPI.Rda")
 wrap_plots(plot_list) +
   plot_annotation(tag_levels = "A")
-
 ```
+
 
 ```{r}
 ggsave("figures/Figure5_figure_supplement2.pdf")
@@ -46,6 +76,7 @@ plot_list <- readRDS("../Genetic_pairs/processed_data/gene_convergence/compare_P
     scale_fill_manual(values = c("red", "blue"), labels = c("pairs without\nmutations", "pairs with\nmutations"),
                       name = ""))
 (p2 <- plot_list[[3]] +
+    geom_hline(yintercept = 0) +
     labs(y = "Regression\ncoefficient beta") +
     scale_colour_brewer(palette = "YlGnBu") +
   theme(axis.text.y = element_blank(),
@@ -58,5 +89,20 @@ wrap_plots(p1, p2) +
 ```
 
 ```{r}
-ggsave("figures/Figure5_figure_supplement1.pdf")
+ggsave("figures/Figure5_figure_supplement3.pdf")
 ```
+
+
+# Pairs with no / minimal PI change
+
+```{r}
+plot_list <- readRDS("../Genetic_pairs/processed_data/gene_convergence/PI_similar/convergence_plots_eqPI.Rda")
+wrap_plots(plot_list) +
+  plot_annotation(tag_levels = "A")
+
+```
+
+```{r}
+ggsave("figures/Figure5_figure_supplement4.pdf")
+```
+

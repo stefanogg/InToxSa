@@ -150,10 +150,8 @@ df_plot <- df_pyseer_annotated %>%
 # Save processed output
 
 ```{r}
-df_pyseer_annotated %>%
-  saveRDS("processed_data/pyseer_output_toxicity_genes.Rda")
+# df_pyseer_annotated %>%
+#   saveRDS("processed_data/pyseer_output_toxicity_genes.Rda")
 
-plot_list <- list(p1,p2,p3,p4,p5, p6, p7)
-
-# saveRDS(plot_list, "processed_data/pyseer_output_toxicity_genes_all_plots.Rda")
+saveRDS(p6, "processed_data/GWAS/pyseer_output/internal_variants/pyseer_output_toxicity_genes_all_plots.Rda")
 ```

@@ -95,6 +95,25 @@ mec <- df_clinical %>%
 mec
 ```
 
+Answer to reviewer question
+
+```{r}
+# proportion of isolates in genetic pairs
+df_clinical %>%
+  mutate(genetic_pair = !is.na(pair_id)) %>%
+  count(genetic_pair) %>%
+  mutate(all = sum(n)) %>%
+  mutate(frac = n/all) 
+# and now baseline only
+df_clinical %>%
+  filter(baseline_isolate == "Yes") %>%
+ mutate(genetic_pair = !is.na(pair_id)) %>%
+  count(genetic_pair) %>%
+  mutate(all = sum(n)) %>%
+  mutate(frac = n/all) 
+```
+
+
 # Export as supplementary table
 
 ```{r}

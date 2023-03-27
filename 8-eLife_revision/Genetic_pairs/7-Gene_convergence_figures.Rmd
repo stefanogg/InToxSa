@@ -32,7 +32,7 @@ rm(list = ls())
 # Load data
 
 ```{r}
-df_mutations <- readRDS("processed_data/gene_convergence/df_PI_convergent_genes.Rda")
+df_mutations <- readRDS("processed_data/gene_convergence/PI_discordant/df_PI_convergent_genes.Rda")
 ```
 
 NEB kinetics data
@@ -156,7 +156,9 @@ df_neb <- read_csv("raw_data/df_FPR3757_curated.csv")
 
 df_tn_insert <- tn_insert_data %>%
   inner_join(df_neb, by = c("sample_id" = "neb_mutant_id")) %>%
-  mutate(AA_POS = ceiling((tn_insert - neb_start)/3))
+  mutate(AA_POS = if_else(neb_strand == "+",
+                          ceiling((tn_insert - neb_start)/3),
+                          ceiling((neb_end - tn_insert)/3)))
 
 df_gene_maps2 <- df_tn_insert %>%
   right_join(cluster_order) %>%
@@ -405,6 +407,6 @@ p6
 
 ```{r}
 # list(p1, p2, p3,p4, p5, p6) %>%
-#   saveRDS("processed_data/gene_convergence/convergence_plots.Rda")
+#   saveRDS("processed_data/gene_convergence/PI_discordant/convergence_plots.Rda")
 ```
 
