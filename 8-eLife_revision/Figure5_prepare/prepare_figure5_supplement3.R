@@ -1,5 +1,5 @@
 # ---
-# title: "Correlation PI and high content imaging - Prepare figure 5 - supplement"
+# title: "Correlation PI and high content imaging - Prepare figure 5 - supplement 3"
 # author: "Romain Guerillot"
 # date: "10/03/2023"
 # ---
@@ -76,7 +76,7 @@ p2 <- ggscatter(bact_per_infected_cell_24h_PI.df,
   theme(axis.title.y = ggtext::element_markdown())
 p2
 
-p <- cowplot::plot_grid(p1, p2, ncol = 1)
+p <- cowplot::plot_grid(p1, p2, ncol = 1, labels = c("A","B"))
 p
 
 ggsave(file = "Figure5_figure_supplement3.pdf",

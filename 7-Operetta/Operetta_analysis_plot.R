@@ -3,7 +3,7 @@ library(tidyverse)
 # set working directory
 setwd(paste0(here(),"/7-Operetta/"))
 
-# import highcontent imaging data
+# import high-content microscopy data
 Cell_count_corrected.df <- readRDS(file = "Cell_count_corrected.df.Rds") %>%
   mutate(cell_id = str_c(sample_id, plate_number, plate_replicate, replicate, timepoint, well, Field, Object_No, sep = "_")) %>%
   mutate(timepoint = factor(.$timepoint, levels = c("3h", "24h"))) %>%
