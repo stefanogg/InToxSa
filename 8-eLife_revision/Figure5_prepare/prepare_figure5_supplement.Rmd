@@ -9,7 +9,7 @@ output:
 
 ```{r setup, include=F}
 knitr::opts_chunk$set(echo = TRUE)
-setwd(stringr::str_c("~/Documents/Github/InToxSa", "/8-eLife_revision/Figure5_prepare"))
+setwd(stringr::str_c(here::here(), "/8-eLife_revision/Figure5_prepare"))
 msg <- glue::glue("My directory is {getwd()}")
 message(msg)
 ```
@@ -31,29 +31,6 @@ theme_set(theme_bw(base_size = 16))
 theme_update( text = element_text(face = "bold"))
 ```
 
-# GWAS on 28 genetic pairs
-
-```{r}
-(p1 <- readRDS("../Genetic_pairs/processed_data/GWAS/pyseer_output/all_variants/pyseer_output_toxicity_genes_all_plots.Rda")[[2]] +
-   labs(title = "All variants"))
-(
-  p2 <- readRDS("../Genetic_pairs/processed_data/GWAS/pyseer_output/internal_variants/pyseer_output_toxicity_genes_all_plots.Rda") +
-    labs(title = "Internal variants only") +
-    scale_color_steps2(low = "blue", high = "red",
-                     na.value = "grey90", name = "Effect size (transformed)",
-                     breaks = seq(-1,1, .5), guide = "none")
-  )
-p1 + p2 +
-  plot_annotation(tag_levels = "A") +
-  plot_layout(guides = "collect")
-```
-
-
-```{r}
-ggsave("figures/Figure5_figure_supplement1.pdf", width = 12)
-```
-
-
 # Pair with PI decreease *and* increase
 
 ```{r}
@@ -64,18 +41,19 @@ wrap_plots(plot_list) +
 
 
 ```{r}
-ggsave("figures/Figure5_figure_supplement2.pdf")
+# ggsave("figures/Figure5_figure_supplement1.pdf")
 ```
 
 # Compare PI uptake
 
 ```{r}
 plot_list <- readRDS("../Genetic_pairs/processed_data/gene_convergence/compare_PI_uptake_between_independent_pairs/comparison_plots.Rda")
+df_lm_tidy <- readRDS("../Genetic_pairs/processed_data/gene_convergence/compare_PI_uptake_between_independent_pairs/comparison_df.Rda")[[3]]
 (p1 <- plot_list[[1]] +
     labs(y = "Median\ndelta PI") +
     scale_fill_manual(values = c("red", "blue"), labels = c("pairs without\nmutations", "pairs with\nmutations"),
                       name = ""))
-(p2 <- plot_list[[3]] +
+(p2 <- plot_list[[2]] +
     geom_hline(yintercept = 0) +
     labs(y = "Regression\ncoefficient beta") +
     scale_colour_brewer(palette = "YlGnBu") +
@@ -89,20 +67,7 @@ wrap_plots(p1, p2) +
 ```
 
 ```{r}
-ggsave("figures/Figure5_figure_supplement3.pdf")
+# ggsave("figures/Figure5_figure_supplement2.pdf")
 ```
 
-
-# Pairs with no / minimal PI change
-
-```{r}
-plot_list <- readRDS("../Genetic_pairs/processed_data/gene_convergence/PI_similar/convergence_plots_eqPI.Rda")
-wrap_plots(plot_list) +
-  plot_annotation(tag_levels = "A")
-
-```
-
-```{r}
-ggsave("figures/Figure5_figure_supplement4.pdf")
-```
 

@@ -7,7 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-setwd(stringr::str_c("~/Documents/Github/InToxSa", "/8-eLife_revision/GWAS/Power_simulations"))
+setwd(stringr::str_c(here::here(), "/8-eLife_revision/GWAS/Power_simulations"))
 msg <- glue::glue("My directory is {getwd()}")
 message(msg)
 ```
@@ -109,11 +109,12 @@ df_gwas_power %>%
   scale_y_continuous(labels = scales::label_percent()) +
   scale_colour_manual(values = c("blue", "red"), 
                       labels = ~if_else(str_detect(. ,"distant"), 
-                                        str_c(., " (150,000 variants)"), 
-                                        str_c(., " (1,000 variants)"))) +
+                                        str_c(., "\n(150,000 variants)"), 
+                                        str_c(., "\n(1,000 variants)"))) +
   labs(x = "Size of simulated dataset") +
   coord_flip() +
-  theme_bw()
+  theme_bw(base_size = 16) +
+  theme(text = element_text(face = "bold"))
 ```
 
 # Export and save

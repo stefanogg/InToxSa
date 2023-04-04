@@ -1762,3 +1762,42 @@ create_gen_pairs <- function(df, # a dataframe with two columns: iso1 and iso2
   
   return(df_isolates)
 }
+
+# generate pylogenetically independent pairs through resampling from the tree
+generate_gp_replicates <- function(rep = NULL, # the replicate number. If none given, the reshuffling step will be skipped
+                                   df) { # a dataframe of genetic pairs with associated phylogenetic data: mrca, offspring tips
+  if (!is.null(rep)){
+    set.seed(rep)
+    df_resample <- df %>%
+      ungroup() %>%
+      slice_sample(prop = 1)
+  } else {
+    df_resample <- df
+  }
+  data_list <- list()
+  nodes <- c()
+  # i = 1
+  data_list[[1]] <- df_resample[1, ]
+  mrca <- df_resample[1, ]$mrca
+  tips <- df_resample[1, ]$offspring_tips[[1]]
+  # i > 1
+  for (i in seq_along(df_resample$pair_id)) {
+    if (i == 1)
+      next
+    else {
+      my_df <- df_resample[i, ]
+      my_tips <- my_df$offspring_tips[[1]]
+      intersection <- intersect(my_tips, tips)
+      if (length(intersection) == 0) {
+        data_list[[length(data_list) + 1]] <- my_df
+        tips <- c(tips, my_tips)
+      } else {
+        next
+      }
+    }
+  }
+  df_gp <- bind_rows(data_list)
+  
+  
+  return(df_gp)
+}

@@ -1,0 +1,194 @@
+---
+title: "Description and analysis of genetic pairs phylogenies"
+author: "Stefano Giulieri"
+date: '28/03/2023'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd(stringr::str_c(here::here(), "/8-eLife_revision/Genetic_pairs"))
+msg <- glue::glue("My directory is {getwd()}")
+message(msg)
+```
+
+Here we extract phylogenetic data from each genetic pair: MRCA, chain of ancestors (nodes) connecting iso1 to iso2, all tips of the smallest clade containing iso1 and iso2 (descendants/offspring of the MRCA)
+
+```{r}
+library(tidyverse)
+library(ggtree)
+library(tidytree)
+library(tictoc)
+library(furrr)
+
+rm(list = ls())
+```
+
+
+# Raw data
+
+Pairs
+
+```{r}
+pairs <- readRDS("processed_data/PI_pairs_data/pairs_description_dataframe.Rda")
+```
+
+Tree
+
+```{r}
+tree1 <- read.tree("raw_data/tree/iqtree.treefile")
+
+# tree2 <- read.tree("../../Genetic_pairs_analysis_Oct_2020/metadata/iqtree.treefile")
+```
+
+We keep only tips with PI information
+
+```{r}
+tree <- ape::keep.tip(tree1, pairs$iso1) %>%
+  phytools::midpoint.root() 
+ggtree(tree)
+ape::write.tree(tree, "processed_data/tree/iqtree_PI_tips.tree")
+```
+
+# Extract clade information 
+
+For each pair extract MRCA, number of descendants, MRCA level
+
+```{r}
+tree_data <- as.treedata(tree)
+df_tree <- as_tibble(tree_data)
+pair <- pairs[1,]
+x <- pair$iso1
+x <- which(tree$tip.label == x)
+y <- pair$iso2
+y <- which(tree$tip.label == y)
+
+mrca <- MRCA(tree, c(x, y))
+
+x1 <- ancestor(tree, x)
+y1 <- ancestor(tree, y)
+d <- c(setdiff(x1, y1), mrca, rev(setdiff(y1, x1)))
+d <- c(setdiff(x1, y1), rev(setdiff(y1, x1)))
+d1 <- which(x1 == mrca)
+d2 <- which(y1 == mrca)
+D <- d1 + d2
+
+DD <- c(d, x, y)
+p <- ggtree(tree) +
+  geom_tree(aes(colour = node %in% DD)) +
+  geom_tiplab(aes(subset = label %in% c(pair$iso1, pair$iso2))) +
+  geom_point2(aes(subset = node == mrca)) +
+  scale_colour_manual(values = c("grey", "blue"), guide = "none")
+p
+# pp <- ggplot_build(p)
+# 
+# 
+# pp1 <- layer_data(p)
+# pp2 <- layer_data(p, 2)
+# pp3 <- layer_data(p, 3)
+# pp4 <- layer_data(p, 4)
+
+
+
+
+
+# plot(tree, use.edge.length = F, show.tip.label = F, edge.color = if_else(tree$edge[,2] %in% c(d, x, y), "blue", "gray" ), no.margin = T)
+
+
+o <- tidytree::offspring(tree, mrca, tiponly = T)
+O <- length(o)
+
+```
+
+Write a function to do all of this
+
+```{r}
+get_ancestral_path <- function(tree, iso1, iso2, return_plot = F){
+  x <- which(tree$tip.label == iso1)
+  y <- which(tree$tip.label == iso2)
+
+  mrca <- MRCA(tree, c(x, y))
+
+  x1 <- ancestor(tree, x)
+  y1 <- ancestor(tree, y)
+  d1 <- which(x1 == mrca)
+  d2 <- which(y1 == mrca)
+  d <- c(setdiff(x1, y1), rev(setdiff(y1, x1)))
+  D <- d1 + d2
+
+  DD <- c(d, x, y)
+  
+  tips <- c(iso1, iso2)
+  
+  p <- ggtree(tree) +
+  geom_tree(aes(colour = node %in% DD)) +
+  geom_tiplab(aes(subset = label %in% {{tips}})) +
+  geom_point2(aes(subset = node == mrca)) +
+  scale_colour_manual(values = c("grey", "blue"), guide = "none")
+  
+  o <- tidytree::offspring(tree, mrca, type = "tips")
+  O <- length(o)
+  
+  out <- list(iso1 = iso1,
+              iso2 = iso2,
+              mrca = mrca, 
+              path_nodes = d,
+              path_length = D,
+              offspring_tips = o,
+              offspring_labels = df_tree %>% filter(node %in% o) %>%.$label,
+              n_offspring = O)
+  
+  if (return_plot) out$plot <- p
+  return(out)
+}
+
+out <- get_ancestral_path(tree, pair$iso1, pair$iso2)
+out <- get_ancestral_path(tree, pair$iso1, pair$iso2, return_plot = T)
+out$plot
+
+```
+
+Get mrca for each pair
+
+```{r}
+tic()
+pairs_with_tree_data <- pairs[1:10,] %>%
+  group_by(pair_id) %>%
+  nest() %>%
+ mutate(ancestral_path = purrr::map(data, ~get_ancestral_path(tree, .x$iso1, .x$iso2))) %>%
+  mutate(mrca = map_int(ancestral_path, "mrca"),
+         path_len = map_int(ancestral_path, "path_length"),
+         offspring_tips = map(ancestral_path, "offspring_tips"),
+         n_offspring = map_int(ancestral_path, "n_offspring")) %>%
+  unnest(cols = data)
+toc()
+
+plan(multisession, workers = 4)
+
+
+tic()
+get_ancestral_path_out <- pairs %>%
+  group_split(pair_id) %>%
+  future_map(~get_ancestral_path(tree, .x$iso1, .x$iso2), .progress = T) 
+toc()
+# 9298.983 sec elapsed
+
+df_get_ancestral_path <- get_ancestral_path_out %>%
+  do.call(rbind, .) %>%
+  as_tibble() 
+
+
+df_get_ancestral_path <- df_get_ancestral_path %>%
+  unnest(c(iso1, iso2, mrca, path_length, n_offspring))
+```
+
+Save intermediate stages. Because these large files are problematic in github, we save them in the local copy of the directory 
+
+```{r}
+# get_ancestral_path_out %>%
+#   saveRDS("processed_data/PI_pairs_data/get_ancestral_path_list.Rda")
+# df_get_ancestral_path %>%
+#   saveRDS("processed_data/PI_pairs_data/get_ancestral_path_dataframe.Rda")
+```
+
+

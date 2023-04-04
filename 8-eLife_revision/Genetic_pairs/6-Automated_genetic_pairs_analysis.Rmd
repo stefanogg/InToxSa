@@ -1,0 +1,460 @@
+---
+title: "Automated genetic pairs analysis"
+author: "Stefano Giulieri"
+date: "08/03/2023"
+output: html_document
+---
+
+```{r setup}
+knitr::opts_chunk$set(echo = TRUE)
+setwd(paste0(here::here(), "/8-eLife_revision/Genetic_pairs"))
+msg <- glue::glue("My directory is {getwd()}")
+message(msg)
+```
+
+Here we try a different approach to the genetic pairs analysis. Instead of looking at convergent within pairs with a definite phenotype, we look at phenotypic differences between independent pairs *with* or *without* homoplasic mutations
+
+```{r message=F}
+library(tidyverse)
+library(ggtree)
+library(furrr)
+library(ComplexHeatmap)
+rm(list = ls())
+```
+
+
+# Raw data
+
+Pairs data collected so far. 
+
+```{r}
+pairs_data <- readRDS("processed_data/PI_pairs_data/pairs_description_with_phylo_dataframe.Rda")
+
+mutations <- readRDS("processed_data/variants_combined_annotation/snippy_denovo_annotated.Rda")
+
+tree <- read.tree("processed_data/tree/iqtree_PI_tips.tree") 
+```
+
+Each observation is a pair and for each pair we define presence / absence of mutations in certain genes.
+
+First define list of pairs. reduce number of variables
+
+```{r}
+df_pairs <- pairs_data %>%
+  filter(dist_denovo <= 200) %>%
+  select(pair_id, PAIR_ID, iso1, iso2, dist_denovo, PI_pair, CC_iso1, delta_auc, pval, mrca, path_nodes, path_length, n_offspring, offspring_tips, offspring_labels)
+rm(pairs_data)
+```
+
+Now combine with mutations to create a matrix of mutated / non mutated gene
+
+```{r}
+df_mutated_genes <- df_pairs %>%
+  inner_join(mutations) %>%
+  drop_na(neb_mutant_id) %>%
+  filter(EFFTYPE_SHORT %in% c("truncating", "non-synonymous")) %>%
+  select(pair_id, PI_pair, delta_auc, neb_gene_symbol, EFFTYPE_SHORT) %>%
+  distinct() %>%
+  mutate(is_mutated = T,
+         is_truncated = EFFTYPE_SHORT == "truncating")
+```
+
+Now complete missing combinations (this might be complicated)
+
+```{r}
+df_mutated_genes_complete <- df_mutated_genes %>%
+  select(pair_id, neb_gene_symbol, is_mutated) %>%
+  complete(pair_id, neb_gene_symbol, fill = list(is_mutated = F))
+
+
+df_mutated_genes_complete <- df_mutated_genes %>%
+  select(-EFFTYPE_SHORT) %>%
+  complete(neb_gene_symbol, nesting(pair_id, PI_pair, delta_auc), explicit = T, fill = list(is_mutated = F, is_truncated = F))
+```
+
+Try plot
+
+```{r}
+theme_set(theme_bw(base_size = 16))
+
+(genes <- readRDS("../../6-InToxSa_paper/Genetic_pairs/processed_data/gene_convergence/convergence_plots.Rda")[[1]][[1]] %>%
+    arrange(cluster_order) %>%
+    pull(cdhit_symbol) %>%
+  unique())
+
+df_mutated_genes_complete %>%
+  filter(neb_gene_symbol %in% genes) %>%
+  ggplot(aes(x = is_mutated, y = abs(delta_auc))) +
+  geom_boxplot() +
+  facet_wrap(~neb_gene_symbol)
+
+df_mutated_genes_complete %>%
+  filter(neb_gene_symbol %in% genes) %>%
+  ggplot(aes(x = is_truncated, y = abs(delta_auc))) +
+  geom_boxplot() +
+  facet_wrap(~neb_gene_symbol)
+```
+
+Remove dataframe that we don't need
+
+```{r}
+rm(df_mutated_genes, df_mutated_genes_complete)
+```
+
+# Limit to independent pairs
+
+Generate a database of independent pairs
+
+```{r}
+source("../../0-Functions/all_functions.R")
+df_gp <- generate_gp_replicates(df = df_pairs)
+
+p1 <- ggtree(tree)
+
+my_df <- df_gp %>%
+  ungroup() %>%
+  slice_head(n = 1) %>%
+  select(pair_id, iso1, iso2, mrca, n_offspring, path_nodes)
+my_df
+
+p1 +
+  geom_cladelabel(node = my_df$mrca, label = my_df$pair_id)
+
+p <- ggtree(tree, layout = "circular") +
+  geom_tree(aes(colour = node %in% my_df$path_nodes)) +
+  geom_tiplab2(aes(subset = label %in% c(my_df$iso1, my_df$iso2)), align = T) +
+  geom_point2(aes(subset = node == my_df$mrca)) +
+  scale_colour_manual(values = c("grey", "blue"), guide = "none")
+p
+
+p1 <- ggtree(tree, layout = "circular")
+for (node in df_gp$mrca){
+  p1 <- p1 +
+    geom_highlight(node = node) +
+    geom_cladelabel(node = node, label = "")
+}
+# ggsave("figures/tree_with_independent_pairs_example.pdf", p1)
+rm(p, p1, my_df)
+```
+
+Now combine with mutations to create a matrix of mutated / non mutated gene
+
+```{r}
+df_mutated_genes <- df_gp %>%
+  inner_join(mutations) %>%
+  drop_na(neb_mutant_id) %>%
+  filter(EFFTYPE_SHORT %in% c("truncating", "non-synonymous")) %>%
+  select(pair_id, PI_pair, delta_auc, neb_gene_symbol, EFFTYPE_SHORT) %>%
+  distinct() %>%
+  mutate(is_mutated = T,
+         is_truncated = EFFTYPE_SHORT == "truncating")
+```
+
+Now complete missing combinations (this might be complicated)
+
+```{r}
+df_mutated_genes_complete <- df_mutated_genes %>%
+  select(pair_id, neb_gene_symbol, is_mutated) %>%
+  complete(pair_id, neb_gene_symbol, fill = list(is_mutated = F))
+
+
+df_mutated_genes_complete <- df_mutated_genes %>%
+  select(-EFFTYPE_SHORT) %>%
+  complete(neb_gene_symbol, nesting(pair_id, PI_pair, delta_auc), explicit = T, fill = list(is_mutated = F, is_truncated = F))
+```
+
+Try plot
+
+```{r}
+df_mutated_genes_complete %>%
+  filter(neb_gene_symbol %in% genes) %>%
+  ggplot(aes(x = is_mutated, y = abs(delta_auc))) +
+  geom_boxplot() +
+  facet_wrap(~neb_gene_symbol)
+
+df_mutated_genes_complete %>%
+  filter(neb_gene_symbol %in% genes) %>%
+  ggplot(aes(x = is_truncated, y = abs(delta_auc))) +
+  geom_boxplot() +
+  facet_wrap(~neb_gene_symbol)
+```
+
+Summary dataset
+
+```{r}
+df_auc <- df_mutated_genes_complete %>%
+  mutate(delta_auc = abs(delta_auc)) %>%
+  group_by(neb_gene_symbol, is_mutated) %>%
+  summarise(mean_delta = mean(delta_auc))
+```
+
+Remove dataframe that we don't need
+
+```{r}
+rm(df_auc, df_gp, df_mutated_genes, df_mutated_genes_complete)
+```
+
+# Test function on multiple replicates
+
+```{r}
+df1 <- generate_gp_replicates(1, df_pairs)
+df2 <- generate_gp_replicates(2, df_pairs)
+setdiff(df1, df2)
+
+# ggtree(tree) +
+#   geom_cladelab(node = 479, label = "df1")
+# 
+# ggtree(tree) +
+#   geom_cladelab(node = 430, label = "df2")
+
+rm(df1, df2)
+```
+
+Now apply to 100 replicates.
+
+```{r}
+plan(multisession, workers = 4)
+
+df_gp <- future_map_dfr(1:100, generate_gp_replicates, df = df_pairs, .id = "replicate", .progress = T) %>%
+  mutate(replicate = as.integer(replicate))
+```
+
+
+Visualise the resampling replicates
+
+```{r}
+df_gp %>%
+  count(pair_id) %>%
+  ggplot(aes(x = n)) +
+  geom_histogram()
+# could show the number of times sampled depending on the clone
+df_gp %>%
+  filter(fct_lump_n(as.factor(CC_iso1), n = 5) != "Other") %>%
+  count(pair_id, CC_iso1) %>%
+  ggplot(aes(x = n)) +
+ geom_histogram() +
+  facet_wrap(~CC_iso1, scales = "free")
+# correlation between path_length and n
+df_gp %>%
+   count(pair_id, path_length) %>%
+  ggplot(aes(x = as.factor(path_length), y = n)) +
+ geom_boxplot()
+# matrix of sets composition
+df_gp %>%
+  ggplot(aes(x = replicate, y = pair_id)) +
+  geom_tile() +
+  scale_y_discrete(labels = NULL)
+# as a heatmap
+matrix <- df_gp %>%
+  mutate(selected = 1) %>%
+  select(pair_id, replicate, selected) %>%
+  pivot_wider(names_from = replicate, values_from = selected, values_fill = 0) %>%
+  column_to_rownames("pair_id") %>%
+  as.matrix()
+heatmap(matrix)
+# using ggplot
+# ord <- hclust(dist(matrix))
+# ord <- ord$order
+# rownames(matrix)[ord]
+# df_gp %>%
+#   mutate(pair_id = fct_relevel(pair_id, rownames(matrix)[ord])) %>%
+#    ggplot(aes(x = replicate, y = pair_id)) +
+#   geom_tile() +
+#   scale_y_discrete(labels = NULL)
+# using ComplexHeatmap
+
+pdf("figures/replicates_heatmap.pdf")
+Heatmap(matrix, show_column_dend = T, show_row_dend = T, show_row_names = F, show_column_names = F, col = circlize::colorRamp2(c(0,1), c("white", "red")), show_heatmap_legend = F, row_title = "Pair id", column_title = "Replicate")
+dev.off()
+```
+
+Now add mutations and summarise auc
+
+```{r}
+compare_auc <- function(df_gp, df_mutations){
+  df_mutated_genes <- df_gp %>%
+  inner_join(df_mutations) %>%
+  drop_na(neb_mutant_id) %>%
+  filter(EFFTYPE_SHORT %in% c("truncating", "non-synonymous")) %>%
+  select(pair_id, PI_pair, delta_auc, neb_gene_symbol, EFFTYPE_SHORT, replicate) %>%
+  distinct() %>%
+  mutate(is_mutated = T,
+         is_truncated = EFFTYPE_SHORT == "truncating")
+  
+  df_mutated_genes_complete <- df_mutated_genes %>%
+  select(pair_id, neb_gene_symbol, is_mutated) %>%
+  complete(pair_id, neb_gene_symbol, fill = list(is_mutated = F))
+
+
+df_mutated_genes_complete <- df_mutated_genes %>%
+  select(-EFFTYPE_SHORT) %>%
+  complete(neb_gene_symbol, nesting(pair_id, PI_pair, delta_auc, replicate), explicit = T, fill = list(is_mutated = F, is_truncated = F))
+
+df_auc <- df_mutated_genes_complete %>%
+  mutate(delta_auc = abs(delta_auc)) %>%
+  group_by(neb_gene_symbol, is_mutated, replicate) %>%
+  summarise(mean_delta = mean(delta_auc),
+            median_delta = median(delta_auc))
+
+return(list(df_auc, df_mutated_genes_complete))
+}
+
+auc_list <- compare_auc(df_gp, mutations)
+df_auc <- auc_list[[1]]
+df_complete <- auc_list[[2]]
+rm(auc_list, mutations)
+```
+
+Stats
+https://broom.tidymodels.org/articles/broom_and_dplyr.html 
+
+
+```{r}
+library(tictoc)
+df_lm <- df_complete %>%
+  mutate(delta_auc = abs(delta_auc)) %>%
+  group_by(neb_gene_symbol, replicate) %>%
+  nest()
+
+tic()
+df_lm_raw <- df_lm %>%
+  mutate(lm = purrr::map(data, function(df) lm(delta_auc ~ is_mutated, data = df)),
+         tidied = purrr::map(lm, broom::tidy) ) 
+toc()
+# 217.47 sec elapsed
+
+df_lm_tidy <- df_lm_raw %>%
+  unnest(tidied) %>%
+  ungroup() %>%
+  filter(term == "is_mutatedTRUE") %>%
+  arrange(p.value) 
+
+rm(df_lm, df_lm_raw)
+```
+
+# Plots
+
+```{r}
+df_auc %>%
+  filter(neb_gene_symbol %in% genes[1:20]) %>%
+  ggplot(aes(x = is_mutated, y = mean_delta)) +
+  geom_boxplot() +
+  facet_wrap(~neb_gene_symbol)
+
+df_auc %>%
+  filter(neb_gene_symbol %in% genes[1:20]) %>%
+  ggplot(aes(x = is_mutated, y = median_delta)) +
+  geom_boxplot() +
+  facet_wrap(~neb_gene_symbol)
+
+df_auc %>%
+  filter(neb_gene_symbol %in% genes[1:20]) %>%
+  ggplot(aes(x = is_mutated, y = median_delta)) +
+  geom_boxplot() +
+  facet_wrap(~neb_gene_symbol, scales = "free")
+```
+
+Final figure
+
+```{r}
+theme_update( text = element_text(face = "bold"))
+genes <- factor(genes, levels = genes)
+(p1 <- df_auc %>%
+  inner_join(tibble(neb_gene_symbol = genes, gene_level = factor(genes))) %>%
+  distinct() %>%
+  ggplot(aes(x = fct_rev(gene_level), y = mean_delta, fill = is_mutated)) +
+  geom_boxplot(alpha = .5, outlier.shape = NA) +
+  scale_fill_manual(values = c("red", "blue"), labels = c("pairs without mutations", "pairs with mutations"), name = "") +
+  labs(x = "", y = "Median delta PI uptake") +
+  coord_flip() )
+```
+
+Multipanel (only 10 randomly selected replicates)
+
+```{r}
+my_sample <- sample(1:100, 10)
+df_complete %>%
+  filter(replicate %in% my_sample) %>%
+  inner_join(tibble(neb_gene_symbol = genes, gene_level = factor(genes))) %>%
+  ggplot(aes(x = fct_rev(gene_level), y = abs(delta_auc), fill = is_mutated)) +
+  geom_boxplot(alpha = .5) +
+  scale_fill_manual(values = c("red", "blue"), labels = c("pairs without mutations", "pairs with mutations"), name = "") +
+  facet_wrap(~replicate, nrow = 1) +
+  labs(x = "", y = "absolute delta PI uptake") +
+  coord_flip() +
+  theme(legend.position = "bottom")
+
+# df_complete %>%
+#   filter(replicate %in% my_sample) %>%
+#   inner_join(tibble(neb_gene_symbol = genes, gene_level = factor(genes))) %>%
+#   ggplot(aes(x = as.factor(replicate), y = abs(delta_auc), fill = is_mutated)) +
+#   geom_boxplot(alpha = .5) +
+#   scale_fill_manual(values = c("red", "blue"), labels = c("pairs without mutations", "pairs with mutations"), name = "") +
+#   facet_wrap(~neb_gene_symbol) +
+#   labs(x = "", y = "absolute delta PI uptake") +
+#   coord_flip() +
+#   theme(legend.position = "bottom")
+```
+
+Here we plot the output of 100 replicate regressions per gene
+
+```{r}
+(p3 <- df_lm_tidy %>%
+   select(neb_gene_symbol, estimate) %>%
+  inner_join(tibble(neb_gene_symbol = genes, gene_level = factor(genes))) %>%
+ ggplot(aes(x = fct_rev(gene_level), y = estimate, colour = estimate > 0)) +
+ geom_point(alpha = .5) +
+   stat_summary(
+     fun = median,
+     fun.min = ~quantile(., .05),
+     fun.max = ~quantile(., .95),
+     geom = "crossbar",
+     colour = "black", width = 0.3
+   ) +
+   scale_colour_manual(values = c("red", "blue"), na.translate = F, name = "Beta > 0") +
+  coord_flip())
+
+(p4 <- df_lm_tidy %>%
+     select(neb_gene_symbol, p.value) %>%
+  inner_join(tibble(neb_gene_symbol = genes, gene_level = factor(genes))) %>%
+ ggplot(aes(x = fct_rev(gene_level), y = -log10(p.value), colour = p.value < .05/n_distinct(df_lm_tidy$neb_gene_symbol))) +
+ geom_point(alpha = .5) +
+   stat_summary(
+     fun = median,
+     fun.min = ~quantile(., .05),
+     fun.max = ~quantile(., .95),
+     geom = "crossbar",
+     colour = "black", width = 0.3
+   ) +
+   scale_colour_manual(values = c("red", "blue"), na.translate = F, name = "Beta > 0") +
+  coord_flip())
+```
+
+Empirical confidence intervals for genes of interest
+
+```{r}
+df_ci95 <- df_lm_tidy %>%
+  drop_na(estimate) %>%
+  left_join(tibble(neb_gene_symbol = genes, gene_level = factor(genes))) %>%
+  group_by(neb_gene_symbol) %>%
+  summarise(median = median(estimate, na.rm = T),
+            lower = quantile(estimate, .05, na.rm = T),
+            upper = quantile(estimate, .95, na.rm = T),
+            frac_above = length(which(estimate > 0))/n()) %>%
+  mutate(converg_genes = neb_gene_symbol %in% genes)
+df_ci95 %>%
+  filter(neb_gene_symbol %in% genes) %>%
+  arrange(-frac_above) 
+```
+
+
+# Save processed data
+
+```{r}
+list(df_gp, df_auc, df_lm_tidy, df_ci95) %>%
+  saveRDS("processed_data/gene_convergence/compare_PI_uptake_between_independent_pairs/comparison_df.Rda")
+
+list(p1,p3,p4) %>%
+  saveRDS("processed_data/gene_convergence/compare_PI_uptake_between_independent_pairs/comparison_plots.Rda")
+```
+
